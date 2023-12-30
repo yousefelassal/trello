@@ -21,8 +21,8 @@ mongoose.connect(config.MONGODB_URI)
 
 const server = new ApolloServer(schema)
 
-server.listen({ 
-    listen: { port: config.PORT },
+startStandaloneServer(server, {
+    listen: {port: config.PORT},
 }).then(({ url }) => {
-    console.log(`Server ready at ${url}`)
+    console.log(`🚀 Server ready at ${url}`)
 })
