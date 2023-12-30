@@ -15,11 +15,11 @@ const typeDefs = `
         value: String!
     }
 
-    type Query {
+    extend type Query {
         me: User
     }
 
-    type Mutation {
+    extend type Mutation {
         createUser(
             name: String!
             username: String!
