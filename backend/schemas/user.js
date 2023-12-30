@@ -4,7 +4,7 @@ const User = require('../models/user')
 const { GraphQLError } = require('graphql')
 require('dotenv').config()
 
-export const typeDefs = `
+const typeDefs = `
     type User {
         name: String!
         username: String!
@@ -33,7 +33,7 @@ export const typeDefs = `
     }
 `
 
-export const resolvers = {
+const resolvers = {
     Query: {
         me: (root, args, context) => {
             return context.currentUser
@@ -87,4 +87,9 @@ export const resolvers = {
             return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
         }
     }
+}
+
+module.exports = {
+    typeDefs,
+    resolvers
 }
