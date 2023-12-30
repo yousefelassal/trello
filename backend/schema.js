@@ -7,13 +7,13 @@ import {
 
 const Query = `
   type Query {
-    
+    test: String
   }
 `;
 
 const resolvers = {
   Query: { 
-
+    test: () => 'Test success!'
   }
 };
 
