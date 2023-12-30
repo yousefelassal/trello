@@ -3,9 +3,8 @@ const { startStandaloneServer } = require('@apollo/server/standalone')
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const typeDefs = require('./schema')
-const resolvers = require('./resolvers')
 const config = require('./utils/config')
+const schema = require('./schema')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -20,10 +19,7 @@ mongoose.connect(config.MONGODB_URI)
     console.log('error connection to MongoDB:', error.message)
   })
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers
-})
+const server = new ApolloServer(schema)
 
 server.listen({ 
     listen: { port: config.PORT },
