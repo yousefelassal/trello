@@ -1,5 +1,9 @@
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 import { merge } from 'lodash';
+import {
+    typeDef as User,
+    resolvers as userResolvers
+} from './schemas/user'
 
 const Query = `
   type Query {
@@ -14,8 +18,8 @@ const resolvers = {
 };
 
 const schema = makeExecutableSchema({
-    typeDefs: [Query],
-    resolvers: merge(resolvers)
+    typeDefs: [Query, User],
+    resolvers: merge(resolvers, userResolvers)
 });
 
 export default schema;
