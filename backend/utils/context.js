@@ -1,3 +1,7 @@
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+require('dotenv').config()
+
 const userContext = async ({ req, res }) => {
     const auth = req ? req.headers.authorization : null
     if(auth && auth.toLowerCase().startsWith('bearer ')) {
