@@ -3,6 +3,7 @@ const { startStandaloneServer } = require('@apollo/server/standalone')
 const { GraphQLError } = require('graphql')
 const config = require('./utils/config')
 const schema = require('./schema')
+const userContext = require('./utils/context')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -20,7 +21,8 @@ mongoose.connect(config.MONGODB_URI)
 const server = new ApolloServer(schema)
 
 startStandaloneServer(server, {
-    listen: {port: config.PORT},
+    listen: { port: config.PORT },
+    context: userContext,
 }).then(({ url }) => {
     console.log(`🚀 Server ready at ${url}`)
 })
