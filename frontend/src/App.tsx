@@ -12,6 +12,7 @@ import FloatingNav from "@/components/ui/floating-navbar"
 import Home from "@/components/Home"
 import Signup from "@/components/Signup"
 import Login from "@/components/Login"
+import Docs from "@/components/Docs"
 
 export default function App() {
   const [token, setToken] = useState<string | null>(null)
@@ -42,6 +43,7 @@ export default function App() {
         } />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/documentation" element={<Docs />} />
       </Routes>
     </>
   )
