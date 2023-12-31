@@ -1,4 +1,4 @@
-import Spotlight from "@/components/ui/Spotlight";
+import Spotlight from "@/components/ui/spotlight";
 
 export default function LandingPage() {
   return (
