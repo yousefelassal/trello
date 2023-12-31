@@ -66,10 +66,10 @@ const FloatingNav = ({
             <span className="hidden sm:block text-sm">{navItem.name}</span>
           </Link>
         ))}
-        <button className="border text-sm font-medium relative border-white/[0.2] text-white px-4 py-2 rounded-full">
+        <Link to="/login" className="group transition hover:shadow-xl duration-300 border hover:border-transparent bg-gradient-to-b from-blue-50/5 to-blue-100/5 hover:from-blue-500 hover:to-blue-600 text-sm font-medium relative border-white/[0.2] text-white hover:text-gray-50 px-4 py-2 rounded-full">
           <span>Login</span>
-          <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
-        </button>
+          <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 group-hover:via-transparent to-transparent h-px" />
+        </Link>
       </motion.div>
     </AnimatePresence>
   );
