@@ -7,12 +7,12 @@ import {
 
 import { Code2, UserRoundPlus } from "lucide-react"
 
-import LandingPage from "@/pages/LandingPage"
-import FloatingNav from "@/components/ui/floating-navbar"
-import Home from "@/pages/Home"
-import Signup from "@/pages/Signup"
-import Login from "@/pages/Login"
-import Docs from "@/pages/Docs"
+import LandingPage from "./pages/LandingPage"
+import FloatingNav from "./components/ui/floating-navbar"
+import Home from "./pages/Home"
+import Signup from "./pages/Signup"
+import Login from "./pages/Login"
+import Docs from "./pages/Docs"
 
 export default function App() {
   const [token, setToken] = useState<string | null>(null)
