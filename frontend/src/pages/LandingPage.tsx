@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
-import Spotlight from "@/components/ui/spotlight";
+import Spotlight from "@/components/ui/spotlights";
 import TypewriterEffectSmooth from "@/components/ui/typewriter-effect";
 import { ChevronRight } from "lucide-react";
 import Bento from "@/components/Bento";
