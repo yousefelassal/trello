@@ -20,8 +20,10 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
+console.log(import.meta.env.VITE_SERVER)
+
 const httpLink = createHttpLink({
-  uri: import.meta.env.SERVER,
+  uri: import.meta.env.VITE_SERVER,
 })
 
 const client = new ApolloClient({
