@@ -9,6 +9,7 @@ import {
   createHttpLink,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import 'dotenv/config'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('trello-3al-daya2-token')
@@ -21,7 +22,7 @@ const authLink = setContext((_, { headers }) => {
 })
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000',
+  uri: process.env.SERVER,
 })
 
 const client = new ApolloClient({
