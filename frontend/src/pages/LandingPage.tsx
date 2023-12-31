@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore
-import Spotlight from "../components/ui/spotlight";
-import TypewriterEffectSmooth from "../components/ui/typewriter-effect";
+import Spotlight from "@/components/ui/spotlight";
+import TypewriterEffectSmooth from "@/components/ui/typewriter-effect";
 import { ChevronRight } from "lucide-react";
-import Bento from "../components/Bento";
+import Bento from "@/components/Bento";
 
 export default function LandingPage() {
   const words = [
