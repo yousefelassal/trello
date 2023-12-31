@@ -41,7 +41,7 @@ export default function App() {
             <LandingPage />
           </>
         } />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={<Signup setToken={setToken} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/documentation" element={<Docs />} />
       </Routes>
