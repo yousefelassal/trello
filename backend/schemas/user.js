@@ -8,6 +8,7 @@ const typeDefs = `
     type User {
         name: String!
         username: String!
+        boards: [Board!]!
         id: ID!
     }
 
@@ -36,7 +37,15 @@ const typeDefs = `
 const resolvers = {
     Query: {
         me: (root, args, context) => {
-            return context.currentUser
+            const currentUser = context.currentUser
+            if (!currentUser) {
+                throw new GraphQLError('Not authenticated', {
+                    extensions: {
+                        code: 'UNAUTHENTICATED'
+                    }
+                })
+            }
+            return currentUser.populate('boards')
         }
     },
     Mutation: {
