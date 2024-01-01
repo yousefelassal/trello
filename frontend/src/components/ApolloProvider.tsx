@@ -1,7 +1,7 @@
 import {
-ApolloClient,
-ApolloProvider as Provider,
-InMemoryCache,
+  ApolloClient,
+  ApolloProvider as Provider,
+  InMemoryCache,
 createHttpLink,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
@@ -9,7 +9,11 @@ import { useTokenValue } from '@/hooks/useTokenValue'
 
 console.log(import.meta.env.VITE_SERVER)
 
-const ApolloProvider = ({children}) => {
+interface Props {
+  children: React.ReactNode
+}
+
+const ApolloProvider = ({children}:Props) => {
   const { token } = useTokenValue()
   const authLink = setContext((_, { headers }) => {
     return {
