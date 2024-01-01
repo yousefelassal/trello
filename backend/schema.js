@@ -5,6 +5,11 @@ const {
     resolvers: userResolvers
 } = require('./schemas/user')
 
+const {
+  typeDefs: Board,
+  resolvers: boardResolvers
+} = require('./schemas/board')
+
 const Query = `
   type Query {
     test: String
@@ -23,8 +28,8 @@ const resolvers = {
 };
 
 const schema = makeExecutableSchema({
-    typeDefs: [Query, User],
-    resolvers: merge(resolvers, userResolvers),
+    typeDefs: [Query, User, Board],
+    resolvers: merge(resolvers, userResolvers, boardResolvers),
     logger: { log: e => console.log(e) }
 });
 
