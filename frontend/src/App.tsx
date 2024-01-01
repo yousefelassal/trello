@@ -1,8 +1,8 @@
-import { useState } from "react"
 import { useApolloClient } from "@apollo/client"
 import {
   Routes,
   Route,
+  Navigate
 } from "react-router-dom"
 
 import { Code2, UserRoundPlus, Home as HomeIcon } from "lucide-react"
@@ -13,10 +13,17 @@ import Home from "./pages/Home"
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import Docs from "./pages/Docs"
+import useHasMounted from './hooks/useHasMounted'
+import { useTokenValue } from "./hooks/useTokenValue"
 
 export default function App() {
-  const [token, setToken] = useState<string | null>(null)
+  const {token, setToken} = useTokenValue()
   const client = useApolloClient()
+  const hasMounted = useHasMounted()
+
+  if (!hasMounted) {
+    return null
+  }
 
   const logout = () => {
     setToken(null)
@@ -28,6 +35,8 @@ export default function App() {
     return (
       <Routes>
         <Route path="/" element={<Home logout={logout} />} />
+        <Route path="/login" element={<Navigate to="/" replace={true} />} />
+        <Route path="/signup" element={<Navigate to="/" replace={true} />} />
       </Routes>
     )
   }
