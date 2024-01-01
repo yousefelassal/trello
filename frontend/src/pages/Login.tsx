@@ -1,23 +1,17 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { LOGIN } from "../graphql/mutations"
-import { useNavigate } from "react-router-dom"
 
 const Login = ({ setToken }:{ setToken:(value:string) => void }) => {
-const [username, setUsername] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const navigate = useNavigate()
     
-    const [login, result] = useMutation(LOGIN)
-
-    useEffect(() => {
-        if (result.data) {
-            const token = result.data.login.value
+    const [login] = useMutation(LOGIN, {
+        onCompleted(data) {
+            const token = data.login.value
             setToken(token)
-            localStorage.setItem('trello-3al-daya2-token', token)
-            navigate('/')
-        }
-    }, [result.data]) // eslint-disable-line
+        },
+    })
 
     const submit = async (event:React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
