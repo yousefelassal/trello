@@ -2,6 +2,7 @@ import Spotlight from "@/components/ui/spotlights";
 import TypewriterEffectSmooth from "@/components/ui/typewriter-effect";
 import { ChevronRight } from "lucide-react";
 import Bento from "@/components/Bento";
+import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 
 export default function LandingPage() {
@@ -50,7 +51,7 @@ export default function LandingPage() {
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
       <Bento />
     </div>
-    <div className="h-20"></div>
+    <Footer />
     </>
   );
 }
