@@ -5,7 +5,7 @@ import {
   Route,
 } from "react-router-dom"
 
-import { Code2, UserRoundPlus } from "lucide-react"
+import { Code2, UserRoundPlus, Home as HomeIcon } from "lucide-react"
 
 import LandingPage from "./pages/LandingPage"
 import FloatingNav from "./components/ui/floating-navbar"
@@ -24,13 +24,18 @@ export default function App() {
     client.resetStore()
   }
 
+  if (token) {
+    return (
+      <Routes>
+        <Route path="/" element={<Home logout={logout} />} />
+      </Routes>
+    )
+  }
+
   return (
     <>
       <Routes>
         <Route path="/" element={
-          token ? 
-          <Home logout={logout} /> 
-          : 
           <>
             <FloatingNav 
               navItems={[
@@ -43,7 +48,17 @@ export default function App() {
         } />
         <Route path="/signup" element={<Signup setToken={setToken} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
-        <Route path="/documentation" element={<Docs />} />
+        <Route path="/documentation" element={
+          <>
+            <FloatingNav 
+              navItems={[
+                { name: "Home", link: "/", icon: <HomeIcon /> },
+                { name: "Signup", link: "/signup", icon: <UserRoundPlus /> },
+              ]}
+            />
+            <Docs />
+          </>
+        } />
       </Routes>
     </>
   )
