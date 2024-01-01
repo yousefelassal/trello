@@ -11,7 +11,13 @@ const schema = new mongoose.Schema({
         unique: true,
         minlength: 3
     },
-    passwordHash: String
+    passwordHash: String,
+    boards: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Board"
+        }
+    ]
 })
 
 schema.set("toJSON", {
