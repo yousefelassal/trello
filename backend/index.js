@@ -25,13 +25,16 @@ const start = async () => {
   const app = express()
   const httpServer = http.createServer(app)
 
-  const server = new ApolloServer({schema})
+  const server = new ApolloServer({
+    schema,
+    cors: false
+  })
 
   await server.start()
 
   app.use(
     '/',
-    cors(),
+    cors({origin: config.FRONTEND_URL}),
     express.json(),
     expressMiddleware(server, {
       context: userContext
