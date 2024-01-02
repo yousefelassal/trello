@@ -15,7 +15,7 @@ export default function AddBoard() {
             cache.updateQuery({ query: AllBoardsDocument }, (data) => {
                 if (response.data?.createBoard) {
                     return {
-                        allBoards: [...data.allBoards, response.data.createBoard]
+                        allBoards: [response.data.createBoard, ...data.allBoards]
                     }
                 }
                 return data
