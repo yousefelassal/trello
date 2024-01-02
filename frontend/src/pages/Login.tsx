@@ -2,7 +2,8 @@ import { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { LoginDocument, LoginMutation, LoginMutationVariables } from "@/generated/graphql"
 
-const Login = ({ setToken }:{ setToken:(value:string | undefined) => void }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Login = ({ setToken }:{ setToken:any }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     

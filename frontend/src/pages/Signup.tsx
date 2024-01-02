@@ -9,7 +9,8 @@ import {
     SignupMutationVariables,
 } from "@/generated/graphql"
 
-const Signup = ({ setToken }:{ setToken:(value:string | undefined) => void }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Signup = ({ setToken }:{ setToken: any }) => {
     const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
