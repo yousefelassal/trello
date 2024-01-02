@@ -2,10 +2,5 @@ query me {
   me {
     username
     name
-    boards {
-      id
-      title
-      bg
-    }
   }
 }
