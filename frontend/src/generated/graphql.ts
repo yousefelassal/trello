@@ -111,6 +111,20 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type AllBoardsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllBoardsQuery = { __typename?: 'Query', allBoards: Array<{ __typename?: 'Board', id: string, title: string, content?: string | null, bg: string, updated_at?: string | null }> };
+
+export type CreateBoardMutationVariables = Exact<{
+  title: Scalars['String']['input'];
+  content?: InputMaybe<Scalars['String']['input']>;
+  bg: Scalars['String']['input'];
+}>;
+
+
+export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, content?: string | null, bg: string, updated_at?: string | null } | null };
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -122,7 +136,7 @@ export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'T
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', username: string, name: string, boards: Array<{ __typename?: 'Board', id: string, title: string, bg: string }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', username: string, name: string } | null };
 
 export type SignupMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -134,6 +148,88 @@ export type SignupMutationVariables = Exact<{
 export type SignupMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', name: string, username: string } | null };
 
 
+export const AllBoardsDocument = gql`
+    query allBoards {
+  allBoards {
+    id
+    title
+    content
+    bg
+    updated_at
+  }
+}
+    `;
+
+/**
+ * __useAllBoardsQuery__
+ *
+ * To run a query within a React component, call `useAllBoardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllBoardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllBoardsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllBoardsQuery(baseOptions?: Apollo.QueryHookOptions<AllBoardsQuery, AllBoardsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllBoardsQuery, AllBoardsQueryVariables>(AllBoardsDocument, options);
+      }
+export function useAllBoardsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllBoardsQuery, AllBoardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllBoardsQuery, AllBoardsQueryVariables>(AllBoardsDocument, options);
+        }
+export function useAllBoardsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AllBoardsQuery, AllBoardsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AllBoardsQuery, AllBoardsQueryVariables>(AllBoardsDocument, options);
+        }
+export type AllBoardsQueryHookResult = ReturnType<typeof useAllBoardsQuery>;
+export type AllBoardsLazyQueryHookResult = ReturnType<typeof useAllBoardsLazyQuery>;
+export type AllBoardsSuspenseQueryHookResult = ReturnType<typeof useAllBoardsSuspenseQuery>;
+export type AllBoardsQueryResult = Apollo.QueryResult<AllBoardsQuery, AllBoardsQueryVariables>;
+export const CreateBoardDocument = gql`
+    mutation createBoard($title: String!, $content: String, $bg: String!) {
+  createBoard(title: $title, content: $content, bg: $bg) {
+    id
+    title
+    content
+    bg
+    updated_at
+  }
+}
+    `;
+export type CreateBoardMutationFn = Apollo.MutationFunction<CreateBoardMutation, CreateBoardMutationVariables>;
+
+/**
+ * __useCreateBoardMutation__
+ *
+ * To run a mutation, you first call `useCreateBoardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBoardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBoardMutation, { data, loading, error }] = useCreateBoardMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      content: // value for 'content'
+ *      bg: // value for 'bg'
+ *   },
+ * });
+ */
+export function useCreateBoardMutation(baseOptions?: Apollo.MutationHookOptions<CreateBoardMutation, CreateBoardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBoardMutation, CreateBoardMutationVariables>(CreateBoardDocument, options);
+      }
+export type CreateBoardMutationHookResult = ReturnType<typeof useCreateBoardMutation>;
+export type CreateBoardMutationResult = Apollo.MutationResult<CreateBoardMutation>;
+export type CreateBoardMutationOptions = Apollo.BaseMutationOptions<CreateBoardMutation, CreateBoardMutationVariables>;
 export const LoginDocument = gql`
     mutation login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
@@ -173,11 +269,6 @@ export const MeDocument = gql`
   me {
     username
     name
-    boards {
-      id
-      title
-      bg
-    }
   }
 }
     `;
