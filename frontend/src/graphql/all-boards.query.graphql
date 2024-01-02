@@ -1,0 +1,9 @@
+query allBoards {
+  allBoards {
+    id
+    title
+    content
+    bg
+    updated_at
+  }
+}
