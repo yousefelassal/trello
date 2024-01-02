@@ -1,10 +1,15 @@
-import { gql } from '@apollo/client'
+import { graphql } from '.'
 
-export const ME = gql`
+export const ME = graphql(/* GraphQL */`
   query me {
     me {
       username
       name
+      boards {
+        id
+        title
+        bg
+      }
     }
   }
-`
+`)
