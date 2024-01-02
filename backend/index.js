@@ -1,8 +1,11 @@
 const { ApolloServer } = require('@apollo/server')
-const { startStandaloneServer } = require('@apollo/server/standalone')
+const { expressMiddleware } = require('@apollo/server/express4')
 const config = require('./utils/config')
 const schema = require('./schema')
 const userContext = require('./utils/context')
+const http = require('http')
+const express = require('express')
+const cors = require('cors')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -17,11 +20,27 @@ mongoose.connect(config.MONGODB_URI)
     console.log('error connection to MongoDB:', error.message)
   })
 
-const server = new ApolloServer({schema})
 
-startStandaloneServer(server, {
-    listen: { port: config.PORT },
-    context: userContext
-}).then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`)
-})
+const start = async () => {
+  const app = express()
+  const httpServer = http.createServer(app)
+
+  const server = new ApolloServer({schema})
+
+  await server.start()
+
+  app.use(
+    '/',
+    cors(),
+    express.json(),
+    expressMiddleware(server, {
+      context: userContext
+    })
+  )
+
+  httpServer.listen(config.PORT, () => {
+    console.log(`🚀 Server ready at http://localhost:${config.PORT}`)
+  })
+}
+
+start()
