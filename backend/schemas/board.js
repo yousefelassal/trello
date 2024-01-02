@@ -8,7 +8,7 @@ const typeDefs = `
         created_at: String
         updated_at: String
         saved: Boolean
-        bg: String
+        bg: String!
         id: ID!
         user: User!
     }
