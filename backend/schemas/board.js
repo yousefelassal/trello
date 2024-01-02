@@ -56,7 +56,7 @@ const resolvers = {
                 })
             }
 
-            const boards = await Board.find({ user: user._id })
+            const boards = await Board.find({ user: user._id }).sort({ updated_at: -1 })
             return boards
         },
         findBoard: async (root, args) => {
