@@ -19,7 +19,7 @@ export type Scalars = {
 
 export type Board = {
   __typename?: 'Board';
-  bg?: Maybe<Scalars['String']['output']>;
+  bg: Scalars['String']['output'];
   content?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
@@ -122,7 +122,7 @@ export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'T
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', username: string, name: string, boards: Array<{ __typename?: 'Board', id: string, title: string, bg?: string | null }> } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', username: string, name: string, boards: Array<{ __typename?: 'Board', id: string, title: string, bg: string }> } | null };
 
 export type SignupMutationVariables = Exact<{
   name: Scalars['String']['input'];
