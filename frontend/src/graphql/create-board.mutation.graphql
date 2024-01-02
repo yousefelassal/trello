@@ -1,0 +1,9 @@
+mutation createBoard($title: String!, $content: String, $bg:String!){
+  createBoard(title: $title, content: $content, bg:$bg){
+    id
+    title
+    content
+    bg
+    updated_at
+  }
+}
