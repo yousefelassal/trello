@@ -32,7 +32,7 @@ export default function Home({logout}: {logout: () => void}) {
       <div className="flex flex-col gap-2">
         <h2 className="text-2xl font-bold">Your Boards</h2>
         {boards?.allBoards?.length === 0 && <div>You don't have any boards yet</div>}
-        <div className="grid md:auto-rows-[12rem] grid-cols-1 md:grid-cols-5 gap-4 max-w-7xl">
+        <div className="grid md:auto-rows-[12rem] grid-cols-1 md:grid-cols-4 gap-4 max-w-7xl">
           {boardsLoading && <div>Loading...</div>}
           {errorBoards && <div>{errorBoards.message}</div>}
           {boards?.allBoards?.map((board) => (
