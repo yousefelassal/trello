@@ -1,14 +1,14 @@
 import { useState } from "react"
 import { useMutation } from "@apollo/client"
-import { LOGIN } from "../graphql/mutations"
+import { LoginDocument, LoginMutation, LoginMutationVariables } from "@/generated/graphql"
 
-const Login = ({ setToken }:{ setToken:(value:string) => void }) => {
+const Login = ({ setToken }:{ setToken:(value:string | undefined) => void }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     
-    const [login] = useMutation(LOGIN, {
+    const [login] = useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, {
         onCompleted(data) {
-            const token = data.login.value
+            const token = data?.login?.value
             setToken(token)
         },
     })
