@@ -3,6 +3,17 @@ query findBoard($id: ID!) {
         id
         bg
         title
-        content
+        description
+        lists{
+            id
+            title
+            position
+            cards{
+                id
+                title
+                description
+                position
+            }
+        }
     }
 }
