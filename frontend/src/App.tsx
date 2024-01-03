@@ -37,12 +37,14 @@ export default function App() {
     return (
       <>
         <Header logout={logout} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Navigate to="/" replace={true} />} />
-          <Route path="/signup" element={<Navigate to="/" replace={true} />} />
-          <Route path="/:id" element={<BoardTest />} />
-        </Routes>
+        <div className="pt-16">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Navigate to="/" replace={true} />} />
+            <Route path="/signup" element={<Navigate to="/" replace={true} />} />
+            <Route path="/:id" element={<BoardTest />} />
+          </Routes>
+        </div>
       </>
     )
   }
