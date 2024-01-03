@@ -168,7 +168,7 @@ export default function BoardTest() {
     setState(newState);
   }
   return (
-    <div className="flex gap-2">
+    <div className="container flex gap-2">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
           {(provided:any) => ( //eslint-disable-line
@@ -201,12 +201,12 @@ const Column = ({ column, tasks, index, deleteColumn, addTask, deleteTask }:any)
         <div 
           {...provided.draggableProps}
           ref={provided.innerRef}
-          className="w-52 flex bg-blue-200 rounded-xl h-fit flex-col"
+          className="w-52 flex border border-gray-400 bg-blue-200 rounded-xl h-fit flex-col"
         >
           <div className="flex justify-between">
             <div 
               {...provided.dragHandleProps}
-              className="flex w-full"
+              className="flex p-2 w-full"
             >
               <h3>{column.title}</h3>
             </div>
@@ -217,7 +217,7 @@ const Column = ({ column, tasks, index, deleteColumn, addTask, deleteTask }:any)
                     <div 
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className={`p-4 transition min-h-32 space-y-2 ${snapshot.isDraggingOver ? 'bg-blue-400' : ''}`}
+                      className={`p-2 transition min-h-32 space-y-2 ${snapshot.isDraggingOver ? 'bg-blue-400' : ''}`}
                     >
                         {tasks.map((task:any, index:any) => ( //eslint-disable-line
                             <Task key={task.id} task={task} index={index} 
