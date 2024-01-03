@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    content: String,
+    description: String,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
     saved: Boolean,
@@ -13,7 +13,13 @@ const schema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
-    }
+    },
+    lists: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "List"
+        }
+    ]
 })
 
 schema.set("toJSON", {
