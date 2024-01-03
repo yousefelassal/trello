@@ -32,6 +32,72 @@ const initialData:any = { //eslint-disable-line
 export default function BoardTest() {
   const [state, setState] = useState(initialData);
 
+  const addColumn = () => {
+    const columnId = `column-${Object.keys(state.columns).length + 1}`;
+    const newColumn = {
+      id: columnId,
+      title: `Column ${Object.keys(state.columns).length + 1}`,
+      taskIds: [],
+    };
+    const newState = {
+      ...state,
+      columns: {
+        ...state.columns,
+        [columnId]: newColumn,
+      },
+      columnOrder: [...state.columnOrder, columnId],
+    };
+    setState(newState);
+  }
+  
+  const deleteColumn = (columnId:any) => { //eslint-disable-line
+    const newColumnOrder = state.columnOrder.filter((id:any) => id !== columnId); //eslint-disable-line
+    const newState = {
+      ...state,
+      columnOrder: newColumnOrder,
+    };
+    setState(newState);
+  }
+
+  const addTask = (columnId:any) => { //eslint-disable-line
+    const taskId = `task-${Object.keys(state.tasks).length + 1}`;
+    const newTask = {
+      id: taskId,
+      content: `Task ${Object.keys(state.tasks).length + 1}`,
+    };
+    const newState = {
+      ...state,
+      tasks: {
+        ...state.tasks,
+        [taskId]: newTask,
+      },
+      columns: {
+        ...state.columns,
+        [columnId]: {
+          ...state.columns[columnId],
+          taskIds: [...state.columns[columnId].taskIds, taskId],
+        },
+      },
+    };
+    setState(newState);
+  }
+
+  const deleteTask = (taskId:any) => { //eslint-disable-line
+    const newTasks = {...state.tasks};
+    delete newTasks[taskId];
+    const newColumns = {...state.columns};
+    Object.keys(newColumns).forEach((columnId:any) => { //eslint-disable-line
+      const newTaskIds = newColumns[columnId].taskIds.filter((id:any) => id !== taskId); //eslint-disable-line
+      newColumns[columnId].taskIds = newTaskIds;
+    });
+    const newState = {
+      ...state,
+      tasks: newTasks,
+      columns: newColumns,
+    };
+    setState(newState);
+  }
+
   const onDragEnd = (result:any) => { //eslint-disable-line
     const { destination, source, draggableId, type } = result;
 
@@ -102,7 +168,7 @@ export default function BoardTest() {
     setState(newState);
   }
   return (
-    <div>
+    <div className="flex gap-2">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
           {(provided:any) => ( //eslint-disable-line
@@ -114,19 +180,21 @@ export default function BoardTest() {
               {state.columnOrder.map((columnId:any, index:any) => { //eslint-disable-line
                 const column = state.columns[columnId];
                 const tasks = column.taskIds.map((taskId:any) => state.tasks[taskId]); //eslint-disable-line
-                return <Column key={column.id} column={column} tasks={tasks} index={index} />;
+                return <Column key={column.id} column={column} tasks={tasks} index={index} 
+                deleteColumn={deleteColumn} addTask={addTask} deleteTask={deleteTask} />;
               })}
               {provided.placeholder}
             </div>
             )}
         </Droppable>
+        <button onClick={addColumn}>Add Column</button>
       </DragDropContext>
     </div>
   )
 }
 
 //eslint-disable-next-line
-const Column = ({ column, tasks, index }:any) => {
+const Column = ({ column, tasks, index, deleteColumn, addTask, deleteTask }:any) => {
     return (
       <Draggable draggableId={column.id} index={index}>
         {(provided:any) => ( //eslint-disable-line
@@ -135,12 +203,15 @@ const Column = ({ column, tasks, index }:any) => {
           ref={provided.innerRef}
           className="w-52 flex flex-col"
         >
+          <div className="flex justify-between">
             <div 
               {...provided.dragHandleProps}
               className="flex w-full"
             >
               <h3>{column.title}</h3>
             </div>
+            <button onClick={() => deleteColumn(column.id)}>Delete</button>
+          </div>
             <Droppable droppableId={column.id} type="task">
                 {(provided:any, snapshot:any) => ( //eslint-disable-line
                     <div 
@@ -149,19 +220,21 @@ const Column = ({ column, tasks, index }:any) => {
                       className={`p-4 transition min-h-32 space-y-2 ${snapshot.isDraggingOver ? 'bg-blue-400' : 'bg-black'}`}
                     >
                         {tasks.map((task:any, index:any) => ( //eslint-disable-line
-                            <Task key={task.id} task={task} index={index} />
+                            <Task key={task.id} task={task} index={index} 
+                            deleteTask={deleteTask}/>
                         ))}
                         {provided.placeholder}
                     </div>
                 )}
             </Droppable>
+            <button onClick={() => addTask(column.id)}>Add Task</button>
         </div>
         )}
       </Draggable>
     );
 }
 
-const Task = ({ task, index }:any) => { //eslint-disable-line
+const Task = ({ task, index, deleteTask }:any) => { //eslint-disable-line
     return (
         <Draggable draggableId={task.id} index={index}>
             {(provided:any, snapshot:any) => ( //eslint-disable-line
@@ -169,9 +242,10 @@ const Task = ({ task, index }:any) => { //eslint-disable-line
                   ref={provided.innerRef}
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
-                  className={`${snapshot.isDragging ? 'bg-slate-400' : 'bg-gray-200' } text-black rounded-sm`}
+                  className={`${snapshot.isDragging ? 'bg-slate-400' : 'bg-gray-200' } text-black rounded-sm flex flex-col gap-2`}
                 >
                     {task.content}
+                    <button onClick={() => deleteTask(task.id)}>Delete</button>
                 </div>
             )}
         </Draggable>
