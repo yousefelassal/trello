@@ -201,7 +201,7 @@ const Column = ({ column, tasks, index, deleteColumn, addTask, deleteTask }:any)
         <div 
           {...provided.draggableProps}
           ref={provided.innerRef}
-          className="w-52 flex flex-col"
+          className="w-52 flex bg-blue-200 rounded-xl h-fit flex-col"
         >
           <div className="flex justify-between">
             <div 
@@ -217,7 +217,7 @@ const Column = ({ column, tasks, index, deleteColumn, addTask, deleteTask }:any)
                     <div 
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className={`p-4 transition min-h-32 space-y-2 ${snapshot.isDraggingOver ? 'bg-blue-400' : 'bg-black'}`}
+                      className={`p-4 transition min-h-32 space-y-2 ${snapshot.isDraggingOver ? 'bg-blue-400' : ''}`}
                     >
                         {tasks.map((task:any, index:any) => ( //eslint-disable-line
                             <Task key={task.id} task={task} index={index} 
