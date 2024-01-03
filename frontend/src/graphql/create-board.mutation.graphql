@@ -1,8 +1,8 @@
-mutation createBoard($title: String!, $content: String, $bg:String!){
-  createBoard(title: $title, content: $content, bg:$bg){
+mutation createBoard($title: String!, $description: String, $bg:String!){
+  createBoard(title: $title, description: $description, bg:$bg){
     id
     title
-    content
+    description
     bg
     updated_at
   }
