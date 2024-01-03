@@ -13,6 +13,8 @@ import Home from "./pages/Home"
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import Docs from "./pages/Docs"
+import Board from "./pages/Board"
+import Header from "./components/Header"
 import useHasMounted from './hooks/useHasMounted'
 import { useTokenValue } from "./hooks/useTokenValue"
 
@@ -33,11 +35,15 @@ export default function App() {
 
   if (token) {
     return (
-      <Routes>
-        <Route path="/" element={<Home logout={logout} />} />
-        <Route path="/login" element={<Navigate to="/" replace={true} />} />
-        <Route path="/signup" element={<Navigate to="/" replace={true} />} />
-      </Routes>
+      <>
+        <Header logout={logout} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Navigate to="/" replace={true} />} />
+          <Route path="/signup" element={<Navigate to="/" replace={true} />} />
+          <Route path="/:id" element={<Board />} />
+        </Routes>
+      </>
     )
   }
 
@@ -68,6 +74,7 @@ export default function App() {
             <Docs />
           </>
         } />
+        <Route path="/*" element={<Navigate to="/" replace={true} />} />
       </Routes>
     </>
   )
