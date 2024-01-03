@@ -17,7 +17,7 @@ export default function Card({
       <Link to={to} className="flex items-center group justify-center antialiased">
         <GlowingStarsBackgroundCard>
           <div className="relative flex flex-1 w-full h-full min-h-[7rem]">
-            <img src={bg} alt="board" className="absolute object-cover inset-0 blur-[1px] flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
+            <img src={bg} alt="board" className="absolute object-cover inset-0 flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
           </div>
           <div className="flex justify-between px-6 py-8 items-center">
           <GlowingStarsTitle>{title}</GlowingStarsTitle>
