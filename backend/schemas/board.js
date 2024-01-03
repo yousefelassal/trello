@@ -59,8 +59,24 @@ const resolvers = {
             const boards = await Board.find({ user: user._id }).sort({ updated_at: -1 })
             return boards
         },
-        findBoard: async (root, args) => {
+        findBoard: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLError("Not authenticated", {
+                    extensions: {
+                        code: 'UNAUTHENTICATED'
+                    }
+                })
+            }
+
             const board = await Board.findById(args.id)
+            if(board.user.toString() !== user._id.toString()) {
+                throw new GraphQLError("Not authenticated", {
+                    extensions: {
+                        code: 'UNAUTHENTICATED'
+                    }
+                })
+            }
             return board
         }
     },
