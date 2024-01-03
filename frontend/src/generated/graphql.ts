@@ -125,6 +125,13 @@ export type CreateBoardMutationVariables = Exact<{
 
 export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, content?: string | null, bg: string, updated_at?: string | null } | null };
 
+export type FindBoardQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, content?: string | null } | null };
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -230,6 +237,49 @@ export function useCreateBoardMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateBoardMutationHookResult = ReturnType<typeof useCreateBoardMutation>;
 export type CreateBoardMutationResult = Apollo.MutationResult<CreateBoardMutation>;
 export type CreateBoardMutationOptions = Apollo.BaseMutationOptions<CreateBoardMutation, CreateBoardMutationVariables>;
+export const FindBoardDocument = gql`
+    query findBoard($id: ID!) {
+  findBoard(id: $id) {
+    id
+    bg
+    title
+    content
+  }
+}
+    `;
+
+/**
+ * __useFindBoardQuery__
+ *
+ * To run a query within a React component, call `useFindBoardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindBoardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindBoardQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindBoardQuery(baseOptions: Apollo.QueryHookOptions<FindBoardQuery, FindBoardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindBoardQuery, FindBoardQueryVariables>(FindBoardDocument, options);
+      }
+export function useFindBoardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindBoardQuery, FindBoardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindBoardQuery, FindBoardQueryVariables>(FindBoardDocument, options);
+        }
+export function useFindBoardSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindBoardQuery, FindBoardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindBoardQuery, FindBoardQueryVariables>(FindBoardDocument, options);
+        }
+export type FindBoardQueryHookResult = ReturnType<typeof useFindBoardQuery>;
+export type FindBoardLazyQueryHookResult = ReturnType<typeof useFindBoardLazyQuery>;
+export type FindBoardSuspenseQueryHookResult = ReturnType<typeof useFindBoardSuspenseQuery>;
+export type FindBoardQueryResult = Apollo.QueryResult<FindBoardQuery, FindBoardQueryVariables>;
 export const LoginDocument = gql`
     mutation login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
