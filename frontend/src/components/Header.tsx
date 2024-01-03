@@ -12,7 +12,7 @@ export default function Header({logout}: {logout: () => void}) {
 
   if (loading) return <div>Loading...</div>
   return (
-    <div className="container py-2 flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
+    <div className="container py-2 backdrop-blur flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
       <h1 className="text-4xl font-bold">Welcome {user?.me?.name}</h1>
       <button onClick={logout}>Logout</button>
     </div>
