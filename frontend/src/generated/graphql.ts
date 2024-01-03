@@ -20,30 +20,68 @@ export type Scalars = {
 export type Board = {
   __typename?: 'Board';
   bg: Scalars['String']['output'];
-  content?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  lists: Array<List>;
   saved?: Maybe<Scalars['Boolean']['output']>;
   title: Scalars['String']['output'];
   updated_at?: Maybe<Scalars['String']['output']>;
   user: User;
 };
 
+export type Card = {
+  __typename?: 'Card';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  position: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type List = {
+  __typename?: 'List';
+  cards: Array<Card>;
+  id: Scalars['ID']['output'];
+  position: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  addCard?: Maybe<Board>;
+  addList?: Maybe<Board>;
   createBoard?: Maybe<Board>;
   createUser?: Maybe<User>;
   deleteBoard?: Maybe<Board>;
+  deleteCard?: Maybe<Board>;
+  deleteList?: Maybe<Board>;
   login?: Maybe<Token>;
   saveBoard?: Maybe<Board>;
   updateBoard?: Maybe<Board>;
+  updateCard?: Maybe<Board>;
+  updateList?: Maybe<Board>;
+};
+
+
+export type MutationAddCardArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  listId: Scalars['ID']['input'];
+  position: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+};
+
+
+export type MutationAddListArgs = {
+  boardId: Scalars['ID']['input'];
+  position: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
 };
 
 
 export type MutationCreateBoardArgs = {
   bg?: InputMaybe<Scalars['String']['input']>;
-  content?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
 };
 
@@ -56,6 +94,16 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteBoardArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteCardArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteListArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -74,8 +122,23 @@ export type MutationSaveBoardArgs = {
 
 export type MutationUpdateBoardArgs = {
   bg?: InputMaybe<Scalars['String']['input']>;
-  content?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  title: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateCardArgs = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  position: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateListArgs = {
+  id: Scalars['ID']['input'];
+  position: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
 
@@ -114,23 +177,23 @@ export type User = {
 export type AllBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllBoardsQuery = { __typename?: 'Query', allBoards: Array<{ __typename?: 'Board', id: string, title: string, content?: string | null, bg: string, updated_at?: string | null }> };
+export type AllBoardsQuery = { __typename?: 'Query', allBoards: Array<{ __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null }> };
 
 export type CreateBoardMutationVariables = Exact<{
   title: Scalars['String']['input'];
-  content?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   bg: Scalars['String']['input'];
 }>;
 
 
-export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, content?: string | null, bg: string, updated_at?: string | null } | null };
+export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null } | null };
 
 export type FindBoardQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, content?: string | null } | null };
+export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, description?: string | null, lists: Array<{ __typename?: 'List', id: string, title: string, position: number, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null, position: number }> }> } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -160,7 +223,7 @@ export const AllBoardsDocument = gql`
   allBoards {
     id
     title
-    content
+    description
     bg
     updated_at
   }
@@ -199,11 +262,11 @@ export type AllBoardsLazyQueryHookResult = ReturnType<typeof useAllBoardsLazyQue
 export type AllBoardsSuspenseQueryHookResult = ReturnType<typeof useAllBoardsSuspenseQuery>;
 export type AllBoardsQueryResult = Apollo.QueryResult<AllBoardsQuery, AllBoardsQueryVariables>;
 export const CreateBoardDocument = gql`
-    mutation createBoard($title: String!, $content: String, $bg: String!) {
-  createBoard(title: $title, content: $content, bg: $bg) {
+    mutation createBoard($title: String!, $description: String, $bg: String!) {
+  createBoard(title: $title, description: $description, bg: $bg) {
     id
     title
-    content
+    description
     bg
     updated_at
   }
@@ -225,7 +288,7 @@ export type CreateBoardMutationFn = Apollo.MutationFunction<CreateBoardMutation,
  * const [createBoardMutation, { data, loading, error }] = useCreateBoardMutation({
  *   variables: {
  *      title: // value for 'title'
- *      content: // value for 'content'
+ *      description: // value for 'description'
  *      bg: // value for 'bg'
  *   },
  * });
@@ -243,7 +306,18 @@ export const FindBoardDocument = gql`
     id
     bg
     title
-    content
+    description
+    lists {
+      id
+      title
+      position
+      cards {
+        id
+        title
+        description
+        position
+      }
+    }
   }
 }
     `;
