@@ -2,7 +2,7 @@ query allBoards {
   allBoards {
     id
     title
-    content
+    description
     bg
     updated_at
   }
