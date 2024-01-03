@@ -24,6 +24,7 @@
     "lucide-react": "^0.303.0",
     "mini-svg-data-uri": "^1.4.4",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
     "react-wrap-balancer": "^1.1.0",
