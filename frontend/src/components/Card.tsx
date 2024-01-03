@@ -20,7 +20,7 @@ export default function Card({
             <img src={bg} alt="board" className="absolute group-hover:scale-110 transition duration-300 object-cover inset-0 flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
           </div>
           <div className="flex justify-between px-6 py-8 items-center">
-          <GlowingStarsTitle className="group-hover:scale-105 transition">{title}</GlowingStarsTitle>
+          <GlowingStarsTitle className="group-hover:scale-105 duration-300 transition">{title}</GlowingStarsTitle>
             <div className="h-8 w-8 rounded-full group-hover:translate-x-1 transition duration-300 bg-[hsla(0,0%,100%,.1)] flex items-center justify-center">
               <Icon />
             </div>
