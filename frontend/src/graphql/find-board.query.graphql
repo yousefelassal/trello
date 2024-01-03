@@ -1,0 +1,8 @@
+query findBoard($id: ID!) {
+    findBoard(id: $id){
+        id
+        bg
+        title
+        content
+    }
+}
