@@ -69,27 +69,27 @@ const typeDefs = `
         updateList(
             id: ID!
             title: String!
-        ): Board
+        ): List
 
         deleteList(
             id: ID!
-        ): Board
+        ): List
 
         addCard(
             listId: ID!
             title: String!
             description: String
-        ): Board
+        ): List
 
         updateCard(
             id: ID!
             title: String!
             description: String
-        ): Board
+        ): Card
 
         deleteCard(
             id: ID!
-        ): Board
+        ): Card
     }
 `
 
@@ -172,7 +172,7 @@ const resolvers = {
             }
 
             const updatedBoard = await Board.findByIdAndUpdate(args.id, { ...args }, { new: true })
-            return updatedBoard
+            return updatedBoard.populate({ path: 'lists', populate: { path: 'cards' }})
         },
         saveBoard: async (root, args, context) => {
             const user = context.currentUser
@@ -258,7 +258,7 @@ const resolvers = {
                 }) 
             }
             const updatedList = await List.findByIdAndUpdate(args.id, { ...args }, { new: true })
-            return updatedList
+            return updatedList.populate('cards')
         },
         deleteList: async (root, args, context) => {
             const user = context.currentUser
@@ -293,7 +293,7 @@ const resolvers = {
             list.cards = list.cards.concat(card._id)
             await list.save()
 
-            return list
+            return list.populate('cards')
         },
         updateCard: async (root, args, context) => {
             const user = context.currentUser
@@ -304,7 +304,6 @@ const resolvers = {
                     }
                 })
             }
-            const card = await Card.findById(args.id)
             const updatedCard = await Card.findByIdAndUpdate(args.id, { ...args }, { new: true })
             return updatedCard
         },
