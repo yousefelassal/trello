@@ -2,12 +2,14 @@ import { useApolloClient } from "@apollo/client"
 import {
   Routes,
   Route,
-  Navigate
+  Navigate,
+  useLocation
 } from "react-router-dom"
 
 import { Code2, UserRoundPlus, Home as HomeIcon } from "lucide-react"
 
 import LandingPage from "./pages/LandingPage"
+import Spotlight from "@/components/ui/spotlights";
 import FloatingNav from "./components/ui/floating-navbar"
 import Home from "./pages/Home"
 import Signup from "./pages/Signup"
@@ -22,6 +24,7 @@ export default function App() {
   const {token, setToken} = useTokenValue()
   const client = useApolloClient()
   const hasMounted = useHasMounted()
+  const location = useLocation()
 
   if (!hasMounted) {
     return null
@@ -51,6 +54,20 @@ export default function App() {
 
   return (
     <>
+      <div className="absolute h-[40rem] md:min-h-screen w-full rounded-md flex items-center justify-center antialiased overflow-hidden">
+        <Spotlight
+          className="top-10 left-0 md:left-60 md:-top-20"
+          fill={
+            location.pathname === "/login"
+              ? "#3478F3"
+              : location.pathname === "/signup"
+              ? "#F3B334"
+              : location.pathname === "/documentation"
+              ? "#F3345B"
+              : "white"
+            }
+        />
+      </div>
       <Routes>
         <Route path="/" element={
           <>
