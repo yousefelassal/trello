@@ -62,7 +62,7 @@ const resolvers = {
             try {
                 await user.save()
             } catch (error) {
-                if(['User validation failed: username: Error, expected `username` to be unique. Value: `{}`'].includes(error.message)) {
+                if(error.code === 11000) {
                     throw new GraphQLError('Username is already taken', {
                         extensions: {
                             code: 'BAD_USER_INPUT'
