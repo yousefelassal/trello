@@ -7,13 +7,11 @@ const typeDefs = `
     type Card {
         title: String!
         description: String
-        position: Int!
         id: ID!
     }
 
     type List {
         title: String!
-        position: Int!
         cards: [Card!]!
         id: ID!
     }
@@ -28,6 +26,7 @@ const typeDefs = `
         bg: String!
         id: ID!
         user: User!
+        listsOrder: [List!]!
     }
 
     extend type Query {
@@ -40,14 +39,17 @@ const typeDefs = `
         createBoard(
             title: String!
             description: String
-            bg: String
+            bg: String!
         ): Board
 
         updateBoard(
             id: ID!
-            title: String!
+            title: String
             description: String
             bg: String
+            lists: [ID!]
+            listsOrder: [ID!]
+            updated_at: String!
         ): Board
 
         saveBoard(
@@ -62,13 +64,11 @@ const typeDefs = `
         addList(
             boardId: ID!
             title: String!
-            position: Int!
         ): Board
 
         updateList(
             id: ID!
             title: String!
-            position: Int!
         ): Board
 
         deleteList(
@@ -79,20 +79,17 @@ const typeDefs = `
             listId: ID!
             title: String!
             description: String
-            position: Int!
         ): Board
 
         updateCard(
             id: ID!
             title: String!
             description: String
-            position: Int!
         ): Board
 
         deleteCard(
             id: ID!
         ): Board
-
     }
 `
 
@@ -121,13 +118,7 @@ const resolvers = {
                 })
             }
 
-            const board = await Board.findById(args.id).populate({
-                path: "lists",
-                populate: {
-                    path: "cards",
-                    model: "Card"
-                }
-            })
+            const board = await Board.findById(args.id).populate({ path: 'lists', populate: { path: 'cards' }})
 
             if(board.user.toString() !== user._id.toString()) {
                 throw new GraphQLError("Not authenticated", {
@@ -171,7 +162,6 @@ const resolvers = {
                     }
                 })
             }
-
             const board = await Board.findById(args.id)
             if(board.user.toString() !== user._id.toString()) {
                 throw new GraphQLError("Not authenticated", {
@@ -237,7 +227,6 @@ const resolvers = {
                     }
                 })
             }
-            
             const board = await Board.findById(args.boardId)
             if(board.user.toString() !== user._id.toString()) {
                 throw new GraphQLError("Not authenticated", {
@@ -246,7 +235,6 @@ const resolvers = {
                     }
                 })
             }
-            
             const list = new List({ ...args })
             try {
                 await list.save()
@@ -255,52 +243,46 @@ const resolvers = {
             }
 
             board.lists = board.lists.concat(list._id)
+            board.listsOrder = board.listsOrder.concat(list._id)
             await board.save()
 
-            return board
+            return board.populate({ path: 'lists', populate: { path: 'cards' }})
         },
         updateList: async (root, args, context) => {
             const user = context.currentUser
-            const list = await List.findById(args.id).populate("cards")
-            const board = await Board.findById(list.board)
-            if(board.user.toString() !== user._id.toString()) {
+            if(!user) {
                 throw new GraphQLError("Not authenticated", {
                     extensions: {
                         code: 'UNAUTHENTICATED'
                     }
-                })
+                }) 
             }
-            
             const updatedList = await List.findByIdAndUpdate(args.id, { ...args }, { new: true })
             return updatedList
         },
         deleteList: async (root, args, context) => {
             const user = context.currentUser
-            const list = await List.findById(args.id).populate("cards")
-            const board = await Board.findById(list.board)
-            if(board.user.toString() !== user._id.toString()) {
+            if(!user) {
                 throw new GraphQLError("Not authenticated", {
                     extensions: {
                         code: 'UNAUTHENTICATED'
                     }
                 })
             }
-            
+            const list = await List.findById(args.id)
             await List.findByIdAndRemove(args.id)
-            return board
+            return list
         },
         addCard: async (root, args, context) => {
             const user = context.currentUser
-            const list = await List.findById(args.listId).populate("cards")
-            const board = await Board.findById(list.board)
-            if(board.user.toString() !== user._id.toString()) {
+            if(!user) {
                 throw new GraphQLError("Not authenticated", {
                     extensions: {
                         code: 'UNAUTHENTICATED'
                     }
                 })
             }
-            
+            const list = await List.findById(args.listId)
             const card = new Card({ ...args })
             try {
                 await card.save()
@@ -311,40 +293,34 @@ const resolvers = {
             list.cards = list.cards.concat(card._id)
             await list.save()
 
-            return board
+            return list
         },
         updateCard: async (root, args, context) => {
             const user = context.currentUser
-            const card = await Card.findById(args.id)
-            const list = await List.findById(card.list)
-            const board = await Board.findById(list.board)
-            if(board.user.toString() !== user._id.toString()) {
+            if(!user) {
                 throw new GraphQLError("Not authenticated", {
                     extensions: {
                         code: 'UNAUTHENTICATED'
                     }
                 })
             }
-            
+            const card = await Card.findById(args.id)
             const updatedCard = await Card.findByIdAndUpdate(args.id, { ...args }, { new: true })
             return updatedCard
         },
         deleteCard: async (root, args, context) => {
             const user = context.currentUser
-            const card = await Card.findById(args.id)
-            const list = await List.findById(card.list)
-            const board = await Board.findById(list.board)
-            if(board.user.toString() !== user._id.toString()) {
+            if(!user) {
                 throw new GraphQLError("Not authenticated", {
                     extensions: {
                         code: 'UNAUTHENTICATED'
                     }
                 })
             }
-            
+            const card = await Card.findById(args.id)
             await Card.findByIdAndRemove(args.id)
-            return board
-        },
+            return card
+        }
     }
 }
 
