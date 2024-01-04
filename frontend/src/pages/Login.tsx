@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { LoginDocument, LoginMutation, LoginMutationVariables } from "@/generated/graphql"
+import { toast } from "sonner"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Login = ({ setToken }:{ setToken:any }) => {
@@ -8,6 +9,9 @@ const Login = ({ setToken }:{ setToken:any }) => {
     const [password, setPassword] = useState('')
     
     const [login] = useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, {
+        onError(error) {
+            toast.error(error.message)
+        },
         onCompleted(data) {
             const token = data?.login?.value
             setToken(token)
