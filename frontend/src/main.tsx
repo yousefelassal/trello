@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <Router>
         <TextProvider>
           <App />
-          <Toaster />
+          <Toaster richColors />
         </TextProvider>
       </Router>
     </ApolloProvider>
