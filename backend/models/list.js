@@ -16,4 +16,8 @@ schema.set("toJSON", {
     }
 })
 
+schema.pre("remove", function(next) {
+    this.model("Card").deleteMany({ list: this._id }, next)
+})
+
 module.exports = mongoose.model("List", schema)
