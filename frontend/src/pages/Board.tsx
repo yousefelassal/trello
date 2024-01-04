@@ -38,23 +38,6 @@ export default function Board() {
     }
   })
 
-
-// update(cache, { data }) {
-//     cache.modify({
-//         fields: {
-//             findBoard(existingBoard = {}) {
-//                 const newListRef = cache.writeFragment({
-//                     data: data?.addList,
-//                     fragment: FindBoardDocument
-//                 })
-//                 return {
-//                     ...existingBoard,
-//                     lists: [...existingBoard.lists, newListRef]
-//                 }
-//             }
-//         }
-//     })
-
   if (error) return <div>{error.message}</div>
 
   if (loading) return <div>Loading...</div>
