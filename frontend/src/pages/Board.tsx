@@ -18,25 +18,26 @@ export default function Board() {
         <div className="-z-10 fixed inset-0 overflow-hidden">
             <img src={data?.findBoard?.bg} alt="board background" className="object-cover absolute w-screen h-screen inset-0" />
         </div>
-        <div className="container flex flex-col">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-2xl font-bold">{data?.findBoard?.title}</h2>
-                <div className="grid md:auto-rows grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl">
-                    {data?.findBoard?.lists?.map((list) => (
-                        <div key={list.id} className="flex flex-col gap-2">
-                            <h3 className="text-xl font-bold">{list.title}</h3>
-                            <div className="flex flex-col gap-2">
-                                {list.cards?.map((card) => (
-                                    <div key={card.id} className="flex flex-col gap-2">
-                                        <h4 className="text-lg font-bold">{card.title}</h4>
-                                        <div>{card.description}</div>
-                                    </div>
-                                ))}
+        <div className="fixed px-6 py-2 w-screen shadow -mt-4 bg-black/60">
+            <h2 className="text-2xl w-fit p-2 py-1 hover:bg-gray-700 rounded-lg font-bold">{data?.findBoard?.title}</h2>
+        </div>
+        <div className="container pt-16 flex gap-2">
+            {data?.findBoard?.lists?.map((list) => (
+                <div key={list.id} className="flex p-2 flex-col min-w-[272px] rounded-2xl shadow-2xl border border-[#201f1f] bg-[#101204] gap-2">
+                    <h3 className="text-xl font-bold">{list.title}</h3>
+                    <div className="flex flex-col gap-2">
+                        {list.cards?.map((card) => (
+                            <div key={card.id} className="flex bg-[#22272B] rounded-lg justify-center px-2 py-1 shadow-2xl flex-col">
+                                <h4 className="text-lg font-bold">{card.title}</h4>
+                                <div>{card.description}</div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
+            ))}
+            <button className="bg-[#ffffff3d] hover:bg-[#ffffff2a] transition rounded-lg min-w-[272px] h-fit p-2 flex items-center shadow-lg">
+                {data?.findBoard?.lists?.length === 0 ? "Add your first list" : "Add another list"}
+            </button>
         </div>
     </>
   )
