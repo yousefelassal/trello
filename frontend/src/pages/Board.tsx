@@ -15,8 +15,8 @@ export default function Board() {
 
   return (
     <>
-        <div className="w-screen -z-10 fixed inset-0 h-screen">
-            <img src={data?.findBoard?.bg} alt="board background" className="object-cover absolute inset-0" />
+        <div className="-z-10 fixed inset-0 overflow-hidden">
+            <img src={data?.findBoard?.bg} alt="board background" className="object-cover absolute w-screen h-screen inset-0" />
         </div>
         <div className="container flex flex-col">
             <div className="flex flex-col gap-2">
