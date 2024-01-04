@@ -3,7 +3,6 @@ const mongoose = require("mongoose")
 const schema = new mongoose.Schema({
     title: String,
     description: String,
-    position: Number
 })
 
 schema.set("toJSON", {
