@@ -1,0 +1,39 @@
+mutation updateBoard(
+    $updateBoardId: ID!,
+    $updatedAt: String!,
+    $title: String,
+    $description: String,
+    $bg: String,
+    $lists: [ID!],
+    $listsOrder: [ID!]
+  ) {
+  updateBoard(
+    id: $updateBoardId,
+    updatedAt: $updatedAt,
+    title: $title,
+    description: $description,
+    bg: $bg,
+    lists: $lists,
+    listsOrder: $listsOrder
+  ) {
+    id
+    title
+    description
+    bg
+    lists {
+      id
+      title
+      cards {
+        id
+        title
+        description
+        comments {
+          id
+          text
+        }
+      }
+    }
+    listsOrder
+  }
+
+}
