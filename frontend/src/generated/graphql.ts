@@ -186,7 +186,7 @@ export type AddListMutationVariables = Exact<{
 }>;
 
 
-export type AddListMutation = { __typename?: 'Mutation', addList?: { __typename?: 'Board', title: string, lists: Array<{ __typename?: 'List', id: string, title: string }> } | null };
+export type AddListMutation = { __typename?: 'Mutation', addList?: { __typename?: 'Board', id: string, title: string, bg: string, description?: string | null, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
 export type AllBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -277,10 +277,18 @@ export type AddCardMutationOptions = Apollo.BaseMutationOptions<AddCardMutation,
 export const AddListDocument = gql`
     mutation addList($boardId: ID!, $title: String!) {
   addList(boardId: $boardId, title: $title) {
+    id
     title
+    bg
+    description
     lists {
       id
       title
+      cards {
+        id
+        title
+        description
+      }
     }
   }
 }
