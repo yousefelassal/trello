@@ -67,7 +67,7 @@ const typeDefs = `
 
         updateList(
             id: ID!
-            title: String!
+            title: String
             cards: [ID!]
         ): List
 
