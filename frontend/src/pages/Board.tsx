@@ -16,6 +16,9 @@ import {
     UpdateListDocument,
     UpdateListMutation,
     UpdateListMutationVariables,
+    MoveCardsDocument,
+    MoveCardsMutation,
+    MoveCardsMutationVariables
 } from "@/generated/graphql"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -53,6 +56,8 @@ export default function Board() {
   const [updateBoard] = useMutation<UpdateBoardMutation, UpdateBoardMutationVariables>(UpdateBoardDocument)
 
   const [updateList] = useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument)
+
+  const [moveCards] = useMutation<MoveCardsMutation, MoveCardsMutationVariables>(MoveCardsDocument)
 
   if (error) return <div>{error.message}</div>
 
@@ -163,56 +168,83 @@ export default function Board() {
     // Moving from one list to another
     const startTaskIds = Array.from(start.cards?.map((card:any) => card.id) as string[] || []) //eslint-disable-line
     startTaskIds.splice(source.index, 1);
-    const newStart = {
-        ...start,
-        cards: startTaskIds.map((cardId) => {
-            return start.cards?.find((card:any) => card.id === cardId) as any //eslint-disable-line
-        })
-    }
-
     const finishTaskIds = Array.from(finish.cards?.map((card:any) => card.id) as string[] || []) //eslint-disable-line
     finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-        ...finish,
-        cards: finishTaskIds.map((cardId) => {
-            return finish.cards?.find((card:any) => card.id === cardId) as any //eslint-disable-line
+
+    const startAndFinish = [...start.cards as any[], ...finish.cards as any[]] //eslint-disable-line
+
+    const newStart = {
+        __typename: "List",
+        id: start.id,
+        title: start.title,
+        cards: startTaskIds.map((cardId) => {
+            return startAndFinish.find((card) => card.id === cardId) as any //eslint-disable-line
         })
     }
 
-    await updateList({
-        variables: {
-            id: start.id,
-            title: start.title,
-            cards: startTaskIds
-        },
-        optimisticResponse: {
-            __typename: "Mutation",
-            updateList: {
-                __typename: "List",
-                id: start.id,
-                title: start.title,
-                cards: newStart.cards
-            }
-        }
-    })
+    console.log(newStart)
 
-    await updateList({
+
+    const newFinish = {
+        __typename: "List",
+        id: finish.id,
+        title: finish.title,
+        cards: finishTaskIds.map((cardId) => {
+            return startAndFinish.find((card) => card.id === cardId) as any //eslint-disable-line
+        })
+    }
+
+    console.log(newFinish)
+
+    const newList = data?.findBoard?.lists?.map((list) => {
+        if(list.id === newStart.id) {
+            return newStart
+        }
+        if(list.id === newFinish.id) {
+            return newFinish
+        }
+        return list
+    }) as any[] //eslint-disable-line
+    
+
+    await moveCards({
         variables: {
-            id: finish.id,
-            title: finish.title,
-            cards: finishTaskIds
+            boardId: id as string,
+            fromListId: start.id,
+            toListId: finish.id,
+            fromCards: startTaskIds,
+            toCards: finishTaskIds,
+            updatedAt: new Date().toISOString()
         },
         optimisticResponse: {
             __typename: "Mutation",
-            updateList: {
-                __typename: "List",
-                id: finish.id,
-                title: finish.title,
-                cards: newFinish.cards
+            moveCardFromToList: {
+                __typename: "Board",
+                id: id as string,
+                title: data?.findBoard?.title as string,
+                bg: data?.findBoard?.bg as string,
+                updated_at: new Date().toISOString(),
+                description: data?.findBoard?.description as string,
+                lists: newList.map((list) => {
+                    return {
+                        __typename: "List",
+                        id: list.id,
+                        title: list.title,
+                        cards: list.cards?.map((card:any) => { //eslint-disable-line
+                            return {
+                                __typename: "Card",
+                                id: card.id,
+                                title: card.title,
+                                description: card.description
+                            }
+                        })
+                    }
+                })
             }
         }
     })
     }
+
 
   return (
     <>
