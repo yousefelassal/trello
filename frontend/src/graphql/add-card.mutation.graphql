@@ -1,0 +1,13 @@
+mutation addCard($listId: ID!, $title: String!) {
+  addCard(listId: $listId, title: $title) {
+    title
+    lists {
+      id
+      title
+      cards {
+        id
+        title
+      }
+    }
+  }
+}
