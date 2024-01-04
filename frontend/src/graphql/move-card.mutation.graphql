@@ -1,0 +1,18 @@
+mutation moveCards($boardId: ID!, $fromListId: ID!, $toListId: ID!, $updatedAt: String!) {
+  moveCardFromToList(boardId: $boardId, fromListId: $fromListId, toListId: $toListId, updated_at: $updatedAt) {
+    id
+    title
+    description
+    updated_at
+    bg
+    lists {
+      id
+      title
+      cards {
+        id
+        title
+        description
+      }
+    }
+  }
+}
