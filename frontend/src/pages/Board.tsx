@@ -12,7 +12,10 @@ import {
     AddCardMutationVariables,
     UpdateBoardDocument,
     UpdateBoardMutation,
-    UpdateBoardMutationVariables
+    UpdateBoardMutationVariables,
+    UpdateListDocument,
+    UpdateListMutation,
+    UpdateListMutationVariables,
 } from "@/generated/graphql"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -49,6 +52,8 @@ export default function Board() {
 
   const [updateBoard] = useMutation<UpdateBoardMutation, UpdateBoardMutationVariables>(UpdateBoardDocument)
 
+  const [updateList] = useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument)
+
   if (error) return <div>{error.message}</div>
 
   if (loading) return <div>Loading...</div>
@@ -66,7 +71,7 @@ export default function Board() {
     addCard({
         variables: {
             listId: list.id,
-            title: `New Card`
+            title: '7aga gdeeda'
         },
         optimisticResponse: {
             __typename: "Mutation",
@@ -79,7 +84,7 @@ export default function Board() {
                     {
                         __typename: "Card",
                         id: `temp-${Date.now()}`,
-                        title: "New Card",
+                        title: '7aga gdeeda',
                         description: ""
                     }
                 ]
@@ -127,41 +132,28 @@ export default function Board() {
       return;
     }
 
-    const start = data?.findBoard?.lists?.find((list) => list.id === source.droppableId) //eslint-disable-line
-    const finish = data?.findBoard?.lists?.find((list) => list.id === destination.droppableId) //eslint-disable-line
+    const start = data?.findBoard?.lists?.find((list) => list.id === source.droppableId) as any //eslint-disable-line
+    const finish = data?.findBoard?.lists?.find((list) => list.id === destination.droppableId) as any //eslint-disable-line
 
     if(start === finish) {
-      const newTaskIds = Array.from(start?.cards?.map((card) => card.id) as string[] || []) //eslint-disable-line
+      const newTaskIds = Array.from(start.cards?.map((card:any) => card.id) as string[] || []) //eslint-disable-line
       newTaskIds.splice(source.index, 1);
       newTaskIds.splice(destination.index, 0, draggableId);
-      const newList = data?.findBoard?.lists?.map((list) => {
-            if(list.id === source.droppableId) {
-                return {
-                    ...list,
-                    cards: newTaskIds
-                }
-            }
-            return list
-        }) as any[] //eslint-disable-line
-      await updateBoard({
+      await updateList({
         variables: {
-            updateBoardId: id as string,
-            updated_at: new Date().toISOString(),
-            title: data?.findBoard?.title as string,
-            bg: data?.findBoard?.bg as string,
-            description: data?.findBoard?.description as string,
-            lists: newList
+            id: start.id,
+            title: start.title,
+            cards: newTaskIds
         },
         optimisticResponse: {
             __typename: "Mutation",
-            updateBoard: {
-                __typename: "Board",
-                id: id as string,
-                title: data?.findBoard?.title as string,
-                updated_at: new Date().toISOString(),
-                bg: data?.findBoard?.bg as string,
-                description: data?.findBoard?.description as string,
-                lists: newList
+            updateList: {
+                __typename: "List",
+                id: start.id,
+                title: start.title,
+                cards: newTaskIds.map((cardId) => {
+                    return start.cards?.find((card:any) => card.id === cardId) as any //eslint-disable-line
+                })
             }
         }
       })
@@ -169,49 +161,54 @@ export default function Board() {
     }
 
     // Moving from one list to another
-    const startTaskIds = Array.from(start?.cards?.map((card) => card.id) as string[] || []) //eslint
+    const startTaskIds = Array.from(start.cards?.map((card:any) => card.id) as string[] || []) //eslint-disable-line
     startTaskIds.splice(source.index, 1);
     const newStart = {
-      ...start,
-      cards: startTaskIds
+        ...start,
+        cards: startTaskIds.map((cardId) => {
+            return start.cards?.find((card:any) => card.id === cardId) as any //eslint-disable-line
+        })
     }
 
-    const finishTaskIds = Array.from(finish?.cards?.map((card) => card.id) as string[] || []) //eslint
+    const finishTaskIds = Array.from(finish.cards?.map((card:any) => card.id) as string[] || []) //eslint-disable-line
     finishTaskIds.splice(destination.index, 0, draggableId);
     const newFinish = {
-      ...finish,
-      cards: finishTaskIds
+        ...finish,
+        cards: finishTaskIds.map((cardId) => {
+            return finish.cards?.find((card:any) => card.id === cardId) as any //eslint-disable-line
+        })
     }
 
-    const newList = data?.findBoard?.lists?.map((list) => {
-        if(list.id === source.droppableId) {
-            return newStart
-        }
-        if(list.id === destination.droppableId) {
-            return newFinish
-        }
-        return list
-    }) as any[] //eslint-disable-line
-
-    await updateBoard({
+    await updateList({
         variables: {
-            updateBoardId: id as string,
-            updated_at: new Date().toISOString(),
-            title: data?.findBoard?.title as string,
-            bg: data?.findBoard?.bg as string,
-            description: data?.findBoard?.description as string,
-            lists: newList
+            id: start.id,
+            title: start.title,
+            cards: startTaskIds
         },
         optimisticResponse: {
             __typename: "Mutation",
-            updateBoard: {
-                __typename: "Board",
-                id: id as string,
-                title: data?.findBoard?.title as string,
-                bg: data?.findBoard?.bg as string,
-                updated_at: new Date().toISOString(),
-                description: data?.findBoard?.description as string,
-                lists: newList
+            updateList: {
+                __typename: "List",
+                id: start.id,
+                title: start.title,
+                cards: newStart.cards
+            }
+        }
+    })
+
+    await updateList({
+        variables: {
+            id: finish.id,
+            title: finish.title,
+            cards: finishTaskIds
+        },
+        optimisticResponse: {
+            __typename: "Mutation",
+            updateList: {
+                __typename: "List",
+                id: finish.id,
+                title: finish.title,
+                cards: newFinish.cards
             }
         }
     })
