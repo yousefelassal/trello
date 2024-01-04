@@ -6,7 +6,10 @@ import {
     FindBoardQueryVariables,
     AddListDocument,
     AddListMutation,
-    AddListMutationVariables
+    AddListMutationVariables,
+    AddCardDocument,
+    AddCardMutation,
+    AddCardMutationVariables,
 } from "@/generated/graphql"
 
 export default function Board() {
@@ -38,6 +41,8 @@ export default function Board() {
     }
   })
 
+  const [addCard] = useMutation<AddCardMutation, AddCardMutationVariables>(AddCardDocument)
+
   if (error) return <div>{error.message}</div>
 
   if (loading) return <div>Loading...</div>
@@ -47,6 +52,32 @@ export default function Board() {
         variables: {
             boardId: id as string,
             title: `New List`
+        }
+    })
+  }
+
+  const addNewCard = async (list:any) => { //eslint-disable-line
+    addCard({
+        variables: {
+            listId: list.id,
+            title: `New Card`
+        },
+        optimisticResponse: {
+            __typename: "Mutation",
+            addCard: {
+                __typename: "List",
+                id: list.id,
+                title: list.title,
+                cards: [
+                    ...list.cards as any[], //eslint-disable-line
+                    {
+                        __typename: "Card",
+                        id: `temp-${Date.now()}`,
+                        title: "New Card",
+                        description: ""
+                    }
+                ]
+            }
         }
     })
   }
@@ -70,6 +101,12 @@ export default function Board() {
                                 <div>{card.description}</div>
                             </div>
                         ))}
+                        <button
+                            onClick={() => addNewCard(list)}
+                            className="bg-[#ffffff3d] hover:bg-[#ffffff2a] transition rounded-lg h-fit p-2 flex items-center shadow-lg"
+                        >
+                            {list.cards?.length === 0 ? "Add a card" : "Add another card"}
+                        </button>
                     </div>
                 </div>
             ))}
