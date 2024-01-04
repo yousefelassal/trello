@@ -114,9 +114,9 @@ export type MutationLoginArgs = {
 
 export type MutationMoveCardFromToListArgs = {
   boardId: Scalars['ID']['input'];
-  fromCards?: InputMaybe<Array<Scalars['ID']['input']>>;
+  fromCards: Array<Scalars['ID']['input']>;
   fromListId: Scalars['ID']['input'];
-  toCards?: InputMaybe<Array<Scalars['ID']['input']>>;
+  toCards: Array<Scalars['ID']['input']>;
   toListId: Scalars['ID']['input'];
   updated_at: Scalars['String']['input'];
 };
@@ -237,6 +237,8 @@ export type MoveCardsMutationVariables = Exact<{
   boardId: Scalars['ID']['input'];
   fromListId: Scalars['ID']['input'];
   toListId: Scalars['ID']['input'];
+  fromCards: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+  toCards: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
   updatedAt: Scalars['String']['input'];
 }>;
 
@@ -569,11 +571,13 @@ export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const MoveCardsDocument = gql`
-    mutation moveCards($boardId: ID!, $fromListId: ID!, $toListId: ID!, $updatedAt: String!) {
+    mutation moveCards($boardId: ID!, $fromListId: ID!, $toListId: ID!, $fromCards: [ID!]!, $toCards: [ID!]!, $updatedAt: String!) {
   moveCardFromToList(
     boardId: $boardId
     fromListId: $fromListId
     toListId: $toListId
+    fromCards: $fromCards
+    toCards: $toCards
     updated_at: $updatedAt
   ) {
     id
@@ -611,6 +615,8 @@ export type MoveCardsMutationFn = Apollo.MutationFunction<MoveCardsMutation, Mov
  *      boardId: // value for 'boardId'
  *      fromListId: // value for 'fromListId'
  *      toListId: // value for 'toListId'
+ *      fromCards: // value for 'fromCards'
+ *      toCards: // value for 'toCards'
  *      updatedAt: // value for 'updatedAt'
  *   },
  * });
