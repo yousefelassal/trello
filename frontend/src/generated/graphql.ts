@@ -172,6 +172,22 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type AddCardMutationVariables = Exact<{
+  listId: Scalars['ID']['input'];
+  title: Scalars['String']['input'];
+}>;
+
+
+export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'Board', title: string, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string }> }> } | null };
+
+export type AddListMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  title: Scalars['String']['input'];
+}>;
+
+
+export type AddListMutation = { __typename?: 'Mutation', addList?: { __typename?: 'Board', title: string, lists: Array<{ __typename?: 'List', id: string, title: string }> } | null };
+
 export type AllBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -216,6 +232,86 @@ export type SignupMutationVariables = Exact<{
 export type SignupMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', name: string, username: string } | null };
 
 
+export const AddCardDocument = gql`
+    mutation addCard($listId: ID!, $title: String!) {
+  addCard(listId: $listId, title: $title) {
+    title
+    lists {
+      id
+      title
+      cards {
+        id
+        title
+      }
+    }
+  }
+}
+    `;
+export type AddCardMutationFn = Apollo.MutationFunction<AddCardMutation, AddCardMutationVariables>;
+
+/**
+ * __useAddCardMutation__
+ *
+ * To run a mutation, you first call `useAddCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addCardMutation, { data, loading, error }] = useAddCardMutation({
+ *   variables: {
+ *      listId: // value for 'listId'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useAddCardMutation(baseOptions?: Apollo.MutationHookOptions<AddCardMutation, AddCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddCardMutation, AddCardMutationVariables>(AddCardDocument, options);
+      }
+export type AddCardMutationHookResult = ReturnType<typeof useAddCardMutation>;
+export type AddCardMutationResult = Apollo.MutationResult<AddCardMutation>;
+export type AddCardMutationOptions = Apollo.BaseMutationOptions<AddCardMutation, AddCardMutationVariables>;
+export const AddListDocument = gql`
+    mutation addList($boardId: ID!, $title: String!) {
+  addList(boardId: $boardId, title: $title) {
+    title
+    lists {
+      id
+      title
+    }
+  }
+}
+    `;
+export type AddListMutationFn = Apollo.MutationFunction<AddListMutation, AddListMutationVariables>;
+
+/**
+ * __useAddListMutation__
+ *
+ * To run a mutation, you first call `useAddListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addListMutation, { data, loading, error }] = useAddListMutation({
+ *   variables: {
+ *      boardId: // value for 'boardId'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useAddListMutation(baseOptions?: Apollo.MutationHookOptions<AddListMutation, AddListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddListMutation, AddListMutationVariables>(AddListDocument, options);
+      }
+export type AddListMutationHookResult = ReturnType<typeof useAddListMutation>;
+export type AddListMutationResult = Apollo.MutationResult<AddListMutation>;
+export type AddListMutationOptions = Apollo.BaseMutationOptions<AddListMutation, AddListMutationVariables>;
 export const AllBoardsDocument = gql`
     query allBoards {
   allBoards {
