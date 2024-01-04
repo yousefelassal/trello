@@ -1,0 +1,9 @@
+mutation addList($boardId: ID!, $title: String!) {
+  addList(boardId: $boardId, title: $title) {
+    title
+    lists {
+      id
+      title
+    }
+  }
+}
