@@ -75,8 +75,8 @@ const typeDefs = `
             boardId: ID!
             fromListId: ID!
             toListId: ID!
-            fromCards: [ID!]
-            toCards: [ID!]
+            fromCards: [ID!]!
+            toCards: [ID!]!
             updated_at: String!
         ): Board
 
@@ -196,7 +196,7 @@ const resolvers = {
             const board = await Board.findById(args.boardId)
             board.updated_at = args.updated_at
             await board.save()
-            
+
             if(board.user.toString() !== user._id.toString()) {
                 throw new GraphQLError("Not authenticated", {
                     extension: {
