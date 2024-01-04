@@ -22,8 +22,6 @@ const Login = ({ setToken }:{ setToken:any }) => {
         event.preventDefault()
     
         login({ variables: { username, password } })
-        setUsername('')
-        setPassword('')
     }
     
     return (
