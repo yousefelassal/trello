@@ -8,6 +8,7 @@ import {
     SignupMutation,
     SignupMutationVariables,
 } from "@/generated/graphql"
+import { toast } from "sonner"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Signup = ({ setToken }:{ setToken: any }) => {
@@ -15,7 +16,12 @@ const Signup = ({ setToken }:{ setToken: any }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     
-    const [signup] = useMutation<SignupMutation, SignupMutationVariables>(SignupDocument)
+    const [signup] = useMutation<SignupMutation, SignupMutationVariables>(SignupDocument,{
+        onError(error) {
+            toast.error(error.message)
+        }
+    })
+
     const [login] = useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, {
         onCompleted(data) {
             const token = data?.login?.value
@@ -28,8 +34,6 @@ const Signup = ({ setToken }:{ setToken: any }) => {
 
         await signup({ variables: { name, username, password } })
         await login({ variables: { username, password } })
-        setUsername('')
-        setPassword('')
     }
     
     return (
