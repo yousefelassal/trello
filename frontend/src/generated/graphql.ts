@@ -122,7 +122,6 @@ export type MutationUpdateBoardArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   lists?: InputMaybe<Array<Scalars['ID']['input']>>;
-  listsOrder?: InputMaybe<Array<Scalars['ID']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   updated_at: Scalars['String']['input'];
 };
@@ -230,6 +229,18 @@ export type SignupMutationVariables = Exact<{
 
 
 export type SignupMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', name: string, username: string } | null };
+
+export type UpdateBoardMutationVariables = Exact<{
+  updateBoardId: Scalars['ID']['input'];
+  updated_at: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  bg?: InputMaybe<Scalars['String']['input']>;
+  lists?: InputMaybe<Array<Scalars['ID']['input']> | Scalars['ID']['input']>;
+}>;
+
+
+export type UpdateBoardMutation = { __typename?: 'Mutation', updateBoard?: { __typename?: 'Board', id: string, title: string, description?: string | null, updated_at?: string | null, bg: string, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
 
 export const AddCardDocument = gql`
@@ -562,3 +573,61 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const UpdateBoardDocument = gql`
+    mutation updateBoard($updateBoardId: ID!, $updated_at: String!, $title: String, $description: String, $bg: String, $lists: [ID!]) {
+  updateBoard(
+    id: $updateBoardId
+    updated_at: $updated_at
+    title: $title
+    description: $description
+    bg: $bg
+    lists: $lists
+  ) {
+    id
+    title
+    description
+    updated_at
+    bg
+    lists {
+      id
+      title
+      cards {
+        id
+        title
+        description
+      }
+    }
+  }
+}
+    `;
+export type UpdateBoardMutationFn = Apollo.MutationFunction<UpdateBoardMutation, UpdateBoardMutationVariables>;
+
+/**
+ * __useUpdateBoardMutation__
+ *
+ * To run a mutation, you first call `useUpdateBoardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBoardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBoardMutation, { data, loading, error }] = useUpdateBoardMutation({
+ *   variables: {
+ *      updateBoardId: // value for 'updateBoardId'
+ *      updated_at: // value for 'updated_at'
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      bg: // value for 'bg'
+ *      lists: // value for 'lists'
+ *   },
+ * });
+ */
+export function useUpdateBoardMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBoardMutation, UpdateBoardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBoardMutation, UpdateBoardMutationVariables>(UpdateBoardDocument, options);
+      }
+export type UpdateBoardMutationHookResult = ReturnType<typeof useUpdateBoardMutation>;
+export type UpdateBoardMutationResult = Apollo.MutationResult<UpdateBoardMutation>;
+export type UpdateBoardMutationOptions = Apollo.BaseMutationOptions<UpdateBoardMutation, UpdateBoardMutationVariables>;
