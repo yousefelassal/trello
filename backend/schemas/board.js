@@ -71,6 +71,15 @@ const typeDefs = `
             cards: [ID!]
         ): List
 
+        moveCardFromToList(
+            boardId: ID!
+            fromListId: ID!
+            toListId: ID!
+            fromCards: [ID!]
+            toCards: [ID!]
+            updated_at: String!
+        ): Board
+
         deleteList(
             id: ID!
         ): List
@@ -173,6 +182,38 @@ const resolvers = {
 
             const updatedBoard = await Board.findByIdAndUpdate(args.id, { ...args }, { new: true })
             return updatedBoard.populate({ path: 'lists', populate: { path: 'cards' }})
+        },
+        moveCardFromToList: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLError("Not authenticated", {
+                    extension: {
+                        code: 'UNAUTHENTICATED'
+                    }
+                })
+            }
+            
+            const board = await Board.findById(args.boardId)
+            board.updated_at = args.updated_at
+            await board.save()
+            
+            if(board.user.toString() !== user._id.toString()) {
+                throw new GraphQLError("Not authenticated", {
+                    extension: {
+                        code: 'UNAUTHENTICATED'
+                    }
+                })
+            }
+
+            const fromList = await List.findById(args.fromListId)
+            fromList.cards = args.fromCards
+            await fromList.save()
+
+            const toList = await List.findById(args.toListId)
+            toList.cards = args.toCards
+            await toList.save()
+
+            return board.populate({ path: 'lists', populate: { path: 'cards' }})
         },
         saveBoard: async (root, args, context) => {
             const user = context.currentUser
