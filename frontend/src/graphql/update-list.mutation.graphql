@@ -1,0 +1,11 @@
+mutation updateList ($id: ID!, $title: String, $cards: [ID!]) {
+  updateList(id: $id, title: $title, cards: $cards) {
+    id
+    title
+    cards {
+      id
+      title
+      description
+    }
+  }
+}
