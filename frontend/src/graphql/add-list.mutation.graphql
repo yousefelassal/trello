@@ -1,9 +1,17 @@
 mutation addList($boardId: ID!, $title: String!) {
   addList(boardId: $boardId, title: $title) {
+    id
     title
+    bg
+    description
     lists {
       id
       title
+      cards {
+        id
+        title
+        description
+      }
     }
   }
 }
