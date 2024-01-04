@@ -2,7 +2,6 @@ const mongoose = require("mongoose")
 
 const schema = new mongoose.Schema({
     title: String,
-    position: Number,
     cards: [
         {
             type: mongoose.Schema.Types.ObjectId,
