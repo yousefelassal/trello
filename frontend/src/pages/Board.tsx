@@ -88,93 +88,133 @@ export default function Board() {
     })
   }
 
-    const onDragEnd = async (result:any) => { //eslint-disable-line
-        const { destination, source, draggableId, type } = result;
-    
-        if(!destination) return;
-    
-        if(
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-        ) return;
-    
-        if(type === "column") {
-            const newLists = Array.from(data?.findBoard?.lists as any[]) //eslint-disable-line
-            newLists.splice(source.index, 1)
-            newLists.splice(destination.index, 0, data?.findBoard?.lists?.find((list) => list.id === draggableId) as any) //eslint-disable-line
-            updateBoard({
-                variables: {
-                    updateBoardId: id as string,
-                    title: data?.findBoard?.title as string,
-                    bg: data?.findBoard?.bg as string,
-                    description: data?.findBoard?.description as string,
-                    lists: newLists,
-                    updated_at: new Date().toISOString()
-                }
-            })
-            return
-        }
-    
-        const start = data?.findBoard?.lists?.find((list) => list.id === source.droppableId) as any //eslint-disable-line
-        const finish = data?.findBoard?.lists?.find((list) => list.id === destination.droppableId) as any //eslint-disable-line
-    
-        if(start === finish) {
-            const newCards = Array.from(start.cards as any[]) //eslint-disable-line
-            newCards.splice(source.index, 1)
-            newCards.splice(destination.index, 0, start.cards?.find((card:any) => card.id === draggableId) as any) //eslint-disable-line
-            updateBoard({
-                variables: {
-                    updateBoardId: id as string,
-                    title: data?.findBoard?.title as string,
-                    bg: data?.findBoard?.bg as string,
-                    updated_at: new Date().toISOString(),
-                    description: data?.findBoard?.description as string,
-                    lists: data?.findBoard?.lists?.map((list) => {
-                        if(list.id === source.droppableId) {
-                            return {
-                                ...list,
-                                cards: newCards
-                            }
-                        }
-                        return list
-                    }) as any[] //eslint-disable-line
-                }
-            })
-            return
-        }
-    
-        const startCards = Array.from(start.cards as any[]) //eslint-disable-line
-        startCards.splice(source.index, 1)
-        const newStart = {
-            ...start,
-            cards: startCards
-        }
+  const onDragEnd = async (result:any) => { //eslint-disable-line
+    const { destination, source, draggableId, type } = result;
 
-        const finishCards = Array.from(finish.cards as any[]) //eslint-disable-line
-        finishCards.splice(destination.index, 0, start.cards?.find((card:any) => card.id === draggableId) as any) //eslint-disable-line
-        const newFinish = {
-            ...finish,
-            cards: finishCards
-        }
+    if (!destination) return;
 
-        updateBoard({
-            variables: {
-                updateBoardId: id as string,
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+
+    // Moving columns
+    if (type === 'column') {
+      const newColumnOrder = Array.from(data?.findBoard?.lists?.map((list) => list.id) as string[] || []) //eslint-disable-line
+      newColumnOrder.splice(source.index, 1);
+      newColumnOrder.splice(destination.index, 0, draggableId);
+      await updateBoard({
+        variables: {
+            updateBoardId: id as string,
+            updated_at: new Date().toISOString(),
+            title: data?.findBoard?.title as string,
+            bg: data?.findBoard?.bg as string,
+            description: data?.findBoard?.description as string,
+            lists: newColumnOrder
+        },
+        optimisticResponse: {
+            __typename: "Mutation",
+            updateBoard: {
+                __typename: "Board",
+                id: id as string,
                 title: data?.findBoard?.title as string,
                 bg: data?.findBoard?.bg as string,
                 updated_at: new Date().toISOString(),
                 description: data?.findBoard?.description as string,
-                lists: data?.findBoard?.lists?.map((list) => {
-                    if(list.id === source.droppableId) {
-                        return newStart
-                    }
-                    if(list.id === destination.droppableId) {
-                        return newFinish
-                    }
-                    return list
-                }) as any[] //eslint-disable-line
+                lists: newColumnOrder.map((listId) => {
+                    return data?.findBoard?.lists?.find((list) => list.id === listId) as any //eslint-disable-line
+                })
             }
-        })
+        }
+      })
+      return;
+    }
+
+    const start = data?.findBoard?.lists?.find((list) => list.id === source.droppableId) //eslint-disable-line
+    const finish = data?.findBoard?.lists?.find((list) => list.id === destination.droppableId) //eslint-disable-line
+
+    if(start === finish) {
+      const newTaskIds = Array.from(start?.cards?.map((card) => card.id) as string[] || []) //eslint-disable-line
+      newTaskIds.splice(source.index, 1);
+      newTaskIds.splice(destination.index, 0, draggableId);
+      const newList = data?.findBoard?.lists?.map((list) => {
+            if(list.id === source.droppableId) {
+                return {
+                    ...list,
+                    cards: newTaskIds
+                }
+            }
+            return list
+        }) as any[] //eslint-disable-line
+      await updateBoard({
+        variables: {
+            updateBoardId: id as string,
+            updated_at: new Date().toISOString(),
+            title: data?.findBoard?.title as string,
+            bg: data?.findBoard?.bg as string,
+            description: data?.findBoard?.description as string,
+            lists: newList
+        },
+        optimisticResponse: {
+            __typename: "Mutation",
+            updateBoard: {
+                __typename: "Board",
+                id: id as string,
+                title: data?.findBoard?.title as string,
+                updated_at: new Date().toISOString(),
+                bg: data?.findBoard?.bg as string,
+                description: data?.findBoard?.description as string,
+                lists: newList
+            }
+        }
+      })
+      return;
+    }
+
+    // Moving from one list to another
+    const startTaskIds = Array.from(start?.cards?.map((card) => card.id) as string[] || []) //eslint
+    startTaskIds.splice(source.index, 1);
+    const newStart = {
+      ...start,
+      cards: startTaskIds
+    }
+
+    const finishTaskIds = Array.from(finish?.cards?.map((card) => card.id) as string[] || []) //eslint
+    finishTaskIds.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...finish,
+      cards: finishTaskIds
+    }
+
+    const newList = data?.findBoard?.lists?.map((list) => {
+        if(list.id === source.droppableId) {
+            return newStart
+        }
+        if(list.id === destination.droppableId) {
+            return newFinish
+        }
+        return list
+    }) as any[] //eslint-disable-line
+
+    await updateBoard({
+        variables: {
+            updateBoardId: id as string,
+            updated_at: new Date().toISOString(),
+            title: data?.findBoard?.title as string,
+            bg: data?.findBoard?.bg as string,
+            description: data?.findBoard?.description as string,
+            lists: newList
+        },
+        optimisticResponse: {
+            __typename: "Mutation",
+            updateBoard: {
+                __typename: "Board",
+                id: id as string,
+                title: data?.findBoard?.title as string,
+                bg: data?.findBoard?.bg as string,
+                updated_at: new Date().toISOString(),
+                description: data?.findBoard?.description as string,
+                lists: newList
+            }
+        }
+    })
     }
 
   return (
