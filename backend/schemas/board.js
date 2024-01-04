@@ -48,7 +48,6 @@ const typeDefs = `
             description: String
             bg: String
             lists: [ID!]
-            listsOrder: [ID!]
             updated_at: String!
         ): Board
 
