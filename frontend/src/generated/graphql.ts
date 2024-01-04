@@ -56,6 +56,7 @@ export type Mutation = {
   deleteCard?: Maybe<Card>;
   deleteList?: Maybe<List>;
   login?: Maybe<Token>;
+  moveCardFromToList?: Maybe<Board>;
   saveBoard?: Maybe<Board>;
   updateBoard?: Maybe<Board>;
   updateCard?: Maybe<Card>;
@@ -108,6 +109,16 @@ export type MutationDeleteListArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationMoveCardFromToListArgs = {
+  boardId: Scalars['ID']['input'];
+  fromCards?: InputMaybe<Array<Scalars['ID']['input']>>;
+  fromListId: Scalars['ID']['input'];
+  toCards?: InputMaybe<Array<Scalars['ID']['input']>>;
+  toListId: Scalars['ID']['input'];
+  updated_at: Scalars['String']['input'];
 };
 
 
@@ -221,6 +232,16 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', username: string, name: string } | null };
+
+export type MoveCardsMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  fromListId: Scalars['ID']['input'];
+  toListId: Scalars['ID']['input'];
+  updatedAt: Scalars['String']['input'];
+}>;
+
+
+export type MoveCardsMutation = { __typename?: 'Mutation', moveCardFromToList?: { __typename?: 'Board', id: string, title: string, description?: string | null, updated_at?: string | null, bg: string, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
 export type SignupMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -547,6 +568,60 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MoveCardsDocument = gql`
+    mutation moveCards($boardId: ID!, $fromListId: ID!, $toListId: ID!, $updatedAt: String!) {
+  moveCardFromToList(
+    boardId: $boardId
+    fromListId: $fromListId
+    toListId: $toListId
+    updated_at: $updatedAt
+  ) {
+    id
+    title
+    description
+    updated_at
+    bg
+    lists {
+      id
+      title
+      cards {
+        id
+        title
+        description
+      }
+    }
+  }
+}
+    `;
+export type MoveCardsMutationFn = Apollo.MutationFunction<MoveCardsMutation, MoveCardsMutationVariables>;
+
+/**
+ * __useMoveCardsMutation__
+ *
+ * To run a mutation, you first call `useMoveCardsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMoveCardsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [moveCardsMutation, { data, loading, error }] = useMoveCardsMutation({
+ *   variables: {
+ *      boardId: // value for 'boardId'
+ *      fromListId: // value for 'fromListId'
+ *      toListId: // value for 'toListId'
+ *      updatedAt: // value for 'updatedAt'
+ *   },
+ * });
+ */
+export function useMoveCardsMutation(baseOptions?: Apollo.MutationHookOptions<MoveCardsMutation, MoveCardsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MoveCardsMutation, MoveCardsMutationVariables>(MoveCardsDocument, options);
+      }
+export type MoveCardsMutationHookResult = ReturnType<typeof useMoveCardsMutation>;
+export type MoveCardsMutationResult = Apollo.MutationResult<MoveCardsMutation>;
+export type MoveCardsMutationOptions = Apollo.BaseMutationOptions<MoveCardsMutation, MoveCardsMutationVariables>;
 export const SignupDocument = gql`
     mutation signup($name: String!, $username: String!, $password: String!) {
   createUser(name: $name, username: $username, password: $password) {
