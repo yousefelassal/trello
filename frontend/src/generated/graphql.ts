@@ -48,18 +48,18 @@ export type List = {
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
-  addCard?: Maybe<Board>;
+  addCard?: Maybe<List>;
   addList?: Maybe<Board>;
   createBoard?: Maybe<Board>;
   createUser?: Maybe<User>;
   deleteBoard?: Maybe<Board>;
-  deleteCard?: Maybe<Board>;
-  deleteList?: Maybe<Board>;
+  deleteCard?: Maybe<Card>;
+  deleteList?: Maybe<List>;
   login?: Maybe<Token>;
   saveBoard?: Maybe<Board>;
   updateBoard?: Maybe<Board>;
-  updateCard?: Maybe<Board>;
-  updateList?: Maybe<Board>;
+  updateCard?: Maybe<Card>;
+  updateList?: Maybe<List>;
 };
 
 
@@ -178,7 +178,7 @@ export type AddCardMutationVariables = Exact<{
 }>;
 
 
-export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'Board', id: string, title: string, bg: string, description?: string | null, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
+export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> } | null };
 
 export type AddListMutationVariables = Exact<{
   boardId: Scalars['ID']['input'];
@@ -237,16 +237,10 @@ export const AddCardDocument = gql`
   addCard(listId: $listId, title: $title) {
     id
     title
-    bg
-    description
-    lists {
+    cards {
       id
       title
-      cards {
-        id
-        title
-        description
-      }
+      description
     }
   }
 }
