@@ -178,7 +178,7 @@ export type AddCardMutationVariables = Exact<{
 }>;
 
 
-export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'Board', title: string, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string }> }> } | null };
+export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'Board', id: string, title: string, bg: string, description?: string | null, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
 export type AddListMutationVariables = Exact<{
   boardId: Scalars['ID']['input'];
@@ -235,13 +235,17 @@ export type SignupMutation = { __typename?: 'Mutation', createUser?: { __typenam
 export const AddCardDocument = gql`
     mutation addCard($listId: ID!, $title: String!) {
   addCard(listId: $listId, title: $title) {
+    id
     title
+    bg
+    description
     lists {
       id
       title
       cards {
         id
         title
+        description
       }
     }
   }
