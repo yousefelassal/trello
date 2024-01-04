@@ -280,7 +280,7 @@ export default function Board() {
                     <div 
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className={`flex flex-col gap-2 transition ${snapshot.isDraggingOver ? 'bg-blue-400' : ''}`}
+                      className={`flex flex-col rounded-lg gap-2 transition ${snapshot.isDraggingOver ? 'bg-[#595956]' : ''}`}
                     >
                         {list.cards?.map((card, index) => (
                             <Draggable draggableId={card.id} index={index} key={card.id}>
@@ -289,8 +289,8 @@ export default function Board() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`${snapshot.isDragging ? 'bg-slate-400' : 'bg-gray-200' }
-                                  flex bg-[#22272B] rounded-lg justify-center px-2 py-1 shadow-2xl flex-col`}
+                                  className={`${snapshot.isDragging ? 'bg-[#353f48] border-blue-500' : 'bg-[#22272B]' }
+                                  flex rounded-lg border-2 border-[#22272B] hover:border-blue-500 justify-center px-2 py-1 shadow-2xl flex-col`}
                                 >
                                 <h4 className="text-lg font-bold">{card.title}</h4>
                                 <div>{card.description}</div>
@@ -299,15 +299,15 @@ export default function Board() {
                             </Draggable>
                         ))}
                         {provided.placeholder}
+                        </div>
+                        )}
+                        </Droppable>
                         <button
                             onClick={() => addNewCard(list)}
                             className="bg-[#ffffff3d] hover:bg-[#ffffff2a] transition rounded-lg h-fit p-2 flex items-center shadow-lg"
                         >
                             {list.cards?.length === 0 ? "Add a card" : "Add another card"}
                         </button>
-                    </div>
-                    )}
-                    </Droppable>
                 </div>
                 )}
                 </Draggable>
