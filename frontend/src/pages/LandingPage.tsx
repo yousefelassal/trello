@@ -1,4 +1,3 @@
-import Spotlight from "@/components/ui/spotlights";
 import TypewriterEffectSmooth from "@/components/ui/typewriter-effect";
 import { ChevronRight } from "lucide-react";
 import Bento from "@/components/Bento";
@@ -21,10 +20,6 @@ export default function LandingPage() {
   return (
     <>
     <div className="h-[40rem] md:min-h-screen w-full rounded-md flex items-center justify-center antialiased bg-grid-white/[0.02] relative overflow-hidden">
-      <Spotlight
-        className="top-10 left-0 md:left-60 md:-top-20"
-        fill="white"
-      />
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
       <div className=" p-4 max-w-7xl  mx-auto relative z-10  w-full pt-20 md:pt-0">
         <div className="flex items-center flex-col">
