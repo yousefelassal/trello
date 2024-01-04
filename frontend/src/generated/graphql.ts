@@ -24,6 +24,7 @@ export type Board = {
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   lists: Array<List>;
+  listsOrder: Array<List>;
   saved?: Maybe<Scalars['Boolean']['output']>;
   title: Scalars['String']['output'];
   updated_at?: Maybe<Scalars['String']['output']>;
@@ -34,7 +35,6 @@ export type Card = {
   __typename?: 'Card';
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
-  position: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -42,7 +42,6 @@ export type List = {
   __typename?: 'List';
   cards: Array<Card>;
   id: Scalars['ID']['output'];
-  position: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -67,20 +66,18 @@ export type Mutation = {
 export type MutationAddCardArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   listId: Scalars['ID']['input'];
-  position: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
 
 
 export type MutationAddListArgs = {
   boardId: Scalars['ID']['input'];
-  position: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
 
 
 export type MutationCreateBoardArgs = {
-  bg?: InputMaybe<Scalars['String']['input']>;
+  bg: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
 };
@@ -124,21 +121,22 @@ export type MutationUpdateBoardArgs = {
   bg?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  title: Scalars['String']['input'];
+  lists?: InputMaybe<Array<Scalars['ID']['input']>>;
+  listsOrder?: InputMaybe<Array<Scalars['ID']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updated_at: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateCardArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  position: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
 
 
 export type MutationUpdateListArgs = {
   id: Scalars['ID']['input'];
-  position: Scalars['Int']['input'];
   title: Scalars['String']['input'];
 };
 
@@ -193,7 +191,7 @@ export type FindBoardQueryVariables = Exact<{
 }>;
 
 
-export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, description?: string | null, lists: Array<{ __typename?: 'List', id: string, title: string, position: number, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null, position: number }> }> } | null };
+export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, description?: string | null, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -310,12 +308,10 @@ export const FindBoardDocument = gql`
     lists {
       id
       title
-      position
       cards {
         id
         title
         description
-        position
       }
     }
   }
