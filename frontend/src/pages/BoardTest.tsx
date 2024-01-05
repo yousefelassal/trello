@@ -1,5 +1,6 @@
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useState } from 'react';
+import UploadImage from '@/components/UploadImage';
 
 const initialData:any = { //eslint-disable-line
     tasks: {
@@ -188,6 +189,7 @@ export default function BoardTest() {
             )}
         </Droppable>
         <button onClick={addColumn}>Add Column</button>
+        <UploadImage />
       </DragDropContext>
     </div>
   )
