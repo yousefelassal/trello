@@ -11,7 +11,7 @@ const f = createUploadthing({
 });
 
 export const uploadRouter = {
-  ImageHandler: f({
+  image: f({
     image: {
       maxFileSize: "4MB",
       maxFileCount: 1
