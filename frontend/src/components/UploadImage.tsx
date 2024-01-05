@@ -9,13 +9,11 @@ export default function UploadImage() {
       <div>
         <UploadDropzone
           endpoint="image"
-          onClientUploadComplete={(file:any) => { //eslint-disable-line
-            console.log("uploaded", file);
-            alert("Upload complete");
+          onClientUploadComplete={(res) => { //eslint-disable-line
+            console.log("File: ", res);
           }}
           onUploadError={(error:any) => { //eslint-disable-line
             console.error(error, error.cause);
-            alert("Upload failed");
           }}
         />
       </div>
