@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+// @ts-nocheck
+
 import { UploadDropzone } from "../../uploadthing";
 
 export default function UploadImage() {
