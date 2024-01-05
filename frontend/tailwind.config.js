@@ -1,12 +1,12 @@
 const svgToDataUri = require("mini-svg-data-uri");
- 
+const { withUt } = require("uploadthing/tw");
 const colors = require("tailwindcss/colors");
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+module.exports = withUt({
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -118,7 +118,7 @@ module.exports = {
       );
     }
   ],
-}
+})
 
 function addVariablesForColors({ addBase, theme }) {
   let allColors = flattenColorPalette(theme("colors"));
