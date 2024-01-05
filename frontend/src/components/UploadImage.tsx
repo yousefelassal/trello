@@ -15,6 +15,9 @@ export default function UploadImage() {
           onUploadError={(error:any) => { //eslint-disable-line
             console.error(error, error.cause);
           }}
+          appearance={{
+            container: "border-gray-400 border-dashed"
+          }}
         />
       </div>
     </div>
