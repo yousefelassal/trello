@@ -9,9 +9,11 @@ import {
     SignupMutationVariables,
 } from "@/generated/graphql"
 import { toast } from "sonner"
+import { useDocumentTitle } from '@uidotdev/usehooks'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Signup = ({ setToken }:{ setToken: any }) => {
+    useDocumentTitle('Signup | Trello 3al daya2')
     const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
