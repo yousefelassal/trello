@@ -3,8 +3,10 @@ import { ChevronRight } from "lucide-react";
 import Bento from "@/components/Bento";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
+import { useDocumentTitle } from '@uidotdev/usehooks'
 
 export default function LandingPage() {
+  useDocumentTitle('Trello 3al daya2')
   const words = [
     {
       text: "bas"
