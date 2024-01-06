@@ -19,7 +19,7 @@ export default function Home() {
       <div className="flex flex-col gap-2">
         <h2 className="text-2xl font-bold">Your Boards</h2>
         {boards?.allBoards?.length === 0 && <div>You don't have any boards yet</div>}
-        <div className="grid md:auto-rows grid-cols-1 md:grid-cols-3 gap-4 max-w-7xl">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(272px,1fr))] items-center justify-center grid-auto-rows gap-4 max-w-7xl">
           {boardsLoading && <div>Loading...</div>}
           {errorBoards && <div>{errorBoards.message}</div>}
           {boards?.allBoards?.map((board) => (
