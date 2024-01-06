@@ -9,6 +9,7 @@ import {
     AllBoardsDocument
 } from "@/generated/graphql"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -28,10 +29,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { Plus, Loader2 } from "lucide-react"
 
 export default function AddBoard({ header, className }:{ header?:boolean, className?:string }) {
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const form = useForm()
     const [createBoard] = useMutation<CreateBoardMutation, CreateBoardMutationVariables>(CreateBoardDocument, {
+        onCompleted(data) {
+            if (data.createBoard) {
+                navigate(`/${data.createBoard.id}`)
+            }
+        },
         update: (cache, response) => {
             cache.updateQuery({ query: AllBoardsDocument }, (data) => {
                 if (response.data?.createBoard) {
