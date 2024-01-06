@@ -21,13 +21,21 @@ import {
     MoveCardsMutationVariables
 } from "@/generated/graphql"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useDocumentTitle } from '@uidotdev/usehooks'
+import { useState } from "react";
 
 export default function Board() {
   const { id } = useParams()
+  const [title, setTitle] = useState('Trello 3al daya2')
 
   const { data, loading, error } = useQuery<FindBoardQuery, FindBoardQueryVariables>(FindBoardDocument, {
-    variables: { id: id as string }
+    variables: { id: id as string },
+    onCompleted(data) {
+      setTitle(`${data.findBoard?.title as string} | Trello 3al daya2`)
+    }
   })
+
+  useDocumentTitle(title)
 
   const [addList] = useMutation<AddListMutation, AddListMutationVariables>(AddListDocument,{
     optimisticResponse: {
