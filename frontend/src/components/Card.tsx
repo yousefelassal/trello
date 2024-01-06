@@ -13,7 +13,7 @@ export default function Card({
     bg?: string | undefined;
   }) {
     return (
-      <Link to={to} className="flex flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
+      <Link to={to} className="flex min-h-52 flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
         <div className="bg-dot-white inset-0 absolute" />
         <div className="absolute top-4 left-4 hidden group-hover:block group-hover:animate-in-from-left z-10">
           [Star]
