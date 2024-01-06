@@ -1,5 +1,4 @@
 import {
-    GlowingStarsBackgroundCard,
     GlowingStarsTitle,
 } from "./ui/glowing-stars";
 import { Link } from "react-router-dom";
@@ -14,18 +13,20 @@ export default function Card({
     bg?: string | undefined;
   }) {
     return (
-      <Link to={to} className="flex items-center group justify-center antialiased">
-        <GlowingStarsBackgroundCard>
+      <Link to={to} className="flex flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
+        <div className="bg-dot-white inset-0 absolute" />
+        <div className="absolute top-4 left-4 hidden group-hover:block group-hover:animate-in-from-left z-10">
+          [Star]
+        </div>
           <div className="relative flex flex-1 w-full h-full min-h-[7rem]">
             <img src={bg} alt="board" className="absolute group-hover:scale-110 transition duration-300 object-cover inset-0 flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
           </div>
-          <div className="flex justify-between px-6 py-8 items-center">
+          <div className="w-full flex justify-between px-6 py-8 items-center">
           <GlowingStarsTitle className="group-hover:scale-105 duration-300 transition">{title}</GlowingStarsTitle>
             <div className="h-8 w-8 rounded-full group-hover:translate-x-1 transition duration-300 bg-[hsla(0,0%,100%,.1)] flex items-center justify-center">
               <Icon />
             </div>
           </div>
-        </GlowingStarsBackgroundCard>
       </Link>
     );
   }
