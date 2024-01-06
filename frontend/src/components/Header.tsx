@@ -14,10 +14,10 @@ export default function Header({logout}: {logout: () => void}) {
   if (loading) return <div>Loading...</div>
   return (
     <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-[9999] flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
-      <Link to="/" className="rounded-md px-2 py-1 items-center flex gap-2 transition hover:bg-gray-500/80">
-        <div className="rounded-sm items-start p-1 h-6 w-6 flex gap-1 bg-gray-700">
-          <div className="h-4 w-3 bg-gray-400 rounded-[1px]" />
-          <div className="h-3 w-3 bg-gray-400 rounded-[1px]" />
+      <Link to="/" className="group rounded-md px-2 py-1 items-center flex gap-1 transition hover:bg-gray-500/80">
+        <div className="rounded-[3px] items-start p-1 h-5 w-5 flex gap-[2px] bg-[#9eacba]/80">
+          <div className="h-3 group-hover:animate-logo-reverse w-2 bg-[#1d2125]/80 rounded-[1px]" />
+          <div className="h-[9px] group-hover:animate-logo w-2 bg-[#1d2125]/80 rounded-[1px]" />
         </div>
         <div className="text-xl font-bold">Trello</div>
       </Link>
