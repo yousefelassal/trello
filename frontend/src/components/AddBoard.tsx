@@ -32,12 +32,14 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [open, setOpen] = useState(false)
   const form = useForm()
     const [createBoard] = useMutation<CreateBoardMutation, CreateBoardMutationVariables>(CreateBoardDocument, {
         onCompleted(data) {
             if (data.createBoard) {
                 navigate(`/${data.createBoard.id}`)
             }
+            setOpen(false)
         },
         update: (cache, response) => {
             cache.updateQuery({ query: AllBoardsDocument }, (data) => {
@@ -57,11 +59,12 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
             bg: await getRandomPhoto()
         } })
         setTitle('')
+        setDescription('')
     }
 
   return (
     <div className="flex items-center justify-center">
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button className={cn('', className)}>
                     {header ? 
