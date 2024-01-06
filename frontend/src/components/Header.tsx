@@ -11,7 +11,10 @@ export default function Header({logout}: {logout: () => void}) {
 
   if (error) return <div>{error.message}</div>
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-[9999] flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
+    Loading...
+  </div>
+  
   return (
     <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-[9999] flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
       <Link to="/" className="group rounded-md px-2 py-1 items-center flex gap-1 transition hover:bg-gray-500/80">
