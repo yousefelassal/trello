@@ -90,6 +90,10 @@ module.exports = withUt({
         "logo-reverse": {
           from: { height: "12px" },
           to: { height: "9px" },
+        },
+        "in-from-left": {
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(0)" },
         }
       },
       animation: {
@@ -98,6 +102,7 @@ module.exports = withUt({
         "spotlight": "spotlight 2s ease .75s 1 forwards",
         "logo": "logo 0.4s ease-in-out infinite alternate",
         "logo-reverse": "logo-reverse 0.4s ease-in-out infinite alternate",
+        "in-from-left": "in-from-left 0.2s ease-out"
       },
     },
   },
