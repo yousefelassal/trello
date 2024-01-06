@@ -2,9 +2,11 @@ import { useState } from "react"
 import { useMutation } from "@apollo/client"
 import { LoginDocument, LoginMutation, LoginMutationVariables } from "@/generated/graphql"
 import { toast } from "sonner"
+import { useDocumentTitle } from '@uidotdev/usehooks'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Login = ({ setToken }:{ setToken:any }) => {
+    useDocumentTitle('Login | Trello 3al daya2')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     
