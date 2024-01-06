@@ -6,9 +6,11 @@ import {
 } from '@/generated/graphql'
 import AddBoard from '@/components/AddBoard'
 import Card from '@/components/Card'
+import { useDocumentTitle } from '@uidotdev/usehooks'
 
 export default function Home() {
   const { data:boards, loading:boardsLoading, error:errorBoards } = useQuery<AllBoardsQuery, AllBoardsQueryVariables>(AllBoardsDocument)
+  useDocumentTitle('Boards | Trello 3al daya2')
 
   return (
     <>
