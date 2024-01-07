@@ -30,6 +30,7 @@ export default function Home() {
               to={`/${board.id}`}
               title={board.title}
               bg={board.bg}
+              star={board.saved}
             />
             ))}
         </div>
