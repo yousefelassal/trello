@@ -267,7 +267,7 @@ const resolvers = {
                 })
             }
 
-            await Board.findByIdAndRemove(args.id)
+            await Board.findByIdAndDelete(args.id)
             return board
         },
         addList: async (root, args, context) => {
@@ -322,7 +322,7 @@ const resolvers = {
                 })
             }
             const list = await List.findById(args.id)
-            await List.findByIdAndRemove(args.id)
+            await List.findByIdAndDelete(args.id)
             return list
         },
         addCard: async (root, args, context) => {
@@ -369,7 +369,7 @@ const resolvers = {
                 })
             }
             const card = await Card.findById(args.id)
-            await Card.findByIdAndRemove(args.id)
+            await Card.findByIdAndDelete(args.id)
             return card
         }
     }
