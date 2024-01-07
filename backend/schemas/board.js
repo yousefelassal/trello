@@ -22,6 +22,7 @@ const typeDefs = `
         created_at: String
         updated_at: String
         saved: Boolean
+        saved_at: String
         lists: [List!]!
         bg: String!
         id: ID!
@@ -32,7 +33,7 @@ const typeDefs = `
     extend type Query {
         allBoards: [Board!]!
         findBoard(id: ID!): Board
-        saveBoard(id: ID!): Board
+        savedBoards: [Board!]!
     }
 
     extend type Mutation {
@@ -54,6 +55,7 @@ const typeDefs = `
         saveBoard(
             id: ID!
             saved: Boolean!
+            saved_at: String
         ): Board
 
         deleteBoard(
@@ -137,6 +139,15 @@ const resolvers = {
                 })
             }
             return board
+        },
+        savedBoards: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                return []
+            }
+
+            const boards = await Board.find({ user: user._id, saved: true }).sort({ saved_at: -1 })
+            return boards
         }
     },
     Mutation: {
