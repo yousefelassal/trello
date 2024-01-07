@@ -65,7 +65,8 @@ export default function Header({logout}: {logout: () => void}) {
                   {saved?.savedBoards?.map((board) => (
                     <NavigationMenuLink key={board.id} asChild>
                       <Link to={`/${board.id}`} className="flex items-center gap-2 px-2 py-1 rounded-md transition hover:bg-gray-500/80">
-                        {board.title}
+                        <img src={board.bg} alt="board background" className="w-10 h-8 object-cover rounded-md" />
+                        <span className="font-semibold">{board.title}</span>
                       </Link>
                     </NavigationMenuLink>
                   ))}
