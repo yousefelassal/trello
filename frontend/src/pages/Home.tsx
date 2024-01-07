@@ -27,7 +27,7 @@ export default function Home() {
           {boards?.allBoards?.map((board) => (
             <Card
               key={board.id}
-              to={`/${board.id}`}
+              id={board.id}
               title={board.title}
               bg={board.bg}
               star={board.saved}
