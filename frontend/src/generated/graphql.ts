@@ -242,6 +242,15 @@ export type MoveCardsMutationVariables = Exact<{
 
 export type MoveCardsMutation = { __typename?: 'Mutation', moveCardFromToList?: { __typename?: 'Board', id: string, title: string, description?: string | null, updated_at?: string | null, bg: string, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
+export type SaveMutationVariables = Exact<{
+  saveBoardId: Scalars['ID']['input'];
+  saved: Scalars['Boolean']['input'];
+  savedAt?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SaveMutation = { __typename?: 'Mutation', saveBoard?: { __typename?: 'Board', id: string, title: string, saved?: boolean | null, saved_at?: string | null, bg: string } | null };
+
 export type GetSavedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -631,6 +640,45 @@ export function useMoveCardsMutation(baseOptions?: Apollo.MutationHookOptions<Mo
 export type MoveCardsMutationHookResult = ReturnType<typeof useMoveCardsMutation>;
 export type MoveCardsMutationResult = Apollo.MutationResult<MoveCardsMutation>;
 export type MoveCardsMutationOptions = Apollo.BaseMutationOptions<MoveCardsMutation, MoveCardsMutationVariables>;
+export const SaveDocument = gql`
+    mutation save($saveBoardId: ID!, $saved: Boolean!, $savedAt: String) {
+  saveBoard(id: $saveBoardId, saved: $saved, saved_at: $savedAt) {
+    id
+    title
+    saved
+    saved_at
+    bg
+  }
+}
+    `;
+export type SaveMutationFn = Apollo.MutationFunction<SaveMutation, SaveMutationVariables>;
+
+/**
+ * __useSaveMutation__
+ *
+ * To run a mutation, you first call `useSaveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveMutation, { data, loading, error }] = useSaveMutation({
+ *   variables: {
+ *      saveBoardId: // value for 'saveBoardId'
+ *      saved: // value for 'saved'
+ *      savedAt: // value for 'savedAt'
+ *   },
+ * });
+ */
+export function useSaveMutation(baseOptions?: Apollo.MutationHookOptions<SaveMutation, SaveMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveMutation, SaveMutationVariables>(SaveDocument, options);
+      }
+export type SaveMutationHookResult = ReturnType<typeof useSaveMutation>;
+export type SaveMutationResult = Apollo.MutationResult<SaveMutation>;
+export type SaveMutationOptions = Apollo.BaseMutationOptions<SaveMutation, SaveMutationVariables>;
 export const GetSavedDocument = gql`
     query getSaved {
   savedBoards {
