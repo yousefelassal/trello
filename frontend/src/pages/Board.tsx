@@ -18,7 +18,11 @@ import {
     UpdateListMutationVariables,
     MoveCardsDocument,
     MoveCardsMutation,
-    MoveCardsMutationVariables
+    MoveCardsMutationVariables,
+    SaveDocument,
+    SaveMutation,
+    SaveMutationVariables,
+    GetSavedDocument,
 } from "@/generated/graphql"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDocumentTitle } from '@uidotdev/usehooks'
@@ -66,6 +70,24 @@ export default function Board() {
   const [updateList] = useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument)
 
   const [moveCards] = useMutation<MoveCardsMutation, MoveCardsMutationVariables>(MoveCardsDocument)
+
+  const [save] = useMutation<SaveMutation, SaveMutationVariables>(SaveDocument,{
+    update: (cache, response) => {
+      cache.updateQuery({ query: GetSavedDocument }, (data) => {
+        if (response.data?.saveBoard?.saved) {
+          return {
+            savedBoards: [response.data.saveBoard, ...data.savedBoards]
+          }
+        }
+        if (!response.data?.saveBoard?.saved) {
+          return {
+            savedBoards: data.savedBoards.filter((board:any) => board.id !== response.data?.saveBoard?.id) // eslint-disable-line
+          }
+        }
+      return data
+    })
+  }
+  });
 
   if (error) return <div>{error.message}</div>
 
@@ -253,6 +275,29 @@ export default function Board() {
     })
     }
 
+    const handleSave = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, board:any) => {//eslint-disable-line
+        event.stopPropagation()
+        event.preventDefault()
+        
+        await save({
+          variables: {
+            saveBoardId: board.id,
+            saved: !board.saved,
+            savedAt: board.saved ? null : new Date().toISOString()
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            saveBoard: {
+              __typename: "Board",
+              id: board.id,
+              saved: !board.saved,
+              saved_at: board.saved ? null : new Date().toISOString(),
+              title: board.title,
+              bg: board.bg
+            }
+          }
+        })
+      }
 
   return (
     <>
@@ -262,7 +307,9 @@ export default function Board() {
         <div className="fixed px-6 backdrop-blur-sm py-2 w-screen shadow -mt-4 bg-black/60">
             <div className="flex items-center gap-2">
                 <h2 className="text-2xl w-fit p-2 py-1 hover:bg-gray-700 rounded-lg font-bold">{data?.findBoard?.title}</h2>
-                [Star]
+                {data?.findBoard?.saved ? 
+                 <button onClick={(e)=>handleSave(e, data?.findBoard)}>[Starred]</button>
+                :<button onClick={(e)=>handleSave(e, data?.findBoard)}>[Star]</button>}
             </div>
         </div>
       <DragDropContext onDragEnd={onDragEnd}>
