@@ -8,7 +8,14 @@ const schema = new mongoose.Schema({
     description: String,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
-    saved: Boolean,
+    saved: {
+        type: Boolean,
+        default: false
+    },
+    saved_at: {
+        type: Date,
+        default: null
+    },
     bg: String,
     user: {
         type: mongoose.Schema.Types.ObjectId,
