@@ -13,6 +13,7 @@ import {
 import { Link } from 'react-router-dom'
 import AddBoard from './AddBoard'
 import Star from './Star'
+import NoStarsImage from '@/assets/star.svg'
 
 import { Skeleton } from './ui/skeleton'
 import {
@@ -97,7 +98,7 @@ export default function Header({logout}: {logout: () => void}) {
                 <div className="grid gap-3 p-4 w-64 md:w-[400px]">
                 {saved?.savedBoards?.length === 0 && 
                 <>
-                  <img src="src/assets/star.svg" alt="masroo2a mn trello credits to whoever made this idk" className="rounded-md" />
+                  <img src={NoStarsImage} alt="masroo2a mn trello credits to whoever made this idk" className="rounded-md" />
                   <div>Star important boards to access them quickly.</div>
                 </>
                 }
