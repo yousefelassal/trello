@@ -7,14 +7,20 @@ import {
 import { Link } from 'react-router-dom'
 import AddBoard from './AddBoard'
 import { ChevronDown } from 'lucide-react'
+import { Skeleton } from './ui/skeleton'
 
 export default function Header({logout}: {logout: () => void}) {
   const { data:user, loading, error } = useQuery<MeQuery, MeQueryVariables>(MeDocument)
 
   if (error) return <div>{error.message}</div>
 
-  if (loading) return <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-[9999] flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
-    Loading...
+  if (loading) return <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-40 flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
+    <div className="flex gap-2">
+      <Skeleton className="h-9 w-24 bg-gray-500/80" />
+      <Skeleton className="h-9 w-20 bg-gray-500/80" />
+      <Skeleton className="h-9 w-9 bg-gray-500/80" />
+    </div>
+    <Skeleton className="h-9 w-16 bg-gray-500/80" />
   </div>
   
   return (
