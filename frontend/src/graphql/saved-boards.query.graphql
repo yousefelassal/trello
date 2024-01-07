@@ -1,0 +1,9 @@
+query getSaved {
+    savedBoards {
+        id
+        title
+        saved
+        saved_at
+        bg
+    }
+}
