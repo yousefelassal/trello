@@ -19,12 +19,12 @@ export default function Card({
         cache.updateQuery({ query: GetSavedDocument }, (data) => {
           if (response.data?.saveBoard?.saved) {
             return {
-              allBoards: [response.data.saveBoard, ...data.allBoards]
+              savedBoards: [response.data.saveBoard, ...data.savedBoards]
             }
           }
           if (!response.data?.saveBoard?.saved) {
             return {
-              allBoards: data.allBoards.filter((board:any) => board.id !== response.data?.saveBoard?.id) // eslint-disable-line
+              savedBoards: data.savedBoards.filter((board:any) => board.id !== response.data?.saveBoard?.id) // eslint-disable-line
             }
           }
         return data
