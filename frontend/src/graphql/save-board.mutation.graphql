@@ -1,0 +1,9 @@
+mutation save($saveBoardId: ID!, $saved: Boolean!, $savedAt: String) {
+  saveBoard(id: $saveBoardId, saved: $saved, saved_at: $savedAt) {
+    id
+    title
+    saved
+    saved_at
+    bg
+  }
+}
