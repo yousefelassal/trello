@@ -93,7 +93,7 @@ export default function Board() {
 
   if (error) return <div>{error.message}</div>
 
-  if (loading) return <Loading />
+  if (loading) return <Loading className="min-h-[70vh]" />
 
   const addNewList = async () => {
     addList({
