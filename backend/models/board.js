@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const List = require("./list")
 
 const schema = new mongoose.Schema({
     title: {
@@ -39,6 +40,12 @@ schema.set("toJSON", {
     transform: (document, returnedObject) => {
         delete returnedObject.__v
     }
+})
+
+schema.pre("findOneAndDelete", async function (next) {
+    const board = this
+    await List.deleteMany({ _id: { $in: board.lists } })
+    next()
 })
 
 module.exports = mongoose.model("Board", schema)
