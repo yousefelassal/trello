@@ -28,6 +28,7 @@ import {
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDocumentTitle } from '@uidotdev/usehooks'
 import Star from "@/components/Star";
+import Loading from "@/components/Loading";
 
 export default function Board() {
   const { id } = useParams()
@@ -92,7 +93,7 @@ export default function Board() {
 
   if (error) return <div>{error.message}</div>
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <Loading />
 
   const addNewList = async () => {
     addList({
