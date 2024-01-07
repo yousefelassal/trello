@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom"
 import { useQuery, useMutation } from '@apollo/client'
 import {
@@ -26,7 +27,7 @@ import {
 } from "@/generated/graphql"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDocumentTitle } from '@uidotdev/usehooks'
-import { useState } from "react";
+import Star from "@/components/Star";
 
 export default function Board() {
   const { id } = useParams()
@@ -307,9 +308,7 @@ export default function Board() {
         <div className="fixed px-6 backdrop-blur-sm py-2 w-screen shadow -mt-4 bg-black/60">
             <div className="flex items-center gap-2">
                 <h2 className="text-2xl w-fit p-2 py-1 hover:bg-gray-700 rounded-lg font-bold">{data?.findBoard?.title}</h2>
-                {data?.findBoard?.saved ? 
-                 <button onClick={(e)=>handleSave(e, data?.findBoard)}>[Starred]</button>
-                :<button onClick={(e)=>handleSave(e, data?.findBoard)}>[Star]</button>}
+                 <Star className="mt-1" saved={data?.findBoard?.saved} onClick={(e:any /*eslint-disable-line*/)=>handleSave(e, data?.findBoard)} />
             </div>
         </div>
       <DragDropContext onDragEnd={onDragEnd}>
