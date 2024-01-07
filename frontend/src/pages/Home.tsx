@@ -7,6 +7,7 @@ import {
 import AddBoard from '@/components/AddBoard'
 import Card from '@/components/Card'
 import { useDocumentTitle } from '@uidotdev/usehooks'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Home() {
   const { data:boards, loading:boardsLoading, error:errorBoards } = useQuery<AllBoardsQuery, AllBoardsQueryVariables>(AllBoardsDocument)
@@ -22,7 +23,28 @@ export default function Home() {
         <h2 className="text-2xl font-bold">Your Boards</h2>
         {boards?.allBoards?.length === 0 && <div>You don't have any boards yet</div>}
         <div className="grid grid-cols-[repeat(auto-fill,minmax(272px,1fr))] items-center justify-center grid-auto-rows gap-4 max-w-7xl">
-          {boardsLoading && <div>Loading...</div>}
+          {boardsLoading && 
+            <>
+              <Skeleton className="flex min-h-52 flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
+                <Skeleton className="relative z-10 bg-gray-200/40 rounded-none flex flex-1 w-full h-full min-h-[7rem]">
+                  <Skeleton className="absolute bg-gray-200/40 rounded-none inset-0 flex flex-1 w-full h-full min-h-[6rem] " />
+                </Skeleton>
+                <div className="h-2/3" />
+              </Skeleton>
+              <Skeleton className="flex min-h-52 flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
+                <Skeleton className="relative z-10 bg-gray-200/40 rounded-none flex flex-1 w-full h-full min-h-[7rem]">
+                  <Skeleton className="absolute bg-gray-200/40 rounded-none inset-0 flex flex-1 w-full h-full min-h-[6rem] " />
+                </Skeleton>
+                <div className="h-2/3" />
+              </Skeleton>
+              <Skeleton className="flex min-h-52 flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
+                <Skeleton className="relative z-10 bg-gray-200/40 rounded-none flex flex-1 w-full h-full min-h-[7rem]">
+                  <Skeleton className="absolute bg-gray-200/40 rounded-none inset-0 flex flex-1 w-full h-full min-h-[6rem] " />
+                </Skeleton>
+                <div className="h-2/3" />
+              </Skeleton>
+            </>
+          }
           {errorBoards && <div>{errorBoards.message}</div>}
           {boards?.allBoards?.map((board) => (
             <Card
