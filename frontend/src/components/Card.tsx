@@ -7,17 +7,21 @@ export default function Card({
     to,
     title,
     bg,
+    star
   }: {
     to: string;
     title?: string | React.ReactNode;
     bg?: string | undefined;
+    star?: boolean | null | undefined;
   }) {
     return (
       <Link to={to} className="flex min-h-52 flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
         <div className="bg-dot-white inset-0 absolute" />
-        <div className="absolute top-4 left-4 hidden group-hover:block group-hover:animate-in-from-left z-10">
-          [Star]
-        </div>
+        {star ? <div className="absolute top-4 left-4 z-10">[Star]</div>
+          : <div className="absolute top-4 left-4 hidden group-hover:block group-hover:animate-in-from-left z-10">
+              [Star]
+            </div>
+        }
           <div className="relative flex flex-1 w-full h-full min-h-[7rem]">
             <img src={bg} alt="board" className="absolute group-hover:scale-110 transition duration-300 object-cover inset-0 flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
           </div>
