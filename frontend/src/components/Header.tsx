@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom'
 import AddBoard from './AddBoard'
 import Star from './Star'
 import NoStarsImage from '@/assets/star.svg'
+import Loading from './Loading'
 
 import { Skeleton } from './ui/skeleton'
 import {
@@ -102,7 +103,7 @@ export default function Header({logout}: {logout: () => void}) {
                   <div>Star important boards to access them quickly.</div>
                 </>
                 }
-                {loadingSaved && <div>Loading...</div>}
+                {loadingSaved && <Loading />}
                 {errorSaved && <div>{errorSaved.message}</div>}
                   {saved?.savedBoards?.map((board) => (
                     <NavigationMenuLink key={board.id} asChild>
