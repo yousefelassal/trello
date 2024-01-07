@@ -26,6 +26,7 @@ export type Board = {
   lists: Array<List>;
   listsOrder: Array<List>;
   saved?: Maybe<Scalars['Boolean']['output']>;
+  saved_at?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   updated_at?: Maybe<Scalars['String']['output']>;
   user: User;
@@ -125,6 +126,7 @@ export type MutationMoveCardFromToListArgs = {
 export type MutationSaveBoardArgs = {
   id: Scalars['ID']['input'];
   saved: Scalars['Boolean']['input'];
+  saved_at?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -156,17 +158,12 @@ export type Query = {
   allBoards: Array<Board>;
   findBoard?: Maybe<Board>;
   me?: Maybe<User>;
-  saveBoard?: Maybe<Board>;
+  savedBoards: Array<Board>;
   test?: Maybe<Scalars['String']['output']>;
 };
 
 
 export type QueryFindBoardArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QuerySaveBoardArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -202,7 +199,7 @@ export type AddListMutation = { __typename?: 'Mutation', addList?: { __typename?
 export type AllBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllBoardsQuery = { __typename?: 'Query', allBoards: Array<{ __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null }> };
+export type AllBoardsQuery = { __typename?: 'Query', allBoards: Array<{ __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null, saved?: boolean | null }> };
 
 export type CreateBoardMutationVariables = Exact<{
   title: Scalars['String']['input'];
@@ -244,6 +241,11 @@ export type MoveCardsMutationVariables = Exact<{
 
 
 export type MoveCardsMutation = { __typename?: 'Mutation', moveCardFromToList?: { __typename?: 'Board', id: string, title: string, description?: string | null, updated_at?: string | null, bg: string, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
+
+export type GetSavedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSavedQuery = { __typename?: 'Query', savedBoards: Array<{ __typename?: 'Board', id: string, title: string, saved?: boolean | null, saved_at?: string | null, bg: string }> };
 
 export type SignupMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -370,6 +372,7 @@ export const AllBoardsDocument = gql`
     description
     bg
     updated_at
+    saved
   }
 }
     `;
@@ -628,6 +631,49 @@ export function useMoveCardsMutation(baseOptions?: Apollo.MutationHookOptions<Mo
 export type MoveCardsMutationHookResult = ReturnType<typeof useMoveCardsMutation>;
 export type MoveCardsMutationResult = Apollo.MutationResult<MoveCardsMutation>;
 export type MoveCardsMutationOptions = Apollo.BaseMutationOptions<MoveCardsMutation, MoveCardsMutationVariables>;
+export const GetSavedDocument = gql`
+    query getSaved {
+  savedBoards {
+    id
+    title
+    saved
+    saved_at
+    bg
+  }
+}
+    `;
+
+/**
+ * __useGetSavedQuery__
+ *
+ * To run a query within a React component, call `useGetSavedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSavedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSavedQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSavedQuery(baseOptions?: Apollo.QueryHookOptions<GetSavedQuery, GetSavedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSavedQuery, GetSavedQueryVariables>(GetSavedDocument, options);
+      }
+export function useGetSavedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSavedQuery, GetSavedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSavedQuery, GetSavedQueryVariables>(GetSavedDocument, options);
+        }
+export function useGetSavedSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSavedQuery, GetSavedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSavedQuery, GetSavedQueryVariables>(GetSavedDocument, options);
+        }
+export type GetSavedQueryHookResult = ReturnType<typeof useGetSavedQuery>;
+export type GetSavedLazyQueryHookResult = ReturnType<typeof useGetSavedLazyQuery>;
+export type GetSavedSuspenseQueryHookResult = ReturnType<typeof useGetSavedSuspenseQuery>;
+export type GetSavedQueryResult = Apollo.QueryResult<GetSavedQuery, GetSavedQueryVariables>;
 export const SignupDocument = gql`
     mutation signup($name: String!, $username: String!, $password: String!) {
   createUser(name: $name, username: $username, password: $password) {
