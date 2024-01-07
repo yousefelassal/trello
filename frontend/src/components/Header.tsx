@@ -1,11 +1,14 @@
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import {
   MeDocument,
   MeQuery,
   MeQueryVariables,
   GetSavedDocument,
   GetSavedQuery,
-  GetSavedQueryVariables
+  GetSavedQueryVariables,
+  SaveDocument,
+  SaveMutation,
+  SaveMutationVariables,
 } from '@/generated/graphql'
 import { Link } from 'react-router-dom'
 import AddBoard from './AddBoard'
@@ -25,6 +28,19 @@ export default function Header({logout}: {logout: () => void}) {
 
   const { data:saved, loading:loadingSaved, error:errorSaved } = useQuery<GetSavedQuery, GetSavedQueryVariables>(GetSavedDocument)
 
+  const [save] = useMutation<SaveMutation, SaveMutationVariables>(SaveDocument, {
+    update: (cache, response) => {
+      cache.updateQuery({ query: GetSavedDocument }, (data) => {
+        if (!response.data?.saveBoard?.saved) {
+          return {
+            savedBoards: data.savedBoards.filter((board:any) => board.id !== response.data?.saveBoard?.id) // eslint-disable-line
+          }
+        }
+      return data
+    })
+  },
+  })
+
   if (error) return <div>{error.message}</div>
 
   if (loading) return <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-40 flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
@@ -35,6 +51,30 @@ export default function Header({logout}: {logout: () => void}) {
     </div>
     <Skeleton className="h-9 w-16 bg-gray-500/80" />
   </div>
+
+  const handleSave = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, board:any) => {//eslint-disable-line
+    event.stopPropagation()
+    event.preventDefault()
+    
+    await save({
+      variables: {
+        saveBoardId: board.id,
+        saved: false,
+        savedAt: board.saved ? null : new Date().toISOString()
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        saveBoard: {
+          __typename: "Board",
+          id: board.id,
+          saved: false,
+          saved_at: board.saved ? null : new Date().toISOString(),
+          title: board.title,
+          bg: board.bg
+        }
+      }
+    })
+  }
   
   return (
     <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-40 flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
@@ -64,9 +104,12 @@ export default function Header({logout}: {logout: () => void}) {
                 {errorSaved && <div>{errorSaved.message}</div>}
                   {saved?.savedBoards?.map((board) => (
                     <NavigationMenuLink key={board.id} asChild>
-                      <Link to={`/${board.id}`} className="flex items-center gap-2 px-2 py-1 rounded-md transition hover:bg-gray-500/80">
-                        <img src={board.bg} alt="board background" className="w-10 h-8 object-cover rounded-md" />
-                        <span className="font-semibold">{board.title}</span>
+                      <Link to={`/${board.id}`} className="flex justify-between items-center px-2 py-1 rounded-md transition hover:bg-gray-500/80">
+                        <div className="gap-2 flex">
+                          <img src={board.bg} alt="board background" className="w-10 h-8 object-cover rounded-md" />
+                          <span className="font-semibold">{board.title}</span>
+                        </div>
+                        <button onClick={(e)=>handleSave(e, board)}>[Starred]</button>
                       </Link>
                     </NavigationMenuLink>
                   ))}
