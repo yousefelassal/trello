@@ -53,10 +53,15 @@ export default function Header({logout}: {logout: () => void}) {
                 Starred
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                {saved?.savedBoards?.length === 0 && <div>You don't have any saved boards yet</div>}
+                <div className="grid gap-3 p-4 w-64 md:w-[400px]">
+                {saved?.savedBoards?.length === 0 && 
+                <>
+                  <img src="src/assets/star.svg" alt="masroo2a mn trello credits to whoever made this idk" className="rounded-md" />
+                  <div>Star important boards to access them quickly.</div>
+                </>
+                }
                 {loadingSaved && <div>Loading...</div>}
                 {errorSaved && <div>{errorSaved.message}</div>}
-                <div className="grid gap-3 p-6 w-64 md:w-[400px]">
                   {saved?.savedBoards?.map((board) => (
                     <NavigationMenuLink key={board.id} asChild>
                       <Link to={`/${board.id}`} className="flex items-center gap-2 px-2 py-1 rounded-md transition hover:bg-gray-500/80">
