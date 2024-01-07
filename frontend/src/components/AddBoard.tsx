@@ -110,7 +110,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                             type="submit"
                             disabled={form.formState.isSubmitting}
                             onClick={form.handleSubmit(submit)}
-                            className="flex gap-1"
+                            className="flex gap-1 text-black border border-neutral-600 bg-[linear-gradient(0deg,#bbb_0.6%,#aaa)]"
                         >
                             {form.formState.isSubmitting ? <> <Loader2 className="animate-spin" /> Adding...</> : 'Add'}
                         </Button>
