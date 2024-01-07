@@ -4,6 +4,7 @@ query findBoard($id: ID!) {
         bg
         title
         description
+        saved
         lists{
             id
             title
