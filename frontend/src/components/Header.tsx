@@ -12,6 +12,7 @@ import {
 } from '@/generated/graphql'
 import { Link } from 'react-router-dom'
 import AddBoard from './AddBoard'
+import Star from './Star'
 
 import { Skeleton } from './ui/skeleton'
 import {
@@ -109,7 +110,7 @@ export default function Header({logout}: {logout: () => void}) {
                           <img src={board.bg} alt="board background" className="w-10 h-8 object-cover rounded-md" />
                           <span className="font-semibold">{board.title}</span>
                         </div>
-                        <button onClick={(e)=>handleSave(e, board)}>[Starred]</button>
+                        <Star iconClassName="w-5 h-5" saved onClick={(e:any /*eslint-disable-line*/)=>handleSave(e, board)} />
                       </Link>
                     </NavigationMenuLink>
                   ))}
