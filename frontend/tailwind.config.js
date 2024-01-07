@@ -91,6 +91,14 @@ module.exports = withUt({
           from: { height: "12px" },
           to: { height: "9px" },
         },
+        "loading": {
+          from: {height: "12px"},
+          to: {height: "20px"},
+        },
+        "loading-reverse": {
+          from: {height: "20px"},
+          to: {height: "12px"},
+        },
         "in-from-left": {
           from: { transform: "translateX(-100%)" },
           to: { transform: "translateX(0)" },
@@ -102,7 +110,9 @@ module.exports = withUt({
         "spotlight": "spotlight 2s ease .75s 1 forwards",
         "logo": "logo 0.4s ease-in-out infinite alternate",
         "logo-reverse": "logo-reverse 0.4s ease-in-out infinite alternate",
-        "in-from-left": "in-from-left 0.2s ease-out"
+        "in-from-left": "in-from-left 0.2s ease-out",
+        "loading": "loading 0.4s ease-in-out infinite alternate",
+        "loading-reverse": "loading-reverse 0.4s ease-in-out infinite alternate"
       },
     },
   },
