@@ -3,14 +3,27 @@ import {
   MeDocument,
   MeQuery,
   MeQueryVariables,
+  GetSavedDocument,
+  GetSavedQuery,
+  GetSavedQueryVariables
 } from '@/generated/graphql'
 import { Link } from 'react-router-dom'
 import AddBoard from './AddBoard'
-import { ChevronDown } from 'lucide-react'
+
 import { Skeleton } from './ui/skeleton'
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu"
 
 export default function Header({logout}: {logout: () => void}) {
   const { data:user, loading, error } = useQuery<MeQuery, MeQueryVariables>(MeDocument)
+
+  const { data:saved, loading:loadingSaved, error:errorSaved } = useQuery<GetSavedQuery, GetSavedQueryVariables>(GetSavedDocument)
 
   if (error) return <div>{error.message}</div>
 
@@ -33,9 +46,29 @@ export default function Header({logout}: {logout: () => void}) {
           </div>
           <div className="text-xl font-bold">Trello</div>
         </Link>
-        <div className="group rounded-md px-2 font-semibold py-1 items-center justify-center flex gap-1 transition hover:bg-gray-500/80">
-          Starred <ChevronDown className="w-4 mt-[2px] h-4" />
-        </div>
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className="rounded-md px-2 text-base font-semibold py-1 items-center bg-transparent justify-center flex gap-1 transition hover:bg-gray-500/80">
+                Starred
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                {saved?.savedBoards?.length === 0 && <div>You don't have any saved boards yet</div>}
+                {loadingSaved && <div>Loading...</div>}
+                {errorSaved && <div>{errorSaved.message}</div>}
+                <div className="grid gap-3 p-6 w-64 md:w-[400px]">
+                  {saved?.savedBoards?.map((board) => (
+                    <NavigationMenuLink key={board.id} asChild>
+                      <Link to={`/${board.id}`} className="flex items-center gap-2 px-2 py-1 rounded-md transition hover:bg-gray-500/80">
+                        {board.title}
+                      </Link>
+                    </NavigationMenuLink>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
         <AddBoard header className="w-8 h-8 items-center flex justify-center p-0" />
       </div>
       <button onClick={logout} className="flex items-center text-sm flex-col">
