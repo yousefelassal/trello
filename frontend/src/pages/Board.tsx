@@ -29,10 +29,13 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDocumentTitle } from '@uidotdev/usehooks'
 import Star from "@/components/Star";
 import Loading from "@/components/Loading";
+import { Button } from "@/components/ui/button";
 
 export default function Board() {
   const { id } = useParams()
   const [title, setTitle] = useState('Trello 3al daya2')
+  const [listTitle, setListTitle] = useState('')
+  const [isAddingList, setIsAddingList] = useState(false)
 
   const { data, loading, error } = useQuery<FindBoardQuery, FindBoardQueryVariables>(FindBoardDocument, {
     variables: { id: id as string },
@@ -57,7 +60,7 @@ export default function Board() {
                 {
                     __typename: "List",
                     id: `temp-${Date.now()}`,
-                    title: "New List",
+                    title: listTitle,
                     cards: []
                 }
             ]
@@ -99,9 +102,11 @@ export default function Board() {
     addList({
         variables: {
             boardId: id as string,
-            title: `New List`
+            title: listTitle
         }
     })
+    setIsAddingList(false)
+    setListTitle('')
   }
 
   const addNewCard = async (list:any) => { //eslint-disable-line
@@ -371,12 +376,43 @@ export default function Board() {
                 </Draggable>
             ))}
             {provided.placeholder}
+            {isAddingList ? 
+            <div className="flex flex-col gap-2">
+              <input
+                type="text"
+                placeholder="Enter list title..."
+                className="rounded-lg p-2 bg-white transition min-w-[272px] text-black shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                value={listTitle}
+                onChange={(e)=>setListTitle(e.target.value)}
+                onBlur={()=>{
+                  setIsAddingList(false)
+                  if(listTitle.trim() !== '') {
+                    addNewList()
+                  }
+                  setListTitle('')
+                }}
+                />
+              <div className="flex gap-2">
+                <Button onClick={()=>{
+                  if(listTitle.trim() !== '') {
+                    addNewList()
+                  }
+                  setListTitle('')
+                }}>Add</Button>
+                <Button className="hover:bg-gray-500/80" variant="ghost" onClick={()=>{
+                  setIsAddingList(false)
+                  setListTitle('')
+                }}>X</Button>
+              </div>
+            </div>
+            :
             <button
-            onClick={addNewList}
+            onClick={()=>setIsAddingList(true)}
             className="bg-[#ffffff3d] hover:bg-[#ffffff2a] transition rounded-lg min-w-[272px] h-fit p-2 flex items-center shadow-lg"
             >
                 {data?.findBoard?.lists?.length === 0 ? "Add your first list" : "Add another list"}
             </button>
+            }
             </div>
         )}
         </Droppable>
