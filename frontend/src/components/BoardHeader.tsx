@@ -127,11 +127,11 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
                         <DialogContent>
                             <DialogHeader>
                             <DialogTitle>Are you absolutely sure?</DialogTitle>
-                            <DialogDescription>
-                                This action cannot be undone. This will permanently delete your board remove your data from our servers.
+                            <DialogDescription className="pr-2">
+                                This action cannot be undone. This will permanently delete your board and remove your data from our servers.
                             </DialogDescription>
                             </DialogHeader>
-                            <DialogFooter>
+                            <DialogFooter className="gap-1">
                                 <DialogClose asChild>
                                     <Button variant="ghost">
                                         Cancel
