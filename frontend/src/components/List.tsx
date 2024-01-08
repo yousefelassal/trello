@@ -6,6 +6,8 @@ import { X } from "lucide-react"
 export default function List({list, index, addNewCard}: {list: any, index: number, addNewCard: (list:any, title:string) => void}) { //eslint-disable-line
   const [title, setTitle] = useState('')
   const [isAddingCard, setIsAddingCard] = useState(false)
+  const [cancelClicked, setCancelClicked] = useState(false)
+
   return (
     <Draggable draggableId={list.id} index={index} key={list.id}>
         {(provided:any) => ( //eslint-disable-line
@@ -56,12 +58,16 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                         className="rounded-lg border-2 border-[#22272B] p-2 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        onFocus={()=>setCancelClicked(false)}
                         onBlur={()=>{
-                            setIsAddingCard(false)
-                            if(title.trim() != '') {
-                                addNewCard(list, title)
-                                setTitle('')
+                            if(!cancelClicked) {
+                                setIsAddingCard(false)
+                                if(title.trim() != '') {
+                                    addNewCard(list, title)
+                                    setTitle('')
+                                }
                             }
+                            setCancelClicked(false)
                         }}
                     />
                     <div className="flex gap-1">
@@ -72,10 +78,16 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                                 setTitle('')
                             }
                         }}>Add Card</Button>
-                        <Button className="hover:bg-gray-500/80 px-2" onClick={()=>{
-                            setIsAddingCard(false)
-                            setTitle('')
-                        }} variant="ghost">
+                        <Button
+                            className="hover:bg-gray-500/80 px-2"
+                            onMouseDown={(e)=>{
+                                e.preventDefault()
+                                setCancelClicked(true)
+                                setIsAddingCard(false)
+                                setTitle('')
+                            }} 
+                            variant="ghost"
+                        >
                             <X />
                         </Button>
                     </div>
