@@ -50,6 +50,7 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                 {isAddingCard ?
                 <div className="flex flex-col gap-2">
                     <input
+                        autoFocus
                         type="text"
                         placeholder="Enter a title for this card..."
                         className="rounded-lg border-2 border-[#22272B] p-2 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
