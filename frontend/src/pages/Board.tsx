@@ -19,18 +19,14 @@ import {
     UpdateListMutationVariables,
     MoveCardsDocument,
     MoveCardsMutation,
-    MoveCardsMutationVariables,
-    SaveDocument,
-    SaveMutation,
-    SaveMutationVariables,
-    GetSavedDocument,
+    MoveCardsMutationVariables
 } from "@/generated/graphql"
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useDocumentTitle } from '@uidotdev/usehooks'
-import Star from "@/components/Star";
 import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import List from "@/components/List";
+import BoardHeader from "@/components/BoardHeader";
 import { X } from "lucide-react"
 
 export default function Board() {
@@ -77,24 +73,6 @@ export default function Board() {
   const [updateList] = useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument)
 
   const [moveCards] = useMutation<MoveCardsMutation, MoveCardsMutationVariables>(MoveCardsDocument)
-
-  const [save] = useMutation<SaveMutation, SaveMutationVariables>(SaveDocument,{
-    update: (cache, response) => {
-      cache.updateQuery({ query: GetSavedDocument }, (data) => {
-        if (response.data?.saveBoard?.saved) {
-          return {
-            savedBoards: [response.data.saveBoard, ...data.savedBoards]
-          }
-        }
-        if (!response.data?.saveBoard?.saved) {
-          return {
-            savedBoards: data.savedBoards.filter((board:any) => board.id !== response.data?.saveBoard?.id) // eslint-disable-line
-          }
-        }
-      return data
-    })
-  }
-  });
 
   if (error) return <div>{error.message}</div>
 
@@ -284,41 +262,9 @@ export default function Board() {
     })
     }
 
-    const handleSave = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, board:any) => {//eslint-disable-line
-        event.stopPropagation()
-        event.preventDefault()
-        
-        await save({
-          variables: {
-            saveBoardId: board.id,
-            saved: !board.saved,
-            savedAt: board.saved ? null : new Date().toISOString()
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            saveBoard: {
-              __typename: "Board",
-              id: board.id,
-              saved: !board.saved,
-              saved_at: board.saved ? null : new Date().toISOString(),
-              title: board.title,
-              bg: board.bg
-            }
-          }
-        })
-      }
-
   return (
     <>
-        <div className="-z-10 fixed inset-0 overflow-hidden">
-            <img src={data?.findBoard?.bg} alt="board background" className="object-cover absolute w-screen h-screen inset-0" />
-        </div>
-        <div className="fixed px-6 backdrop-blur-sm py-2 w-screen shadow -mt-4 bg-black/60">
-            <div className="flex items-center gap-2">
-                <h2 className="text-2xl w-fit p-2 py-1 hover:bg-gray-700 rounded-lg font-bold">{data?.findBoard?.title}</h2>
-                 <Star className="mt-1" saved={data?.findBoard?.saved} onClick={(e:any /*eslint-disable-line*/)=>handleSave(e, data?.findBoard)} />
-            </div>
-        </div>
+      <BoardHeader board={data?.findBoard} />
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
         {(provided:any) => ( //eslint-disable-line
