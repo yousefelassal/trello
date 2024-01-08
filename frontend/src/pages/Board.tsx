@@ -279,6 +279,7 @@ export default function Board() {
             {isAddingList ? 
             <div className="flex flex-col gap-2">
               <input
+                autoFocus
                 type="text"
                 placeholder="Enter list title..."
                 className="rounded-lg p-2 bg-white transition min-w-[272px] text-black shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
