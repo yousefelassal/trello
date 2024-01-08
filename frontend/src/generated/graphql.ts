@@ -210,6 +210,13 @@ export type CreateBoardMutationVariables = Exact<{
 
 export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null } | null };
 
+export type DeleteBoardMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteBoardMutation = { __typename?: 'Mutation', deleteBoard?: { __typename?: 'Board', id: string } | null };
+
 export type FindBoardQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -456,6 +463,39 @@ export function useCreateBoardMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateBoardMutationHookResult = ReturnType<typeof useCreateBoardMutation>;
 export type CreateBoardMutationResult = Apollo.MutationResult<CreateBoardMutation>;
 export type CreateBoardMutationOptions = Apollo.BaseMutationOptions<CreateBoardMutation, CreateBoardMutationVariables>;
+export const DeleteBoardDocument = gql`
+    mutation deleteBoard($id: ID!) {
+  deleteBoard(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteBoardMutationFn = Apollo.MutationFunction<DeleteBoardMutation, DeleteBoardMutationVariables>;
+
+/**
+ * __useDeleteBoardMutation__
+ *
+ * To run a mutation, you first call `useDeleteBoardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBoardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBoardMutation, { data, loading, error }] = useDeleteBoardMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteBoardMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBoardMutation, DeleteBoardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBoardMutation, DeleteBoardMutationVariables>(DeleteBoardDocument, options);
+      }
+export type DeleteBoardMutationHookResult = ReturnType<typeof useDeleteBoardMutation>;
+export type DeleteBoardMutationResult = Apollo.MutationResult<DeleteBoardMutation>;
+export type DeleteBoardMutationOptions = Apollo.BaseMutationOptions<DeleteBoardMutation, DeleteBoardMutationVariables>;
 export const FindBoardDocument = gql`
     query findBoard($id: ID!) {
   findBoard(id: $id) {
