@@ -208,7 +208,7 @@ export type CreateBoardMutationVariables = Exact<{
 }>;
 
 
-export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null } | null };
+export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null, saved?: boolean | null } | null };
 
 export type DeleteBoardMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -432,6 +432,7 @@ export const CreateBoardDocument = gql`
     description
     bg
     updated_at
+    saved
   }
 }
     `;
