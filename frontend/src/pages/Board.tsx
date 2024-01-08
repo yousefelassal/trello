@@ -293,7 +293,7 @@ export default function Board() {
                   setListTitle('')
                 }}
                 />
-              <div className="flex gap-2">
+              <div className="flex gap-1">
                 <Button onClick={()=>{
                   if(listTitle.trim() !== '') {
                     addNewList()
