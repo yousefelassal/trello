@@ -64,7 +64,7 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             }
                         }}
                     />
-                    <div className="flex gap-2">
+                    <div className="flex gap-1">
                         <Button onClick={()=>{
                             setIsAddingCard(false)
                             if(title.trim() != '') {
