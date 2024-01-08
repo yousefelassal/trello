@@ -54,7 +54,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
     })
 
     const submit = async () => {
-        createBoard({ variables: { 
+        await createBoard({ variables: { 
             title, 
             bg: await getRandomPhoto()
         } })
