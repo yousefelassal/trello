@@ -19,9 +19,23 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
+import { useForm } from "react-hook-form"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog"
+import { Separator } from "./ui/separator";
+import { Loader2 } from "lucide-react";
 
 export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
     const navigate = useNavigate()
+    const form = useForm()
 
     const [save] = useMutation<SaveMutation, SaveMutationVariables>(SaveDocument,{
         update: (cache, response) => {
@@ -99,11 +113,44 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
                 <SheetHeader>
                     <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col justify-between h-full py-6 w-full">
-                    <div>Change Background</div>
-                    <Button className="px-2 w-full flex gap-1" variant="destructive" onClick={handleDelete}>
-                        <Trash className="w-4 h-4" /> Delete Board
-                    </Button>
+                <div className="flex flex-col justify-between h-full pb-6 w-full">
+                    <div className="flex flex-col pt-2 gap-4 w-full">
+                        <Separator className="bg-gray-500/60" />
+                        <div>Change Background</div>
+                    </div>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="px-2 w-full flex gap-1" variant="destructive">
+                                <Trash className="w-4 h-4" /> Delete Board
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                            <DialogTitle>Are you absolutely sure?</DialogTitle>
+                            <DialogDescription>
+                                This action cannot be undone. This will permanently delete your board remove your data from our servers.
+                            </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant="ghost">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <DialogClose asChild>
+                                    <Button
+                                        type="submit"
+                                        disabled={form.formState.isSubmitting}
+                                        onClick={form.handleSubmit(handleDelete)}
+                                        variant="destructive"
+                                        className="flex gap-1"
+                                    >
+                                        {form.formState.isSubmitting ? <> <Loader2 className="animate-spin w-4 h-4" /> Deleting...</> : 'Delete'}
+                                    </Button>
+                                </DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </SheetContent>
             </Sheet>
