@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from "./ui/button";
+import { X } from "lucide-react"
 
 export default function List({list, index, addNewCard}: {list: any, index: number, addNewCard: (list:any, title:string) => void}) { //eslint-disable-line
   const [title, setTitle] = useState('')
@@ -70,10 +71,12 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                                 setTitle('')
                             }
                         }}>Add Card</Button>
-                        <Button className="hover:bg-gray-500/80" onClick={()=>{
+                        <Button className="hover:bg-gray-500/80 px-2" onClick={()=>{
                             setIsAddingCard(false)
                             setTitle('')
-                        }} variant="ghost">X</Button>
+                        }} variant="ghost">
+                            <X />
+                        </Button>
                     </div>
                 </div>
                 :
