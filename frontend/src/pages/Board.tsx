@@ -31,6 +31,7 @@ import Star from "@/components/Star";
 import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import List from "@/components/List";
+import { X } from "lucide-react"
 
 export default function Board() {
   const { id } = useParams()
@@ -352,10 +353,12 @@ export default function Board() {
                   }
                   setListTitle('')
                 }}>Add</Button>
-                <Button className="hover:bg-gray-500/80" variant="ghost" onClick={()=>{
+                <Button className="hover:bg-gray-500/80 px-2 " variant="ghost" onClick={()=>{
                   setIsAddingList(false)
                   setListTitle('')
-                }}>X</Button>
+                }}>
+                  <X />
+                </Button>
               </div>
             </div>
             :
