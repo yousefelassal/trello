@@ -46,7 +46,7 @@ export default function Header({logout}: {logout: () => void}) {
 
   if (error) return <div>{error.message}</div>
 
-  if (loading) return <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-40 flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
+  if (loading) return <div className="container fixed inset-x-0 py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[#1D2125]">
     <div className="flex gap-2">
       <Skeleton className="h-9 w-24 bg-gray-500/80" />
       <Skeleton className="h-9 w-20 bg-gray-500/80" />
@@ -80,7 +80,7 @@ export default function Header({logout}: {logout: () => void}) {
   }
   
   return (
-    <div className="container fixed inset-x-0 py-2 backdrop-blur items-center z-40 flex justify-between border-b border-neutral-600 bg-[hsla(0,0%,100%,.1)]">
+    <div className="container fixed inset-x-0 py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[linear-gradient(110deg,#333_0.6%,#222)]">
       <div className="flex gap-2">
         <Link to="/" className="group rounded-md px-2 py-1 items-center flex gap-1 transition hover:bg-gray-500/80">
           <div className="rounded-[3px] items-start p-1 h-5 w-5 flex gap-[2px] bg-[#9eacba]/80">
@@ -96,7 +96,7 @@ export default function Header({logout}: {logout: () => void}) {
                 Starred
               </NavigationMenuTrigger>
               <NavigationMenuContent>
-                <div className="grid gap-3 p-4 w-64 md:w-[400px]">
+                <div className="grid gap-2 p-4 w-64 md:w-[400px]">
                 {saved?.savedBoards?.length === 0 && 
                 <>
                   <img src={NoStarsImage} alt="masroo2a mn trello credits to whoever made this idk" className="rounded-md" />
@@ -107,7 +107,7 @@ export default function Header({logout}: {logout: () => void}) {
                 {errorSaved && <div>{errorSaved.message}</div>}
                   {saved?.savedBoards?.map((board) => (
                     <NavigationMenuLink key={board.id} asChild>
-                      <Link to={`/${board.id}`} className="flex justify-between items-center px-2 py-1 rounded-md transition hover:bg-gray-500/80">
+                      <Link to={`/${board.id}`} className="flex justify-between items-center p-1 pr-4 rounded-lg transition hover:bg-gray-500/80">
                         <div className="gap-2 flex items-center">
                           <img src={board.bg} alt="board background" className="w-10 h-8 object-cover rounded-md" />
                           <span className="font-semibold">{board.title}</span>
