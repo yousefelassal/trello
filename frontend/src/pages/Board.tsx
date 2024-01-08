@@ -34,6 +34,7 @@ export default function Board() {
   const [title, setTitle] = useState('Trello 3al daya2')
   const [listTitle, setListTitle] = useState('')
   const [isAddingList, setIsAddingList] = useState(false)
+  const [cancelClicked, setCancelClicked] = useState(false)
 
   const { data, loading, error } = useQuery<FindBoardQuery, FindBoardQueryVariables>(FindBoardDocument, {
     variables: { id: id as string },
@@ -285,12 +286,16 @@ export default function Board() {
                 className="rounded-lg p-2 bg-white transition min-w-[272px] text-black shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 value={listTitle}
                 onChange={(e)=>setListTitle(e.target.value)}
+                onFocus={()=>setCancelClicked(false)}
                 onBlur={()=>{
-                  setIsAddingList(false)
-                  if(listTitle.trim() !== '') {
-                    addNewList()
+                  if(!cancelClicked) {
+                    setIsAddingList(false)
+                    if(listTitle.trim() !== '') {
+                      addNewList()
+                    }
+                    setListTitle('')
                   }
-                  setListTitle('')
+                  setCancelClicked(false)
                 }}
                 />
               <div className="flex gap-1">
@@ -300,10 +305,16 @@ export default function Board() {
                   }
                   setListTitle('')
                 }}>Add</Button>
-                <Button className="hover:bg-gray-500/80 px-2 " variant="ghost" onClick={()=>{
-                  setIsAddingList(false)
-                  setListTitle('')
-                }}>
+                <Button
+                  className="hover:bg-gray-500/80 px-2"
+                  variant="ghost"
+                  onMouseDown={(e)=>{
+                    e.preventDefault()
+                    setCancelClicked(true)
+                    setIsAddingList(false)
+                    setListTitle('')
+                  }}
+                >
                   <X />
                 </Button>
               </div>
