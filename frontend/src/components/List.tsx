@@ -67,7 +67,7 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
             <div 
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`flex flex-col rounded-lg gap-2 transition ${snapshot.isDraggingOver ? 'bg-[#595956]' : ''}`}
+                className={`flex flex-col min-h-[2px] rounded-lg gap-2 transition ${snapshot.isDraggingOver ? 'bg-[#595956]' : ''}`}
             >
                 {list.cards?.map((card:any, index:any) => ( //eslint-disable-line
                     <Draggable draggableId={card.id} index={index} key={card.id}>
