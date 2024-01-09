@@ -42,7 +42,7 @@ const Login = ({ setToken }:{ setToken:any }) => {
     return (
         <div className="min-h-screen w-full rounded-md flex items-center justify-center antialiased bg-grid-white/[0.02] relative overflow-hidden">
         <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
-        <div className="flex flex-col p-8 md:px-14 w-full md:w-auto bg-black/80 rounded-xl shadow-xl">
+        <div className="flex items-center justify-center flex-col p-8 md:px-14 w-full md:w-auto bg-black/80 border border-black rounded-xl shadow-xl">
         <div className="max-w-sm w-full text-gray-600">
             <div className="text-center flex flex-col items-center">
                 <Link to="/">
