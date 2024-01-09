@@ -273,7 +273,7 @@ export default function Board() {
             <div 
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="container pt-16 flex gap-2">
+              className="container mt-16 flex gap-2">
             {data?.findBoard?.lists?.map((list, index) => (
                 <List list={list} index={index} addNewCard={addNewCard} key={list.id} />
             ))}
