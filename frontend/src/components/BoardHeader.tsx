@@ -130,7 +130,7 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
 
   return (
     <>
-    <div className="-z-10 fixed top-14 w-screen h-screen overflow-hidden">
+    <div className="-z-10 fixed top-14 w-screen h-dvh overflow-hidden">
         <img src={board.bg} alt="board background" className="object-cover absolute w-full h-full" />
     </div>
     <div className="fixed px-6 top-14 backdrop-blur-sm py-1 min-w-[100vw] shadow bg-black/60">
