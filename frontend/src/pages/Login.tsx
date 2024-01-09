@@ -82,7 +82,7 @@ const Login = ({ setToken }:{ setToken:any }) => {
                             <div className="relative">
                                 <Input 
                                     placeholder="" {...field}
-                                    className="w-full mt-2 px-3 py-2 text-gray-900 bg-white outline-none border focus:border-blue-600 shadow-sm rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-opacity-50 transition"
+                                    className="w-full mt-2 px-3 py-2 z-20 text-gray-900 bg-white outline-none border focus:border-blue-600 shadow-sm rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-opacity-50 transition"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />
@@ -104,7 +104,7 @@ const Login = ({ setToken }:{ setToken:any }) => {
                                             type={form.watch("showPassword") ? "text" : "password"}
                                             placeholder=""
                                             {...field}
-                                            className="w-full mt-2 px-3 py-2 text-gray-900 bg-white 
+                                            className="w-full mt-2 z-30 px-3 py-2 text-gray-900 bg-white 
                                             outline-none border focus:border-blue-600 shadow-sm rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-opacity-50 transition"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
@@ -146,11 +146,11 @@ const Login = ({ setToken }:{ setToken:any }) => {
                     />
                     <Button 
                         type="submit"
-                        className="shrink-0 flex mt-4 gap-1 items-center justify-center w-full h-10 bg-gradient-to-br from-blue-400 to-blue-700 shadow-md hover:bg-gradient-to-tr px-12 py-3 text-sm font-medium text-white transition focus:border-blue-600 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-opacity-50"
+                        className="shrink-0 z-10 flex mt-4 gap-1 items-center justify-center w-full h-10 bg-gradient-to-br from-blue-400 to-blue-700 shadow-md hover:bg-gradient-to-tr px-12 py-3 text-sm font-medium text-white transition focus:border-blue-600 rounded-lg focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-opacity-50"
                         onClick={form.handleSubmit(submit)}
                         disabled={form.formState.isSubmitting}
                     >
-                        {form.formState.isSubmitting ? <><Loader2 className="aniamte-spin"/> Logging in...</> : "Login"}
+                        {form.formState.isSubmitting ? <><Loader2 className="animate-spin"/> Logging in...</> : "Login"}
                     </Button>
                 </form>
             </Form>
