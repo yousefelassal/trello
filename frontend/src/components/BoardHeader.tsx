@@ -130,10 +130,10 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
 
   return (
     <>
-    <div className="-z-10 fixed inset-0 overflow-hidden">
-        <img src={board.bg} alt="board background" className="object-cover absolute w-screen h-screen inset-0" />
+    <div className="-z-10 fixed w-screen h-screen overflow-hidden">
+        <img src={board.bg} alt="board background" className="object-cover absolute w-full h-full" />
     </div>
-    <div className="fixed px-6 backdrop-blur-sm pb-1 pt-3 min-w-[100vw] shadow -mt-4 bg-black/60">
+    <div className="fixed px-6 top-14 backdrop-blur-sm py-1 min-w-[100vw] shadow bg-black/60">
         <div className="flex justify-between">
             <div className="flex items-center gap-2">
               {isEditing ?
@@ -155,7 +155,7 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
                       }
                     }}
                     style={{
-                      width: `${title.length}ch`,
+                      width: `${(title.length + 0.6)}ch`,
                       minWidth: '4ch'
                     }}
                   />
