@@ -13,7 +13,8 @@ import {
     PopoverContent,
     PopoverTrigger
 } from "@/components/ui/popover"  
-import { X, MoreHorizontal, Loader2, Trash } from "lucide-react"
+import { X, MoreHorizontal, Loader2, Trash, Pen } from "lucide-react"
+import { Separator } from "./ui/separator";
 
 export default function List({list, index, addNewCard}: {list: any, index: number, addNewCard: (list:any, title:string) => void}) { //eslint-disable-line
   const [title, setTitle] = useState('')
@@ -60,13 +61,22 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                     </PopoverTrigger>
                     <PopoverContent className="w-60 p-2">
                         <div className="flex flex-col gap-2">
+                            <h2 className="place-self-center">List actions</h2>
+                            <Separator />
+                            <Button
+                                variant="ghost"
+                                className="justify-start gap-1"
+                            >
+                                <Pen className="h-[16px] w-[16px]" />
+                                Update Title
+                            </Button>
                             <Popover open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
                                 <PopoverTrigger asChild>
                                     <Button
                                         variant="ghost"
                                         className="hover:bg-gray-500/80 gap-1 items-center hover:text-red-500 justify-start"
                                     >
-                                        <Trash className="h-5 w-5" /> Delete List
+                                        <Trash className="h-[16px] w-[16px]" /> Delete List
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-60 p-3">
