@@ -60,7 +60,7 @@ export default function Card({
       <Link to={`/${board.id}`} className="flex min-h-52 flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
         <div className="bg-dot-white inset-0 absolute" />
         <Star className="absolute top-4 left-4 z-10 drop-shadow-lg" saved={board.saved} onClick={handleSave} animate />
-          <div className="relative flex flex-1 w-full h-full min-h-[7rem]">
+          <div className="relative flex flex-1 w-full h-[7rem]">
             <img src={board.bg} alt="board" className="absolute group-hover:scale-110 transition duration-300 object-cover inset-0 flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100" />
           </div>
           <div className="w-full flex justify-between px-6 py-8 items-center">
