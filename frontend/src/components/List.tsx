@@ -99,6 +99,19 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         onFocus={()=>setCancelClicked(false)}
+                        onKeyDown={(e)=>{
+                            if(e.key === 'Enter') {
+                                setIsAddingCard(false)
+                                if(title.trim() != '') {
+                                    addNewCard(list, title)
+                                    setTitle('')
+                                }
+                            }
+                            if(e.key === 'Escape') {
+                                setIsAddingCard(false)
+                                setTitle('')
+                            }
+                        }}
                         onBlur={()=>{
                             if(!cancelClicked) {
                                 setIsAddingCard(false)
