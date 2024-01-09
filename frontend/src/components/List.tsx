@@ -113,7 +113,12 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             <MoreHorizontal className="w-5 h-5" />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-60 p-2">
+                    <PopoverContent
+                        onOpenAutoFocus={(e)=>{
+                            e.preventDefault()
+                        }}
+                        className="w-60 p-2"
+                    >
                         <div className="flex flex-col gap-2">
                             <h2 className="place-self-center">List actions</h2>
                             <Separator />
