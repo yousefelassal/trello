@@ -174,7 +174,7 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
                     <MoreHorizontal />
                 </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent onOpenAutoFocus={(e)=>e.preventDefault()}>
                 <SheetHeader>
                     <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
