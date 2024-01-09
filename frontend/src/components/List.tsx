@@ -7,6 +7,11 @@ import {
 } from "@/generated/graphql";
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from "./ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"  
 import { X, MoreHorizontal } from "lucide-react"
 
 export default function List({list, index, addNewCard}: {list: any, index: number, addNewCard: (list:any, title:string) => void}) { //eslint-disable-line
@@ -44,9 +49,18 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                     >
                     {list.title}
                 </h3>
-                <Button variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
-                    <MoreHorizontal className="w-5 h-5" />
-                </Button>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
+                            <MoreHorizontal className="w-5 h-5" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-60">
+                        <div className="flex flex-col gap-2">
+                            <Button variant="ghost" className="hover:bg-gray-500/80" onClick={handleDelete}>Delete List</Button>
+                        </div>
+                    </PopoverContent>
+                </Popover>
             </div>
             <Droppable droppableId={list.id} type="task">
             {(provided:any, snapshot:any) => ( //eslint-disable-line
