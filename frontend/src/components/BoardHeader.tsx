@@ -133,7 +133,7 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
     <div className="-z-10 fixed inset-0 overflow-hidden">
         <img src={board.bg} alt="board background" className="object-cover absolute w-screen h-screen inset-0" />
     </div>
-    <div className="fixed px-6 backdrop-blur-sm pb-1 pt-3 w-screen shadow -mt-4 bg-black/60">
+    <div className="fixed px-6 backdrop-blur-sm pb-1 pt-3 min-w-[100vw] shadow -mt-4 bg-black/60">
         <div className="flex justify-between">
             <div className="flex items-center gap-2">
               {isEditing ?
