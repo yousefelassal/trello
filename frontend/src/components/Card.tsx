@@ -57,7 +57,7 @@ export default function Card({
     }
 
     return (
-      <Link to={`/${board.id}`} className="flex min-h-52 flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative max-w-md max-h-[20rem] h-full w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
+      <Link to={`/${board.id}`} className="flex flex-col items-center bg-[linear-gradient(110deg,#333_0.6%,#222)] relative h-52 w-full rounded-xl border border-neutral-600 overflow-hidden group justify-center antialiased">
         <div className="bg-dot-white inset-0 absolute" />
         <Star className="absolute top-4 left-4 z-10 drop-shadow-lg" saved={board.saved} onClick={handleSave} animate />
           <div className="relative flex flex-1 w-full h-[7rem]">
