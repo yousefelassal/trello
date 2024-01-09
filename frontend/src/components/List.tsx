@@ -1,12 +1,33 @@
 import { useState } from "react"
+import { useMutation } from "@apollo/client";
+import {
+    DeleteListDocument,
+    DeleteListMutation,
+    DeleteListMutationVariables,
+} from "@/generated/graphql";
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from "./ui/button";
-import { X } from "lucide-react"
+import { X, MoreHorizontal } from "lucide-react"
 
 export default function List({list, index, addNewCard}: {list: any, index: number, addNewCard: (list:any, title:string) => void}) { //eslint-disable-line
   const [title, setTitle] = useState('')
   const [isAddingCard, setIsAddingCard] = useState(false)
   const [cancelClicked, setCancelClicked] = useState(false)
+
+  const [deleteList] = useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, {
+    update: (cache) => {
+        cache.evict({ id: `List:${list.id}` })
+        cache.gc()
+    }
+  })
+
+  const handleDelete = async () => {
+    await deleteList({
+        variables: {
+            id: list.id
+        }
+    })
+  }
 
   return (
     <Draggable draggableId={list.id} index={index} key={list.id}>
@@ -15,13 +36,18 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
             {...provided.draggableProps}
             ref={provided.innerRef}
             className="flex p-2 flex-col min-w-[272px] h-fit rounded-2xl shadow-2xl border border-[#201f1f] bg-[#101204] gap-2"
-        >
-            <h3
-                className="text-xl w-full font-bold"
-                {...provided.dragHandleProps}
-            >
-                {list.title}
-            </h3>
+        >   
+            <div className="flex justify-between items-center">
+                <h3
+                    className="text-xl w-full flex-1 font-bold"
+                    {...provided.dragHandleProps}
+                    >
+                    {list.title}
+                </h3>
+                <Button variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
+                    <MoreHorizontal className="w-5 h-5" />
+                </Button>
+            </div>
             <Droppable droppableId={list.id} type="task">
             {(provided:any, snapshot:any) => ( //eslint-disable-line
             <div 
