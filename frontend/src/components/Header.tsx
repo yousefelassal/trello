@@ -80,7 +80,7 @@ export default function Header({logout}: {logout: () => void}) {
   }
   
   return (
-    <div className="container fixed inset-x-0 py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[linear-gradient(110deg,#333_0.6%,#222)]">
+    <div className="container w-screen fixed py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[linear-gradient(110deg,#333_0.6%,#222)]">
       <div className="flex gap-2">
         <Link to="/" className="group rounded-md px-2 py-1 items-center flex gap-1 transition hover:bg-gray-500/80">
           <div className="rounded-[3px] items-start p-1 h-5 w-5 flex gap-[2px] bg-[#9eacba]/80">
