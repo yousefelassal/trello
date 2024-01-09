@@ -217,6 +217,13 @@ export type DeleteBoardMutationVariables = Exact<{
 
 export type DeleteBoardMutation = { __typename?: 'Mutation', deleteBoard?: { __typename?: 'Board', id: string } | null };
 
+export type DeleteListMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteListMutation = { __typename?: 'Mutation', deleteList?: { __typename?: 'List', id: string } | null };
+
 export type FindBoardQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -497,6 +504,39 @@ export function useDeleteBoardMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteBoardMutationHookResult = ReturnType<typeof useDeleteBoardMutation>;
 export type DeleteBoardMutationResult = Apollo.MutationResult<DeleteBoardMutation>;
 export type DeleteBoardMutationOptions = Apollo.BaseMutationOptions<DeleteBoardMutation, DeleteBoardMutationVariables>;
+export const DeleteListDocument = gql`
+    mutation deleteList($id: ID!) {
+  deleteList(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteListMutationFn = Apollo.MutationFunction<DeleteListMutation, DeleteListMutationVariables>;
+
+/**
+ * __useDeleteListMutation__
+ *
+ * To run a mutation, you first call `useDeleteListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteListMutation, { data, loading, error }] = useDeleteListMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteListMutation(baseOptions?: Apollo.MutationHookOptions<DeleteListMutation, DeleteListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, options);
+      }
+export type DeleteListMutationHookResult = ReturnType<typeof useDeleteListMutation>;
+export type DeleteListMutationResult = Apollo.MutationResult<DeleteListMutation>;
+export type DeleteListMutationOptions = Apollo.BaseMutationOptions<DeleteListMutation, DeleteListMutationVariables>;
 export const FindBoardDocument = gql`
     query findBoard($id: ID!) {
   findBoard(id: $id) {
