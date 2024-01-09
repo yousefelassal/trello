@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation } from "@apollo/client"
 import {
     SaveDocument,
@@ -6,7 +7,10 @@ import {
     GetSavedDocument,
     DeleteBoardDocument,
     DeleteBoardMutation,
-    DeleteBoardMutationVariables
+    DeleteBoardMutationVariables,
+    UpdateBoardDocument,
+    UpdateBoardMutation,
+    UpdateBoardMutationVariables
 } from "@/generated/graphql"
 import Star from "./Star"
 import { useNavigate } from "react-router-dom";
@@ -36,6 +40,10 @@ import { Loader2 } from "lucide-react";
 export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
     const navigate = useNavigate()
     const form = useForm()
+    const [title, setTitle] = useState(board.title)
+    const [isEditing, setIsEditing] = useState(false)
+
+    const [updateBoard] = useMutation<UpdateBoardMutation, UpdateBoardMutationVariables>(UpdateBoardDocument)
 
     const [save] = useMutation<SaveMutation, SaveMutationVariables>(SaveDocument,{
         update: (cache, response) => {
@@ -92,6 +100,34 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
         navigate('/')
     }
 
+  const handleTitleChange = async () => {
+    setIsEditing(false)
+    if (title.trim() == '' || title.trim() == board.title) {
+      setTitle(board.title)
+      setIsEditing(false)
+      return
+    }
+    await updateBoard({
+      variables: {
+        updateBoardId: board.id,
+        title: title.trim(),
+        updated_at: new Date().toISOString()
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateBoard: {
+          __typename: "Board",
+          id: board.id,
+          title: title.trim(),
+          bg: board.bg,
+          lists: board.lists,
+          updated_at: new Date().toISOString(),
+          description: board.description
+        }
+      }
+    })
+  }
+
   return (
     <>
     <div className="-z-10 fixed inset-0 overflow-hidden">
@@ -100,7 +136,36 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
     <div className="fixed px-6 backdrop-blur-sm pb-1 pt-3 w-screen shadow -mt-4 bg-black/60">
         <div className="flex justify-between">
             <div className="flex items-center gap-2">
-                <h2 className="text-2xl w-fit p-2 py-1 hover:bg-gray-500/80 rounded-lg font-bold">{board.title}</h2>
+              {isEditing ?
+                  <input
+                    autoFocus
+                    type="text"
+                    className="rounded-lg w-fit bg-black/60 border-2 border-[#22272B] shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white p-2 py-1 text-2xl font-bold"
+                    value={title}
+                    onFocus={(e) => e.target.select()}
+                    onChange={(e) => setTitle(e.target.value)}
+                    onBlur={handleTitleChange}
+                    onKeyDown={(e) => {
+                      if (e.key == 'Enter' && (title.trim() != '' || title.trim() != board.title)) {
+                        handleTitleChange()
+                      }
+                      if (e.key == 'Escape') {
+                        setIsEditing(false)
+                        setTitle(board.title)
+                      }
+                    }}
+                    style={{
+                      width: `${title.length}ch`,
+                      minWidth: '4ch'
+                    }}
+                  />
+                : <button 
+                    className="text-2xl border-2 border-transparent w-fit p-2 py-1 hover:bg-gray-500/80 rounded-lg font-bold"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    {board.title}
+                  </button>
+              }
                 <Star className="mt-1" saved={board.saved} onClick={handleSave} />
             </div>
             <Sheet>
