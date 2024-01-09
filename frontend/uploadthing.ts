@@ -8,8 +8,6 @@ export const useHeaders = () => {
     }
 }
 
-console.log(import.meta.env.VITE_UPLOAD_SERVER)
-
 export const { UploadButton, UploadDropzone, Uploader } =
   generateComponents({
     url: import.meta.env.VITE_UPLOAD_SERVER
