@@ -266,14 +266,14 @@ export default function Board() {
   return (
     <>
     <BoardHeader board={data?.findBoard} />
-    <div className="w-screen mt-[108px] h-[calc(100vh-108px)] overflow-auto py-4">
+    <div className="w-screen mt-[108px] container px-6 h-[calc(100vh-108px)] overflow-auto py-4">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
         {(provided:any) => ( //eslint-disable-line
             <div 
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="container flex gap-2">
+              className="flex gap-2">
             {data?.findBoard?.lists?.map((list, index) => (
                 <List list={list} index={index} addNewCard={addNewCard} key={list.id} />
             ))}
