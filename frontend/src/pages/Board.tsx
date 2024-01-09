@@ -200,9 +200,6 @@ export default function Board() {
         })
     }
 
-    console.log(newStart)
-
-
     const newFinish = {
         __typename: "List",
         id: finish.id,
@@ -211,8 +208,6 @@ export default function Board() {
             return startAndFinish.find((card) => card.id === cardId) as any //eslint-disable-line
         })
     }
-
-    console.log(newFinish)
 
     const newList = data?.findBoard?.lists?.map((list) => {
         if(list.id === newStart.id) {

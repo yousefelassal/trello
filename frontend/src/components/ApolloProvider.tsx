@@ -7,8 +7,6 @@ createHttpLink,
 import { setContext } from '@apollo/client/link/context'
 import { useTokenValue } from '@/hooks/useTokenValue'
 
-console.log(import.meta.env.VITE_SERVER)
-
 interface Props {
   children: React.ReactNode
 }
