@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useMutation } from "@apollo/client";
+import { useForm } from "react-hook-form";
 import {
     DeleteListDocument,
     DeleteListMutation,
@@ -10,14 +11,16 @@ import { Button } from "./ui/button";
 import {
     Popover,
     PopoverContent,
-    PopoverTrigger,
+    PopoverTrigger
 } from "@/components/ui/popover"  
-import { X, MoreHorizontal } from "lucide-react"
+import { X, MoreHorizontal, Loader2, Trash } from "lucide-react"
 
 export default function List({list, index, addNewCard}: {list: any, index: number, addNewCard: (list:any, title:string) => void}) { //eslint-disable-line
   const [title, setTitle] = useState('')
   const [isAddingCard, setIsAddingCard] = useState(false)
   const [cancelClicked, setCancelClicked] = useState(false)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const form = useForm()
 
   const [deleteList] = useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, {
     update: (cache) => {
@@ -55,9 +58,43 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             <MoreHorizontal className="w-5 h-5" />
                         </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-60">
+                    <PopoverContent className="w-60 p-2">
                         <div className="flex flex-col gap-2">
-                            <Button variant="ghost" className="hover:bg-gray-500/80" onClick={handleDelete}>Delete List</Button>
+                            <Popover open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className="hover:bg-gray-500/80 gap-1 items-center hover:text-red-500 justify-start"
+                                    >
+                                        <Trash className="h-5 w-5" /> Delete List
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-60 p-3">
+                                    <div className="flex items-center flex-col gap-3">
+                                        <h3 className="text-lg font-semibold">Are you sure?</h3>
+                                        <p className="text-sm text-gray-200">This action cannot be undone.</p>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                onClick={()=>setIsDeleteOpen(false)}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                variant="destructive"
+                                                onClick={()=>{
+                                                    setIsDeleteOpen(false)
+                                                    form.handleSubmit(handleDelete)()
+                                                }}
+                                                className="gap-1 items-center justify-center"
+                                                disabled={form.formState.isSubmitting}
+                                            >
+                                                {form.formState.isSubmitting ? <><Loader2 className="w-5 h-5 animate-spin" /> Deleting...</> : "Delete"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
                         </div>
                     </PopoverContent>
                 </Popover>
