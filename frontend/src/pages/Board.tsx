@@ -266,7 +266,7 @@ export default function Board() {
   return (
     <>
     <BoardHeader board={data?.findBoard} />
-    <div className="w-screen pt-16 h-screen overflow-auto pb-4 pr-4">
+    <div className="w-screen mt-16 h-[calc(100vh-64px)] overflow-auto pb-4 pr-4">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="all-columns" direction="horizontal" type="column">
         {(provided:any) => ( //eslint-disable-line
