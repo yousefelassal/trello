@@ -288,6 +288,18 @@ export default function Board() {
                 value={listTitle}
                 onChange={(e)=>setListTitle(e.target.value)}
                 onFocus={()=>setCancelClicked(false)}
+                onKeyDown={(e)=>{
+                  if(e.key === 'Enter') {
+                    if(listTitle.trim() !== '') {
+                      addNewList()
+                    }
+                    setListTitle('')
+                  }
+                  if(e.key === 'Escape') {
+                    setIsAddingList(false)
+                    setListTitle('')
+                  }
+                }}
                 onBlur={()=>{
                   if(!cancelClicked) {
                     setIsAddingList(false)
