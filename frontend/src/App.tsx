@@ -20,6 +20,7 @@ import Board from "./pages/Board"
 import Header from "./components/Header"
 import useHasMounted from './hooks/useHasMounted'
 import { useTokenValue } from "./hooks/useTokenValue"
+import Footer from "./components/Footer";
 
 export default function App() {
   const {token, setToken} = useTokenValue()
@@ -95,6 +96,7 @@ export default function App() {
         } />
         <Route path="/*" element={<Navigate to="/" replace={true} />} />
       </Routes>
+      <Footer />
     </>
   )
 }
