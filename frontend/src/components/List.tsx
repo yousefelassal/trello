@@ -5,6 +5,9 @@ import {
     DeleteListDocument,
     DeleteListMutation,
     DeleteListMutationVariables,
+    UpdateListDocument,
+    UpdateListMutation,
+    UpdateListMutationVariables
 } from "@/generated/graphql";
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from "./ui/button";
@@ -21,6 +24,8 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
   const [isAddingCard, setIsAddingCard] = useState(false)
   const [cancelClicked, setCancelClicked] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [listTitle, setListTitle] = useState(list.title)
   const form = useForm()
 
   const [deleteList] = useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, {
@@ -30,10 +35,30 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
     }
   })
 
+  const [updateList] = useMutation<UpdateListMutation, UpdateListMutationVariables>(UpdateListDocument)
+
   const handleDelete = async () => {
     await deleteList({
         variables: {
             id: list.id
+        }
+    })
+  }
+
+  const handleUpdate = async () => {
+    await updateList({
+        variables: {
+            id: list.id,
+            title: listTitle
+        },
+        optimisticResponse: {
+            __typename: "Mutation",
+            updateList: {
+                __typename: "List",
+                id: list.id,
+                title: listTitle,
+                cards: list.cards
+            }
         }
     })
   }
@@ -46,13 +71,42 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
             ref={provided.innerRef}
             className="flex p-2 flex-col min-w-[272px] h-fit rounded-2xl shadow-2xl border border-[#201f1f] bg-[#101204] gap-2"
         >   
-            <div className="flex justify-between items-center">
-                <h3
+            <div 
+                {...provided.dragHandleProps}
+                className="flex justify-between items-center"
+            >
+                {isEditing ?
+                <input
+                    autoFocus
+                    type="text"
+                    className="rounded-lg border-2 border-[#22272B] p-2 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
+                    value={listTitle}
+                    onChange={(e) => setListTitle(e.target.value)}
+                    onKeyDown={(e)=>{
+                        if(e.key === 'Enter') {
+                            setIsEditing(false)
+                            if(listTitle.trim() != '' || listTitle != list.title) {
+                                handleUpdate()
+                            }
+                        }
+                        if(e.key === 'Escape') {
+                            setIsEditing(false)
+                            setListTitle(list.title)
+                        }
+                    }}
+                    onBlur={()=>{
+                        setIsEditing(false)
+                        if(listTitle.trim() != '' || listTitle != list.title) {    
+                            handleUpdate()
+                        }
+                    }}
+                />
+                : <h3
                     className="text-xl w-full flex-1 font-bold"
-                    {...provided.dragHandleProps}
                     >
                     {list.title}
                 </h3>
+                }
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
@@ -66,6 +120,7 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             <Button
                                 variant="ghost"
                                 className="justify-start gap-1"
+                                onClick={()=>setIsEditing(true)}
                             >
                                 <Pen className="h-[16px] w-[16px]" />
                                 Update Title
