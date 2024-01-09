@@ -18,7 +18,7 @@ export default function Home() {
     <div className="fixed -z-10 h-screen w-full bg-black bg-dot-white/[0.2] flex items-center justify-center">
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
     </div>
-    <div className="container min-h-[calc(100dvh-64px)] mt-16 flex flex-col gap-12 pb-8">
+    <div className="container min-h-[calc(100dvh-64px)] overflow-auto mt-16 flex flex-col gap-12 pb-8">
       <div className="flex flex-col gap-2">
         <h2 className="text-2xl font-bold">Your Boards</h2>
         {boards?.allBoards?.length === 0 && <div>You don't have any boards yet</div>}
