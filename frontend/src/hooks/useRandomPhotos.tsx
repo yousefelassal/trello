@@ -1,4 +1,3 @@
-// import useSWR from 'swr' 
 import { useState, useEffect } from 'react'
 
 const dataIfError = [
