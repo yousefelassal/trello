@@ -34,6 +34,12 @@ const schema = new mongoose.Schema({
             ref: "List"
         }
     ],
+    uploaded_bgs: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Image"
+        }
+    ]
 })
 
 schema.set("toJSON", {
