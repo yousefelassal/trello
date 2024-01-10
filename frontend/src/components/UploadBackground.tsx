@@ -8,6 +8,7 @@ import {
   AddBgDocument,
   AddBgMutationVariables,
 } from "@/generated/graphql";
+import { toast } from "sonner"
 
 export default function UploadBackground({ board }:any) { //eslint-disable-line
   const [addBg] = useMutation<AddBgMutation, AddBgMutationVariables>(AddBgDocument);
@@ -49,10 +50,10 @@ export default function UploadBackground({ board }:any) { //eslint-disable-line
         endpoint="image"
         onClientUploadComplete={onClientUploadComplete}
         onUploadError={(error:any) => { //eslint-disable-line
-          console.error(error, error.cause);
+          toast.error(error.cause)
         }}
         appearance={{
-          container: "border-gray-400 bg-blue-50 w-full border-dashed border-blue-500 rounded-xl"
+          container: "border-neutral-600 bg-[linear-gradient(90deg,#333_0.6%,#222)] w-full border-dashed rounded-xl"
         }}
       />
     </div>
