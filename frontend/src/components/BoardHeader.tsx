@@ -13,6 +13,7 @@ import {
     UpdateBoardMutationVariables
 } from "@/generated/graphql"
 import Star from "./Star"
+import UploadBackground from "./UploadBackground"
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Trash, MoreHorizontal } from "lucide-react";
@@ -181,7 +182,7 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
                 <div className="flex flex-col justify-between h-full pb-6 w-full">
                     <div className="flex flex-col pt-2 gap-4 w-full">
                         <Separator className="bg-gray-500/60" />
-                        <div>Change Background</div>
+                        <UploadBackground board={board} />
                     </div>
                     <Dialog>
                         <DialogTrigger asChild>
