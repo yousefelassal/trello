@@ -43,19 +43,18 @@ export default function UploadBackground({ board }:any) { //eslint-disable-line
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 py-8">
-      <div>
-        <UploadDropzone
-          endpoint="image"
-          onClientUploadComplete={onClientUploadComplete}
-          onUploadError={(error:any) => { //eslint-disable-line
-            console.error(error, error.cause);
-          }}
-          appearance={{
-            container: "border-gray-400 border-dashed"
-          }}
-        />
-      </div>
+    <div className="flex flex-col items-start w-full gap-2 py-2">
+      <h3 className="text-lg font-semibold">Change background</h3>
+      <UploadDropzone
+        endpoint="image"
+        onClientUploadComplete={onClientUploadComplete}
+        onUploadError={(error:any) => { //eslint-disable-line
+          console.error(error, error.cause);
+        }}
+        appearance={{
+          container: "border-gray-400 bg-blue-50 w-full border-dashed border-blue-500 rounded-xl"
+        }}
+      />
     </div>
   );
 }
