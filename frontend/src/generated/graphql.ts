@@ -261,7 +261,7 @@ export type AddBgMutationVariables = Exact<{
 }>;
 
 
-export type AddBgMutation = { __typename?: 'Mutation', addBgToBoard?: { __typename?: 'Board', bg: string, uploaded_bgs?: Array<{ __typename?: 'Image', id: string, url: string }> | null } | null };
+export type AddBgMutation = { __typename?: 'Mutation', addBgToBoard?: { __typename?: 'Board', id: string, bg: string, uploaded_bgs?: Array<{ __typename?: 'Image', id: string, url: string }> | null } | null };
 
 export type AddCardMutationVariables = Exact<{
   listId: Scalars['ID']['input'];
@@ -393,6 +393,7 @@ export const AddBgDocument = gql`
     name: $name
     uploaded_at: $uploadedAt
   ) {
+    id
     bg
     uploaded_bgs {
       id
