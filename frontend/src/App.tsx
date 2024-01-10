@@ -15,7 +15,6 @@ import Home from "./pages/Home"
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import Docs from "./pages/Docs"
-import BoardTest from "./pages/BoardTest"
 import Board from "./pages/Board"
 import Header from "./components/Header"
 import useHasMounted from './hooks/useHasMounted'
@@ -47,7 +46,6 @@ export default function App() {
           <Route path="/login" element={<Navigate to="/" replace={true} />} />
           <Route path="/signup" element={<Navigate to="/" replace={true} />} />
           <Route path="/:id" element={<Board />} />
-          <Route path="/test" element={<BoardTest />} />
         </Routes>
       </>
     )
