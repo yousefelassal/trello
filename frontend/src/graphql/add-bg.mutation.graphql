@@ -1,0 +1,9 @@
+mutation addBg($boardId: ID!, $key: String!, $url: String!, $name: String!, $uploadedAt: String!) {
+  addBgToBoard(boardId: $boardId, key: $key, url: $url, name: $name, uploaded_at: $uploadedAt) {
+    bg
+    uploaded_bgs {
+      id
+      url
+    }
+  }
+}
