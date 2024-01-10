@@ -2,6 +2,10 @@ query findBoard($id: ID!) {
     findBoard(id: $id){
         id
         bg
+        uploaded_bgs{
+            id
+            url
+        }
         title
         description
         saved
