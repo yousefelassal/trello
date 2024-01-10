@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useMutation } from "@apollo/client"
 import {
     CreateBoardDocument,
@@ -30,15 +30,8 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [open, setOpen] = useState(false)
-  const [selectedBg, setSelectedBg] = useState('')
-  const { photos, isLoading } = useRandomPhotos()
+  const { photos, isLoading, selectedBg, handleBgChange } = useRandomPhotos()
   const form = useForm()
-
-  useEffect(() => { 
-    if (photos) {
-      setSelectedBg(photos[0])
-    }
-  }, [photos])
 
     const [createBoard] = useMutation<CreateBoardMutation, CreateBoardMutationVariables>(CreateBoardDocument, {
         onCompleted(data) {
@@ -115,7 +108,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                                 <button
                                     key={i}
                                     className={cn('relative rounded-md h-12 w-16 overflow-hidden', selectedBg === bg ? 'border-2 border-blue-500' : '')}
-                                    onClick={() => setSelectedBg(bg)}
+                                    onClick={() => handleBgChange(bg)}
                                 >
                                     {selectedBg === bg && (
                                         <div className="absolute z-10 inset-0 bg-black bg-opacity-50 flex items-center justify-center" />
