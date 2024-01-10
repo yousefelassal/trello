@@ -268,7 +268,10 @@ const resolvers = {
             }
 
             const updatedBoard = await Board.findByIdAndUpdate(args.id, { ...args }, { new: true })
-            return updatedBoard.populate({ path: 'lists', populate: { path: 'cards' }}).populate('uploaded_bgs')
+                .populate({ path: 'lists', populate: { path: 'cards' }})
+                .populate('uploaded_bgs');
+            
+            return updatedBoard
         },
         moveCardFromToList: async (root, args, context) => {
             const user = context.currentUser
