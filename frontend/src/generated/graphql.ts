@@ -252,6 +252,17 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type AddBgMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  key: Scalars['String']['input'];
+  url: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  uploadedAt: Scalars['String']['input'];
+}>;
+
+
+export type AddBgMutation = { __typename?: 'Mutation', addBgToBoard?: { __typename?: 'Board', bg: string, uploaded_bgs?: Array<{ __typename?: 'Image', id: string, url: string }> | null } | null };
+
 export type AddCardMutationVariables = Exact<{
   listId: Scalars['ID']['input'];
   title: Scalars['String']['input'];
@@ -373,6 +384,53 @@ export type UpdateListMutationVariables = Exact<{
 export type UpdateListMutation = { __typename?: 'Mutation', updateList?: { __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> } | null };
 
 
+export const AddBgDocument = gql`
+    mutation addBg($boardId: ID!, $key: String!, $url: String!, $name: String!, $uploadedAt: String!) {
+  addBgToBoard(
+    boardId: $boardId
+    key: $key
+    url: $url
+    name: $name
+    uploaded_at: $uploadedAt
+  ) {
+    bg
+    uploaded_bgs {
+      id
+      url
+    }
+  }
+}
+    `;
+export type AddBgMutationFn = Apollo.MutationFunction<AddBgMutation, AddBgMutationVariables>;
+
+/**
+ * __useAddBgMutation__
+ *
+ * To run a mutation, you first call `useAddBgMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddBgMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addBgMutation, { data, loading, error }] = useAddBgMutation({
+ *   variables: {
+ *      boardId: // value for 'boardId'
+ *      key: // value for 'key'
+ *      url: // value for 'url'
+ *      name: // value for 'name'
+ *      uploadedAt: // value for 'uploadedAt'
+ *   },
+ * });
+ */
+export function useAddBgMutation(baseOptions?: Apollo.MutationHookOptions<AddBgMutation, AddBgMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddBgMutation, AddBgMutationVariables>(AddBgDocument, options);
+      }
+export type AddBgMutationHookResult = ReturnType<typeof useAddBgMutation>;
+export type AddBgMutationResult = Apollo.MutationResult<AddBgMutation>;
+export type AddBgMutationOptions = Apollo.BaseMutationOptions<AddBgMutation, AddBgMutationVariables>;
 export const AddCardDocument = gql`
     mutation addCard($listId: ID!, $title: String!) {
   addCard(listId: $listId, title: $title) {
