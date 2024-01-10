@@ -88,7 +88,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                         <div className="relative rounded-lg h-36 w-48 overflow-hidden animate-pulse">
                             <div className="bg-gray-200 animate-pulse w-full h-full" />
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex gap-2">
                             <div className="animate-pulse flex-1 flex items-center justify-center rounded-md h-12 w-16 overflow-hidden">
                                 <div className="bg-gray-200 animate-pulse w-full h-full" />
                             </div>
@@ -110,7 +110,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                             <img src={selectedBg} alt="" className="object-cover absolute w-full h-full shadow-md" />
                             <Placeholder />
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex gap-2">
                             {photos.map((bg:any, i:any) => (//eslint-disable-line
                                 <button
                                     key={i}
