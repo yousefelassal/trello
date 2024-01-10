@@ -88,7 +88,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                         <div className="relative rounded-lg h-36 w-48 overflow-hidden animate-pulse">
                             <div className="bg-gray-200 animate-pulse w-full h-full" />
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex gap-3">
                             <div className="animate-pulse flex-1 flex items-center justify-center rounded-md h-12 w-16 overflow-hidden">
                                 <div className="bg-gray-200 animate-pulse w-full h-full" />
                             </div>
@@ -107,10 +107,10 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                 { !isLoading && (
                     <div className="w-full flex-1 flex items-center flex-col gap-4">
                         <div className="relative rounded-lg h-36 w-48 overflow-hidden">
-                            <img src={selectedBg} alt="" className="object-cover absolute w-full h-full" />
+                            <img src={selectedBg} alt="" className="object-cover absolute w-full h-full shadow-md" />
                             <Placeholder />
                         </div>
-                        <div className="flex gap-4">
+                        <div className="flex gap-3">
                             {photos.map((bg:any, i:any) => (//eslint-disable-line
                                 <button
                                     key={i}
@@ -120,7 +120,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                                     {selectedBg === bg && (
                                         <div className="absolute z-10 inset-0 bg-black bg-opacity-50 flex items-center justify-center" />
                                     )}
-                                    <img src={bg} alt="" className="object-cover absolute inset-0 w-full h-full" />
+                                    <img src={bg} alt="" className="object-cover absolute inset-0 w-full h-full shadow-md" />
                                 </button>
                             ))}
                         </div>
@@ -131,8 +131,9 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                         Title
                     </Label>
                     <Input
+                        autoFocus
                         id="title"
-                        className="col-span-full"
+                        className="col-span-full text-white focus:outline-2 outline-blue-500 shadow-md transition"
                         onChange={(e) => setTitle(e.target.value)}
                         value={title}
                     />
@@ -144,7 +145,7 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                             type="submit"
                             disabled={form.formState.isSubmitting}
                             onClick={form.handleSubmit(submit)}
-                            className="flex gap-1 text-black border border-neutral-600 bg-[linear-gradient(0deg,#bbb_0.6%,#aaa)]"
+                            className="flex gap-1"
                         >
                             {form.formState.isSubmitting ? <> <Loader2 className="animate-spin" /> Adding...</> : 'Add'}
                         </Button>
