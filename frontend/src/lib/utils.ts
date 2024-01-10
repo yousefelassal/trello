@@ -6,11 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function getRandomPhoto(){
-  const photo = await fetch(`https://api.unsplash.com/photos/random?client_id=${import.meta.env.VITE_ACCESS_KEY}`)
-  .then((data) => data.json())
-  .then((json) => {
-      return json.urls.regular
-  })
+  const photo = await fetch(`https://api.unsplash.com/photos/random?client_id=${import.meta.env.VITE_ACCESS_KEY}&count=4&topics=minimalism,wallpapers,nature,textures-patterns`)
+  .then(res => res.json())
+  .then(data => data.map((item:any) => item.urls.regular))//eslint-disable-line
+  .catch(err => console.log(err))
 
   return photo
 }
