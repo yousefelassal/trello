@@ -9,7 +9,7 @@ import {
   AddBgMutationVariables,
 } from "@/generated/graphql";
 
-export default function UploadImage({ board }:any) { //eslint-disable-line
+export default function UploadBackground({ board }:any) { //eslint-disable-line
   const [addBg] = useMutation<AddBgMutation, AddBgMutationVariables>(AddBgDocument);
 
   const onClientUploadComplete = (res:any) => { //eslint-disable-line
