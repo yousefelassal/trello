@@ -17,6 +17,14 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Attachment = {
+  __typename?: 'Attachment';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  uploaded_at: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
 export type Board = {
   __typename?: 'Board';
   bg: Scalars['String']['output'];
@@ -29,14 +37,27 @@ export type Board = {
   saved_at?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   updated_at?: Maybe<Scalars['String']['output']>;
+  uploaded_bgs?: Maybe<Array<Image>>;
   user: User;
 };
 
 export type Card = {
   __typename?: 'Card';
+  attachments?: Maybe<Array<Attachment>>;
+  cover?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  images?: Maybe<Array<Image>>;
   title: Scalars['String']['output'];
+};
+
+export type Image = {
+  __typename?: 'Image';
+  id: Scalars['ID']['output'];
+  key: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  uploaded_at: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type List = {
@@ -49,12 +70,17 @@ export type List = {
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  addAttachmentToCard?: Maybe<Card>;
+  addBgToBoard?: Maybe<Board>;
   addCard?: Maybe<List>;
+  addImageToCard?: Maybe<Card>;
   addList?: Maybe<Board>;
   createBoard?: Maybe<Board>;
   createUser?: Maybe<User>;
+  deleteAttachment?: Maybe<Attachment>;
   deleteBoard?: Maybe<Board>;
   deleteCard?: Maybe<Card>;
+  deleteImage?: Maybe<Image>;
   deleteList?: Maybe<List>;
   login?: Maybe<Token>;
   moveCardFromToList?: Maybe<Board>;
@@ -65,10 +91,36 @@ export type Mutation = {
 };
 
 
+export type MutationAddAttachmentToCardArgs = {
+  cardId: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  uploaded_at: Scalars['String']['input'];
+  url: Scalars['String']['input'];
+};
+
+
+export type MutationAddBgToBoardArgs = {
+  boardId: Scalars['ID']['input'];
+  key: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  uploaded_at: Scalars['String']['input'];
+  url: Scalars['String']['input'];
+};
+
+
 export type MutationAddCardArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   listId: Scalars['ID']['input'];
   title: Scalars['String']['input'];
+};
+
+
+export type MutationAddImageToCardArgs = {
+  cardId: Scalars['ID']['input'];
+  key: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  uploaded_at: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
 
@@ -92,12 +144,22 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationDeleteAttachmentArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteBoardArgs = {
   id: Scalars['ID']['input'];
 };
 
 
 export type MutationDeleteCardArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteImageArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -137,13 +199,17 @@ export type MutationUpdateBoardArgs = {
   lists?: InputMaybe<Array<Scalars['ID']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   updated_at: Scalars['String']['input'];
+  uploaded_bgs?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 
 export type MutationUpdateCardArgs = {
+  attachments?: InputMaybe<Array<Scalars['ID']['input']>>;
+  cover?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  title: Scalars['String']['input'];
+  images?: InputMaybe<Array<Scalars['ID']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -157,6 +223,7 @@ export type Query = {
   __typename?: 'Query';
   allBoards: Array<Board>;
   findBoard?: Maybe<Board>;
+  findCard?: Maybe<Card>;
   me?: Maybe<User>;
   savedBoards: Array<Board>;
   test?: Maybe<Scalars['String']['output']>;
@@ -164,6 +231,11 @@ export type Query = {
 
 
 export type QueryFindBoardArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryFindCardArgs = {
   id: Scalars['ID']['input'];
 };
 
