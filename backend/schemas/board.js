@@ -1,13 +1,33 @@
 const Board = require("../models/board")
 const List = require("../models/list")
 const Card = require("../models/card")
+const Image = require("../models/image")
+const Attachment = require("../models/attachment")
 const { GraphQLError } = require('graphql')
 
 const typeDefs = `
+    type Attachment {
+        id: ID!
+        url: String!
+        name: String!
+        uploaded_at: String!
+    }
+
+    type Image {
+        id: ID!
+        url: String!
+        key: String!
+        name: String!
+        uploaded_at: String!
+    }
+
     type Card {
         title: String!
         description: String
         id: ID!
+        attachments: [Attachment!]
+        images: [Image!]
+        cover: String
     }
 
     type List {
@@ -25,6 +45,7 @@ const typeDefs = `
         saved_at: String
         lists: [List!]!
         bg: String!
+        uploaded_bgs: [Image!]
         id: ID!
         user: User!
         listsOrder: [List!]!
@@ -33,6 +54,7 @@ const typeDefs = `
     extend type Query {
         allBoards: [Board!]!
         findBoard(id: ID!): Board
+        findCard(id: ID!): Card
         savedBoards: [Board!]!
     }
 
@@ -48,6 +70,7 @@ const typeDefs = `
             title: String
             description: String
             bg: String
+            uploaded_bgs: [ID!]
             lists: [ID!]
             updated_at: String!
         ): Board
@@ -94,13 +117,48 @@ const typeDefs = `
 
         updateCard(
             id: ID!
-            title: String!
+            title: String
             description: String
+            attachments: [ID!]
+            images: [ID!]
+            cover: String
         ): Card
 
         deleteCard(
             id: ID!
         ): Card
+
+        addBgToBoard(
+            boardId: ID!
+            key: String!
+            url: String!
+            name: String!
+            uploaded_at: String!
+        ): Board
+
+        addImageToCard(
+            cardId: ID!
+            key: String!
+            url: String!
+            name: String!
+            uploaded_at: String!
+        ): Card
+
+        addAttachmentToCard(
+            cardId: ID!
+            url: String!
+            name: String!
+            uploaded_at: String!
+        ): Card
+
+        deleteImage(
+            id: ID!
+        ): Image
+
+        deleteAttachment(
+            id: ID!
+        ): Attachment
+
     }
 `
 
@@ -129,7 +187,9 @@ const resolvers = {
                 })
             }
 
-            const board = await Board.findById(args.id).populate({ path: 'lists', populate: { path: 'cards' }})
+            const board = await Board.findById(args.id)
+                .populate({ path: 'lists', populate: { path: 'cards' }})
+                .populate('uploaded_bgs');
 
             if(board.user.toString() !== user._id.toString()) {
                 throw new GraphQLError("Not authenticated", {
@@ -139,6 +199,22 @@ const resolvers = {
                 })
             }
             return board
+        },
+        findCard: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLError("Not authenticated", {
+                    extension: {
+                        code: 'UNAUTHENTICATED'
+                    }
+                })
+            }
+
+            const card = await Card.findById(args.id)
+            .populate('attachments')
+            .populate('images');
+
+            return card
         },
         savedBoards: async (root, args, context) => {
             const user = context.currentUser
@@ -192,7 +268,7 @@ const resolvers = {
             }
 
             const updatedBoard = await Board.findByIdAndUpdate(args.id, { ...args }, { new: true })
-            return updatedBoard.populate({ path: 'lists', populate: { path: 'cards' }})
+            return updatedBoard.populate({ path: 'lists', populate: { path: 'cards' }}).populate('uploaded_bgs')
         },
         moveCardFromToList: async (root, args, context) => {
             const user = context.currentUser
@@ -357,7 +433,7 @@ const resolvers = {
                 })
             }
             const updatedCard = await Card.findByIdAndUpdate(args.id, { ...args }, { new: true })
-            return updatedCard
+            return updatedCard.populate('attachments').populate('images')
         },
         deleteCard: async (root, args, context) => {
             const user = context.currentUser
@@ -371,6 +447,81 @@ const resolvers = {
             const card = await Card.findById(args.id)
             await Card.findByIdAndDelete(args.id)
             return card
+        },
+        addBgToBoard: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLEroor("Not authenticated")
+            }
+            const board = await Board.findById(args.boardId)
+            if(board.user.toString() !== user._id.toString()) {
+                throw new GraphQLEroor("Not authenticated")
+            }
+            const image = new Image({ ...args })
+            try {
+                await image.save()
+            } catch (error) {
+                throw new GraphQLError(error.message)
+            }
+
+            board.uploaded_bgs = board.uploaded_bgs.concat(image._id)
+            await board.save()
+
+            return board.populate('uploaded_bgs')
+        },
+        addImageToCard: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLError("Not authenticated")
+            }
+            const card = await Card.findById(args.cardId)
+            const image = new Image({ ...args })
+            try {
+                await image.save()
+            } catch (error) {
+                throw new GraphQLError(error.message)
+            }
+
+            card.images = card.images.concat(image._id)
+            await card.save()
+
+            return card.populate('images')
+        },
+        addAttachmentToCard: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLError("Not authenticated")
+            }
+            const card = await Card.findById(args.cardId)
+            const attachment = new Attachment({ ...args })
+            try {
+                await attachment.save()
+            } catch (error) {
+                throw new GraphQLError(error.message)
+            }
+
+            card.attachments = card.attachments.concat(attachment._id)
+            await card.save()
+
+            return card.populate('attachments')
+        },
+        deleteImage: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLError("Not authenticated")
+            }
+            const image = await Image.findById(args.id)
+            await Image.findByIdAndDelete(args.id)
+            return image
+        },
+        deleteAttachment: async (root, args, context) => {
+            const user = context.currentUser
+            if(!user) {
+                throw new GraphQLError("Not authenticated")
+            }
+            const attachment = await Attachment.findById(args.id)
+            await Attachment.findByIdAndDelete(args.id)
+            return attachment
         }
     }
 }
