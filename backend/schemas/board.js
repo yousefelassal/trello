@@ -465,6 +465,7 @@ const resolvers = {
             }
 
             board.uploaded_bgs = board.uploaded_bgs.concat(image._id)
+            board.bg = image.url
             await board.save()
 
             return board.populate('uploaded_bgs')
@@ -483,6 +484,7 @@ const resolvers = {
             }
 
             card.images = card.images.concat(image._id)
+            card.cover = image.url
             await card.save()
 
             return card.populate('images')
