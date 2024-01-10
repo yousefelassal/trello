@@ -1,6 +1,5 @@
-import { getRandomPhoto } from "@/lib/utils"
 import { cn } from "@/lib/utils";
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useMutation } from "@apollo/client"
 import {
     CreateBoardDocument,
@@ -15,7 +14,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -24,16 +22,24 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-
+import useRandomPhotos from "@/hooks/useRandomPhotos";
 import { Plus, Loader2 } from "lucide-react"
+import Placeholder from "./Placeholder";
 
 export default function AddBoard({ header, className }:{ header?:boolean, className?:string }) {
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
   const [open, setOpen] = useState(false)
+  const [selectedBg, setSelectedBg] = useState('')
+  const { photos, isLoading } = useRandomPhotos()
   const form = useForm()
+
+  useEffect(() => { 
+    if (photos) {
+      setSelectedBg(photos[0])
+    }
+  }, [photos])
+
     const [createBoard] = useMutation<CreateBoardMutation, CreateBoardMutationVariables>(CreateBoardDocument, {
         onCompleted(data) {
             if (data.createBoard) {
@@ -56,10 +62,9 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
     const submit = async () => {
         await createBoard({ variables: { 
             title, 
-            bg: await getRandomPhoto()
+            bg: selectedBg
         } })
         setTitle('')
-        setDescription('')
     }
 
   return (
@@ -75,32 +80,61 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                <DialogTitle>Add a Board</DialogTitle>
-                <DialogDescription>
-                    Add a new board to your dashboard
-                </DialogDescription>
+                <DialogTitle className="items-center flex justify-center">Add a Board</DialogTitle>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="title" className="sm:text-right">
+                <div className="flex w-full flex-col items-center gap-4 py-4">
+                {isLoading && (
+                    <div className="w-full flex-1 flex items-center flex-col gap-4">
+                        <div className="relative rounded-lg h-36 w-48 overflow-hidden animate-pulse">
+                            <div className="bg-gray-200 animate-pulse w-full h-full" />
+                        </div>
+                        <div className="flex gap-4">
+                            <div className="animate-pulse flex-1 flex items-center justify-center rounded-md h-12 w-16 overflow-hidden">
+                                <div className="bg-gray-200 animate-pulse w-full h-full" />
+                            </div>
+                            <div className="animate-pulse flex-1 flex items-center justify-center rounded-md h-12 w-16 overflow-hidden">
+                                <div className="bg-gray-200 animate-pulse w-full h-full" />
+                            </div>
+                            <div className="animate-pulse flex-1 flex items-center justify-center rounded-md h-12 w-16 overflow-hidden">
+                                <div className="bg-gray-200 animate-pulse w-full h-full" />
+                            </div>
+                            <div className="animate-pulse flex-1 flex items-center justify-center rounded-md h-12 w-16 overflow-hidden">
+                                <div className="bg-gray-200 animate-pulse w-full h-full" />
+                            </div>
+                        </div>
+                    </div>
+                )}
+                { !isLoading && (
+                    <div className="w-full flex-1 flex items-center flex-col gap-4">
+                        <div className="relative rounded-lg h-36 w-48 overflow-hidden">
+                            <img src={selectedBg} alt="" className="object-cover absolute w-full h-full" />
+                            <Placeholder />
+                        </div>
+                        <div className="flex gap-4">
+                            {photos.map((bg:any, i:any) => (//eslint-disable-line
+                                <button
+                                    key={i}
+                                    className={cn('relative rounded-md h-12 w-16 overflow-hidden', selectedBg === bg ? 'border-2 border-blue-500' : '')}
+                                    onClick={() => setSelectedBg(bg)}
+                                >
+                                    {selectedBg === bg && (
+                                        <div className="absolute z-10 inset-0 bg-black bg-opacity-50 flex items-center justify-center" />
+                                    )}
+                                    <img src={bg} alt="" className="object-cover absolute inset-0 w-full h-full" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                <div className="grid grid-cols-4 w-full items-center gap-4">
+                    <Label htmlFor="title" className="">
                         Title
                     </Label>
                     <Input
                         id="title"
-                        className="col-span-full sm:col-span-3"
+                        className="col-span-full"
                         onChange={(e) => setTitle(e.target.value)}
                         value={title}
-                    />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="description" className="sm:text-right">
-                        Description
-                    </Label>
-                    <Textarea
-                        id="description"
-                        className="col-span-full sm:col-span-3"
-                        onChange={(e) => setDescription(e.target.value)}
-                        value={description}
                     />
                 </div>
                 </div>
