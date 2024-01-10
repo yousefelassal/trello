@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import useRandomPhotos from "@/hooks/useRandomPhotos";
-import { Plus, Loader2 } from "lucide-react"
+import { Plus, Loader2, Check } from "lucide-react"
 import Placeholder from "./Placeholder";
 
 export default function AddBoard({ header, className }:{ header?:boolean, className?:string }) {
@@ -107,12 +107,15 @@ export default function AddBoard({ header, className }:{ header?:boolean, classN
                             {photos.map((bg:any, i:any) => (//eslint-disable-line
                                 <button
                                     key={i}
-                                    className={cn('relative rounded-md h-12 w-16 overflow-hidden', selectedBg === bg ? 'border-2 border-blue-500' : '')}
+                                    className={cn('relative group rounded-md h-12 w-16 overflow-hidden transition', selectedBg === bg ? 'ring-2 ring-blue-500' : '')}
                                     onClick={() => handleBgChange(bg)}
                                 >
                                     {selectedBg === bg && (
-                                        <div className="absolute z-10 inset-0 bg-black bg-opacity-50 flex items-center justify-center" />
+                                        <div className="absolute z-20 inset-0 flex items-center justify-center">
+                                            <Check className="text-white/80 w-5 h-5" />
+                                        </div>
                                     )}
+                                    <div className={cn("absolute hidden group-hover:block z-10 inset-0 bg-black/40 items-center justify-center", selectedBg === bg && 'block')} />
                                     <img src={bg} alt="" className="object-cover absolute inset-0 w-full h-full shadow-md" />
                                 </button>
                             ))}
