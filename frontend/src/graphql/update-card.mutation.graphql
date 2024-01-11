@@ -1,0 +1,18 @@
+mutation updateCard(
+    $id: ID!,
+    $title: String,
+    $description: String,
+    $cover: String
+  ){
+  updateCard(
+    id: $id,
+    title: $title,
+    description: $description,
+    cover: $cover
+  ){
+    id
+    title
+    description
+    cover
+  }
+}
