@@ -378,13 +378,14 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                                         <ExternalLink className="h-4 w-4" />
                                     </div>
                                     <span className="text-xs">Added at {new Date(parseInt(image?.uploaded_at)).toLocaleString()}</span>
+                                    <div className="flex gap-3">
                                     {image?.url === data?.findCard?.cover 
                                         ? <button
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 handleRemoveCover()
                                             }}
-                                            className="text-xs justify-self-end underline"
+                                            className="transition hover:underline-offset-4 text-xs justify-self-end underline hover:text-blue-400"
                                           >
                                             Remove cover
                                           </button>
@@ -393,11 +394,13 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                                                 e.preventDefault();
                                                 handleSetCover(image?.url as string)
                                             }}
-                                            className="text-xs item-end underline"
+                                            className="transition hover:underline-offset-4 text-xs underline hover:text-blue-400"
                                           >
                                             Set as cover
                                           </button>
                                     }
+                                    <button className="transition hover:underline-offset-4 text-xs underline hover:text-red-500">Delete</button>
+                                    </div>
                                 </div>
                             </a>
                         ))}
