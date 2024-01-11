@@ -300,6 +300,13 @@ export type DeleteBoardMutationVariables = Exact<{
 
 export type DeleteBoardMutation = { __typename?: 'Mutation', deleteBoard?: { __typename?: 'Board', id: string } | null };
 
+export type DeleteCardMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteCardMutation = { __typename?: 'Mutation', deleteCard?: { __typename?: 'Card', id: string } | null };
+
 export type DeleteListMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -652,6 +659,39 @@ export function useDeleteBoardMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteBoardMutationHookResult = ReturnType<typeof useDeleteBoardMutation>;
 export type DeleteBoardMutationResult = Apollo.MutationResult<DeleteBoardMutation>;
 export type DeleteBoardMutationOptions = Apollo.BaseMutationOptions<DeleteBoardMutation, DeleteBoardMutationVariables>;
+export const DeleteCardDocument = gql`
+    mutation deleteCard($id: ID!) {
+  deleteCard(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteCardMutationFn = Apollo.MutationFunction<DeleteCardMutation, DeleteCardMutationVariables>;
+
+/**
+ * __useDeleteCardMutation__
+ *
+ * To run a mutation, you first call `useDeleteCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCardMutation, { data, loading, error }] = useDeleteCardMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCardMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCardMutation, DeleteCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteCardMutation, DeleteCardMutationVariables>(DeleteCardDocument, options);
+      }
+export type DeleteCardMutationHookResult = ReturnType<typeof useDeleteCardMutation>;
+export type DeleteCardMutationResult = Apollo.MutationResult<DeleteCardMutation>;
+export type DeleteCardMutationOptions = Apollo.BaseMutationOptions<DeleteCardMutation, DeleteCardMutationVariables>;
 export const DeleteListDocument = gql`
     mutation deleteList($id: ID!) {
   deleteList(id: $id) {
