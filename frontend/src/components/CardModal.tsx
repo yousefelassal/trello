@@ -136,6 +136,44 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
     });
   }
 
+  const handleRemoveCover = async () => {
+    await updateCard({
+      variables: {
+        id: id as string,
+        cover: null,
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateCard: {
+          __typename: "Card",
+          id: id as string,
+          title: data?.findCard?.title as string,
+          description: data?.findCard?.description,
+          cover: null,
+        },
+      },
+    });
+  }
+
+  const handleSetCover = async (imageUrl: string) => {
+    await updateCard({
+      variables: {
+        id: id as string,
+        cover: imageUrl,
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateCard: {
+          __typename: "Card",
+          id: id as string,
+          title: data?.findCard?.title as string,
+          description: data?.findCard?.description,
+          cover: imageUrl,
+        },
+      },
+    });
+  }
+
     const handleDeleteCard = async () => {
         await deleteCard({
             variables: {
@@ -340,6 +378,26 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                                         <ExternalLink className="h-4 w-4" />
                                     </div>
                                     <span className="text-xs">Added at {new Date(parseInt(image?.uploaded_at)).toLocaleString()}</span>
+                                    {image?.url === data?.findCard?.cover 
+                                        ? <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleRemoveCover()
+                                            }}
+                                            className="text-xs justify-self-end underline"
+                                          >
+                                            Remove cover
+                                          </button>
+                                        : <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleSetCover(image?.url as string)
+                                            }}
+                                            className="text-xs item-end underline"
+                                          >
+                                            Set as cover
+                                          </button>
+                                    }
                                 </div>
                             </a>
                         ))}
