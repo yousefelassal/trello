@@ -19,6 +19,7 @@ import {
 } from "@/generated/graphql";  
 import Loading from "./Loading";
 import { IconBoxMultiple, IconAlignJustified, IconPaperclip, IconPhoto } from "@tabler/icons-react"
+import UploadImage from "./UploadImage";
 
 export default function CardModal({ previousLocation }:any) { //eslint-disable-line
   const modalRef = useRef<any>(); //eslint-disable-line
@@ -116,7 +117,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
         });
         return;
     }
-    
+
     await updateCard({
       variables: {
         id: id as string,
@@ -171,11 +172,11 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   return (
     <div
       ref={modalRef}
-      className="fixed inset-0 z-10 bg-black/70 flex justify-center overflow-y-auto px-6 py-2 sm:px-10 sm:py-6"
+      className="fixed inset-0 z-50 bg-black/70 flex justify-center overflow-y-auto px-6 py-2 sm:px-10 sm:py-6"
       onClick={() => navigate(`${previousLocation.pathname}`)}
     >
         <div
-            className="flex flex-col text-[#9FADBC] gap-4 w-full bg-[#323940] min-h-[40vh] mt-32 z-20 relative h-fit max-w-2xl rounded-xl shadow-lg p-3 md:px-4 pb-6 mx-1"
+            className="flex flex-col text-[#9FADBC] gap-4 w-full bg-[#323940] min-h-[40vh] mt-14 z-[60] relative h-fit max-w-2xl rounded-xl shadow-lg p-3 md:px-4 pb-6 mx-1"
             onClick={e=>e.stopPropagation()}
         >
             <div className="absolute right-1 top-1">
@@ -316,22 +317,28 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                     <h2 className="text-lg font-medium">Images</h2>
                 </div>
                 {data?.findCard?.images?.length !== 0
-                    ? 
-                        <div className="flex flex-col gap-2">
-                            {data?.findCard?.images?.map((image, index) => (
-                                <div className="flex items-center gap-2" key={index}>
-                                    <a href={image?.url} target="_blank" rel="noreferrer">{image?.name}</a>
+                    &&
+                    <>
+                        {data?.findCard?.images?.map((image) => (
+                            <a
+                                href={image?.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                key={image?.id}
+                                className="rounded-lg ml-8 mr-4 flex hover:bg-gray-500/80 transition"
+                            >
+                                <div className="relative h-20 w-32 overflow-hidden rounded-md bg-gray-700/80">
+                                    <img
+                                        src={image?.url}
+                                        alt={image?.name}
+                                        className="object-contain absolute inset-0 w-full h-full"
+                                    />
                                 </div>
-                            ))}
-                        </div>
-                    : <Button
-                        variant="ghost"
-                        className="ml-8 mr-4 flex gap-2 rounded-lg text-sm justify-start bg-gray-500/60 shadow-sm"
-                      >
-                        <IconPhoto />
-                        Add an image
-                      </Button>
+                            </a>
+                        ))}
+                    </>
                 }
+                <UploadImage card={data?.findCard} />
                 <div className="flex items-end justify-end">
                     <Button
                         variant="destructive"
