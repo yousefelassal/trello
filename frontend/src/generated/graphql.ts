@@ -271,6 +271,17 @@ export type AddCardMutationVariables = Exact<{
 
 export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> } | null };
 
+export type AddImageMutationVariables = Exact<{
+  cardId: Scalars['ID']['input'];
+  key: Scalars['String']['input'];
+  url: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  uploadedAt: Scalars['String']['input'];
+}>;
+
+
+export type AddImageMutation = { __typename?: 'Mutation', addImageToCard?: { __typename?: 'Card', id: string, cover?: string | null, images?: Array<{ __typename?: 'Image', id: string, key: string, url: string, name: string, uploaded_at: string }> | null } | null };
+
 export type AddListMutationVariables = Exact<{
   boardId: Scalars['ID']['input'];
   title: Scalars['String']['input'];
@@ -496,6 +507,57 @@ export function useAddCardMutation(baseOptions?: Apollo.MutationHookOptions<AddC
 export type AddCardMutationHookResult = ReturnType<typeof useAddCardMutation>;
 export type AddCardMutationResult = Apollo.MutationResult<AddCardMutation>;
 export type AddCardMutationOptions = Apollo.BaseMutationOptions<AddCardMutation, AddCardMutationVariables>;
+export const AddImageDocument = gql`
+    mutation addImage($cardId: ID!, $key: String!, $url: String!, $name: String!, $uploadedAt: String!) {
+  addImageToCard(
+    cardId: $cardId
+    key: $key
+    url: $url
+    name: $name
+    uploaded_at: $uploadedAt
+  ) {
+    id
+    cover
+    images {
+      id
+      key
+      url
+      name
+      uploaded_at
+    }
+  }
+}
+    `;
+export type AddImageMutationFn = Apollo.MutationFunction<AddImageMutation, AddImageMutationVariables>;
+
+/**
+ * __useAddImageMutation__
+ *
+ * To run a mutation, you first call `useAddImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addImageMutation, { data, loading, error }] = useAddImageMutation({
+ *   variables: {
+ *      cardId: // value for 'cardId'
+ *      key: // value for 'key'
+ *      url: // value for 'url'
+ *      name: // value for 'name'
+ *      uploadedAt: // value for 'uploadedAt'
+ *   },
+ * });
+ */
+export function useAddImageMutation(baseOptions?: Apollo.MutationHookOptions<AddImageMutation, AddImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddImageMutation, AddImageMutationVariables>(AddImageDocument, options);
+      }
+export type AddImageMutationHookResult = ReturnType<typeof useAddImageMutation>;
+export type AddImageMutationResult = Apollo.MutationResult<AddImageMutation>;
+export type AddImageMutationOptions = Apollo.BaseMutationOptions<AddImageMutation, AddImageMutationVariables>;
 export const AddListDocument = gql`
     mutation addList($boardId: ID!, $title: String!) {
   addList(boardId: $boardId, title: $title) {
