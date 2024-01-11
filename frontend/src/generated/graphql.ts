@@ -381,6 +381,16 @@ export type UpdateBoardMutationVariables = Exact<{
 
 export type UpdateBoardMutation = { __typename?: 'Mutation', updateBoard?: { __typename?: 'Board', id: string, title: string, description?: string | null, updated_at?: string | null, bg: string, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
+export type UpdateCardMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  cover?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UpdateCardMutation = { __typename?: 'Mutation', updateCard?: { __typename?: 'Card', id: string, title: string, description?: string | null, cover?: string | null } | null };
+
 export type UpdateListMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
@@ -1096,6 +1106,45 @@ export function useUpdateBoardMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UpdateBoardMutationHookResult = ReturnType<typeof useUpdateBoardMutation>;
 export type UpdateBoardMutationResult = Apollo.MutationResult<UpdateBoardMutation>;
 export type UpdateBoardMutationOptions = Apollo.BaseMutationOptions<UpdateBoardMutation, UpdateBoardMutationVariables>;
+export const UpdateCardDocument = gql`
+    mutation updateCard($id: ID!, $title: String, $description: String, $cover: String) {
+  updateCard(id: $id, title: $title, description: $description, cover: $cover) {
+    id
+    title
+    description
+    cover
+  }
+}
+    `;
+export type UpdateCardMutationFn = Apollo.MutationFunction<UpdateCardMutation, UpdateCardMutationVariables>;
+
+/**
+ * __useUpdateCardMutation__
+ *
+ * To run a mutation, you first call `useUpdateCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCardMutation, { data, loading, error }] = useUpdateCardMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      description: // value for 'description'
+ *      cover: // value for 'cover'
+ *   },
+ * });
+ */
+export function useUpdateCardMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCardMutation, UpdateCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCardMutation, UpdateCardMutationVariables>(UpdateCardDocument, options);
+      }
+export type UpdateCardMutationHookResult = ReturnType<typeof useUpdateCardMutation>;
+export type UpdateCardMutationResult = Apollo.MutationResult<UpdateCardMutation>;
+export type UpdateCardMutationOptions = Apollo.BaseMutationOptions<UpdateCardMutation, UpdateCardMutationVariables>;
 export const UpdateListDocument = gql`
     mutation updateList($id: ID!, $title: String, $cards: [ID!]) {
   updateList(id: $id, title: $title, cards: $cards) {
