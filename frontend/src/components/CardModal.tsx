@@ -1,13 +1,26 @@
 import { useEffect, useRef } from "react";
+import { useQuery } from "@apollo/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { X } from "lucide-react";
 import { Button } from "./ui/button";
+import {
+    FindCardDocument,
+    FindCardQuery,
+    FindCardQueryVariables
+} from "@/generated/graphql";  
+import Loading from "./Loading";
 
 export default function CardModal({ previousLocation }:any) { //eslint-disable-line
   const modalRef = useRef<any>(); //eslint-disable-line
   const { id } = useParams();
   const navigate = useNavigate();
+
+    const { data, loading, error } = useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, {
+        variables: {
+            findCardId: id as string
+        }
+    });
 
   useEffect(() => {
     const observerRefValue = modalRef.current;
@@ -27,7 +40,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
       onClick={() => navigate(`${previousLocation.pathname}`)}
     >
         <div
-            className="w-full bg-[#323940] mt-16 z-20 relative h-fit max-w-xl rounded-xl shadow-lg p-2"
+            className="w-full bg-[#323940] min-h-[40vh] mt-16 z-20 relative h-fit max-w-xl rounded-xl shadow-lg p-2 md:px-4 md:py-3 mx-1"
             onClick={e=>e.stopPropagation()}
         >
             <div className="absolute right-1 top-1">
@@ -39,39 +52,9 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                     <X className="h-5 w-5" />
                 </Button>
             </div>
-            <h1>{id}</h1>
-            <p>
-          Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-          consectetur, adipisci velit, sed quia non numquam eius modi tempora
-          incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut
-          enim ad minima veniam, quis nostrum exercitationem ullam corporis
-          suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis
-          autem vel eum iure reprehenderit qui in ea voluptate velit esse quam
-          nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo
-          voluptas nulla pariatur? Neque porro quisquam est, qui dolorem ipsum
-          quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam
-          eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat
-          voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem
-          ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
-          consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate
-          velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum
-          fugiat quo voluptas nulla pariatur? Neque porro quisquam est, qui
-          dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed
-          quia non numquam eius modi tempora incidunt ut labore et dolore magnam
-          aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
-          exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex
-          ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in
-          ea voluptate velit esse quam nihil molestiae consequatur, vel illum
-          qui dolorem eum fugiat quo voluptas nulla pariatur? Neque porro
-          quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,
-          adipisci velit, sed quia non numquam eius modi tempora incidunt ut
-          labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima
-          veniam, quis nostrum exercitationem ullam corporis suscipit
-          laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel
-          eum iure reprehenderit qui in ea voluptate velit esse quam nihil
-          molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas
-          nulla pariatur?
-        </p>
+            {loading && <Loading className="absolute inset-0" />}
+            {error && <p>Oops something went wrong!</p>}
+            <h1 className="text-xl font-semibold">{data?.findCard?.title}</h1>
         </div>
     </div>
   )
