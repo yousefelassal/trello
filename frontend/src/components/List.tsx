@@ -201,9 +201,17 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             <div className="flex flex-col gap-1">
                                 <h4 className="text-lg font-bold">{card.title}</h4>
                                 <div className="flex gap-2">
-                                    {card.description && <IconAlignJustified className="w-5 h-5" />}
-                                    {card.attachments && <IconPaperclip className="w-5 h-5" />}
-                                    {card.images && <IconPhoto className="w-5 h-5" />}
+                                    {card.description && <IconAlignJustified className="w-4 h-4" />}
+                                    {card.attachments && 
+                                    <div className="flex gap-1">
+                                        <IconPaperclip className="w-4 h-4" />
+                                        <span>{card.attachments.length}</span>
+                                    </div>}
+                                    {card.images && 
+                                    <div className="flex gap-1">
+                                        <IconPhoto className="w-4 h-4" />
+                                        <span>{card.images.length}</span>
+                                    </div>}
                                 </div>
                             </div>
                             <Link
