@@ -89,10 +89,34 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   const handleDescriptionChange = async () => {
     setIsEditingDescription(false);
     const descriptionWithBreaks = description.replace(/\n/g, '<br />');
-    if (description.trim() == '' || description.trim() == data?.findCard?.description) {
-      setDescription(data?.findCard?.description as string);  
+    if (description.trim() == data?.findCard?.description) {
+      setDescription(data?.findCard?.description.replace(/<br \/>/g, '\n') as string);
       return;
     }
+    if (descriptionWithBreaks == data?.findCard?.description) {
+      setDescription(data?.findCard?.description.replace(/<br \/>/g, '\n') as string);
+      return;
+    }
+    if (description.trim() == '') {
+        await updateCard({
+            variables: {
+                id: id as string,
+                description: null,
+            },
+            optimisticResponse: {
+                __typename: "Mutation",
+                updateCard: {
+                    __typename: "Card",
+                    id: id as string,
+                    title: data?.findCard?.title as string,
+                    description: null,
+                    cover: data?.findCard?.cover,
+                },
+            },
+        });
+        return;
+    }
+    
     await updateCard({
       variables: {
         id: id as string,
