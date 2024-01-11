@@ -191,26 +191,6 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                             Edit
                         </Button>
                     }
-                    {data?.findCard?.description && isEditingDescription &&
-                    <div className="flex gap-2">
-                        <Button
-                            onClick={handleDescriptionChange}
-                            className="rounded-lg py-0"
-                        >
-                            Save
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                setIsEditingDescription(false)
-                                setDescription(data?.findCard?.description as string)
-                            }}
-                            variant="ghost"
-                            className="rounded-lg mr-8 py-0"
-                        >
-                            Cancel
-                        </Button>
-                    </div>
-                    }
                 </div>
                 {data?.findCard?.description && !isEditingDescription &&
                     <p className="text-sm mx-8">{
@@ -221,6 +201,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                 }
 
                 {isEditingDescription &&
+                <div className="flex flex-col gap-2">
                     <TextareaAutosize
                         autoFocus
                         className="rounded-lg mx-6 text-sm p-2 flex justify-start font-normal bg-black/60 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
@@ -235,6 +216,25 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                             }
                         }}
                     />
+                    <div className="flex gap-2">
+                        <Button
+                            onClick={handleDescriptionChange}
+                            className="rounded-lg ml-6 py-0"
+                        >
+                            Save
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setIsEditingDescription(false)
+                                setDescription(data?.findCard?.description as string)
+                            }}
+                            variant="ghost"
+                            className="rounded-lg py-0"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </div>
                 }
                 {!data?.findCard?.description && !isEditingDescription &&
                     <Button
