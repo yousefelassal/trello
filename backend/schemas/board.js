@@ -457,11 +457,11 @@ const resolvers = {
         addBgToBoard: async (root, args, context) => {
             const user = context.currentUser
             if(!user) {
-                throw new GraphQLEroor("Not authenticated")
+                throw new GraphQLError("Not authenticated")
             }
             const board = await Board.findById(args.boardId)
             if(board.user.toString() !== user._id.toString()) {
-                throw new GraphQLEroor("Not authenticated")
+                throw new GraphQLError("Not authenticated")
             }
             const image = new Image({ ...args })
             try {
