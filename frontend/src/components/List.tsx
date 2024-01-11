@@ -198,25 +198,23 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             </div>
                         }
                         <div className="flex items-center justify-between">
-                            <h4 className="text-lg font-bold">{card.title}</h4>
-                            <div className="flex gap-1">
-                                <Link
-                                    to={`/${location.pathname.split('/')[1]}/${card.id}`}
-                                    state={{ previousLocation: location }}
-                                >
-                                    <Button title="Open card dialog" variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
-                                        <IconBoxMultiple className="w-5 h-5" />
-                                    </Button>
-                                </Link>
+                            <div className="flex flex-col gap-1">
+                                <h4 className="text-lg font-bold">{card.title}</h4>
+                                <div className="flex gap-2">
+                                    {card.description && <IconAlignJustified className="w-5 h-5" />}
+                                    {card.attachments && <IconPaperclip className="w-5 h-5" />}
+                                    {card.images && <IconPhoto className="w-5 h-5" />}
+                                </div>
                             </div>
+                            <Link
+                                to={`/${location.pathname.split('/')[1]}/${card.id}`}
+                                state={{ previousLocation: location }}
+                            >
+                                <Button title="Open card dialog" variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
+                                    <IconBoxMultiple className="w-5 h-5" />
+                                </Button>
+                            </Link>
                         </div>
-                        {card.description || card.images || card.attachments &&
-                            <div className="flex gap-2">
-                                {card.description && <IconAlignJustified />}
-                                {card.images && <IconPhoto />}
-                                {card.attachments && <IconPaperclip />}
-                            </div>
-                        }
                     </div>
                     )}
                     </Draggable>
