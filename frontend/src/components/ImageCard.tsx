@@ -15,16 +15,16 @@ export default function ImageCard({image, data, handleSetCover, handleRemoveCove
         href={image?.url}
         target="_blank"
         rel="noreferrer"
-        className="rounded-lg hover:text-white ml-8 mr-4 flex flex-col sm:flex-row items-center hover:bg-gray-500/80 transition"
+        className="rounded-lg hover:text-white ml-8 mr-4 flex flex-col justify-center sm:flex-row items-center hover:bg-gray-500/80 transition"
     >
-        <div className="relative h-20 w-32 overflow-hidden rounded-md bg-black/60">
+        <div className="relative h-24 w-full sm:h-20 sm:w-32 overflow-hidden rounded-md bg-black/60">
             <img
                 src={image?.url}
                 alt={image?.name}
                 className="object-contain absolute inset-0 w-full h-full"
             />
         </div>
-        <div className="flex-1 p-2 flex flex-col items-start">
+        <div className="flex-1 p-2 flex flex-col justify-start items-start">
             <div className="flex items-center gap-2">
                 <span className="font-semibold">{image?.name}</span>
                 <ExternalLink className="h-4 w-4" />
