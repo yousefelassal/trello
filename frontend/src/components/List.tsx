@@ -187,28 +187,29 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             className={`${snapshot.isDragging ? 'bg-[#353f48] border-blue-500' : 'bg-[#22272B]' }
-                            flex rounded-lg border-2 border-[#22272B] hover:border-blue-500 justify-center pr-[2px] pl-2 py-[2px] shadow-2xl flex-col`}
+                            flex rounded-lg border-2 h-fit border-[#22272B] hover:border-blue-500 justify-center shadow-2xl flex-col overflow-hidden`}
                         >
                         {card.cover && 
-                            <div className="flex-1 relative rounded-lg h-[100px] w-full">
+                            <div className="relative overflow-hidden h-[150px] w-full">
                                 <img
                                     src={card.cover}
                                     className="absolute inset-0 object-cover "
                                 />
                             </div>
                         }
+                        <div className="w-full pr-[2px] pl-2 py-[2px]">
                         <div className="flex items-center justify-between">
                             <div className="flex flex-col gap-1">
                                 <h4 className="text-lg font-bold">{card.title}</h4>
-                                <div className="flex gap-2">
+                                <div className="flex items-center gap-2">
                                     {card.description && <IconAlignJustified className="w-4 h-4" />}
-                                    {card.attachments && 
-                                    <div className="flex gap-1">
+                                    {card.attachments.length !== 0 && 
+                                    <div className="flex items-center gap-1">
                                         <IconPaperclip className="w-4 h-4" />
                                         <span>{card.attachments.length}</span>
                                     </div>}
-                                    {card.images && 
-                                    <div className="flex gap-1">
+                                    {card.images.length !== 0 && 
+                                    <div className="flex items-center gap-1">
                                         <IconPhoto className="w-4 h-4" />
                                         <span>{card.images.length}</span>
                                     </div>}
@@ -222,6 +223,7 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                                     <IconBoxMultiple className="w-5 h-5" />
                                 </Button>
                             </Link>
+                        </div>
                         </div>
                     </div>
                     )}
