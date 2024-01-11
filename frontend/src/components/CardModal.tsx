@@ -5,6 +5,11 @@ import { useForm } from "react-hook-form";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { Loader2, X, ExternalLink } from "lucide-react";
 import { Button } from "./ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger
+} from "@/components/ui/popover"
 import TextareaAutosize from "react-textarea-autosize";
 import {
     FindCardDocument,
@@ -16,6 +21,9 @@ import {
     DeleteCardDocument,
     DeleteCardMutation,
     DeleteCardMutationVariables,
+    DeleteImageDocument,
+    DeleteImageMutation,
+    DeleteImageMutationVariables,
 } from "@/generated/graphql";  
 import Loading from "./Loading";
 import { IconBoxMultiple, IconAlignJustified, IconPaperclip, IconPhoto } from "@tabler/icons-react"
@@ -51,6 +59,8 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
             cache.gc();
         },
     });
+
+    const [deleteImage] = useMutation<DeleteImageMutation, DeleteImageMutationVariables>(DeleteImageDocument)
 
   useEffect(() => {
     const observerRefValue = modalRef.current;
@@ -181,6 +191,21 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
             }
         })
         navigate(`${previousLocation.pathname}`)
+    }
+
+    const handleDeleteImage = async (key:string, id:string) => {
+        await fetch(`${import.meta.env.VITE_UPLOAD_SERVER}/delete/${key}`,{
+            method: 'POST'
+        })
+        await deleteImage({
+            variables: {
+                id: id
+            },
+            update: (cache) => {
+                cache.evict({ id: cache.identify({ __typename: "Image", id: id }) as string });
+                cache.gc();
+            }
+        })
     }
 
     if (loading) return <div
@@ -399,7 +424,18 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                                             Set as cover
                                           </button>
                                     }
-                                    <button className="transition hover:underline-offset-4 text-xs underline hover:text-red-500">Delete</button>
+                                    <button
+                                        className="transition hover:underline-offset-4 text-xs underline hover:text-red-500"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleDeleteImage(image?.key as string, image?.id as string)
+                                            if(image?.url === data?.findCard?.cover) {
+                                                handleRemoveCover()
+                                            }
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
                                     </div>
                                 </div>
                             </a>
