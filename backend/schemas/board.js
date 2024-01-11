@@ -436,7 +436,10 @@ const resolvers = {
                 })
             }
             const updatedCard = await Card.findByIdAndUpdate(args.id, { ...args }, { new: true })
-            return updatedCard.populate('attachments').populate('images')
+                .populate('attachments')
+                .populate('images');
+            
+            return updatedCard
         },
         deleteCard: async (root, args, context) => {
             const user = context.currentUser
