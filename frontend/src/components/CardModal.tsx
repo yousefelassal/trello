@@ -212,7 +212,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                         onKeyDown={(e) => {
                             if (e.key == 'Escape') {
                                 setIsEditingDescription(false)
-                                setDescription(data?.findCard?.description as string)
+                                setDescription(data?.findCard?.description?.replace(/<br \/>/g, '\n') as string)
                             }
                         }}
                     />
@@ -226,7 +226,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                         <Button
                             onClick={() => {
                                 setIsEditingDescription(false)
-                                setDescription(data?.findCard?.description as string)
+                                setDescription(data?.findCard?.description?.replace(/<br \/>/g, '\n') as string)
                             }}
                             variant="ghost"
                             className="rounded-lg py-0"
