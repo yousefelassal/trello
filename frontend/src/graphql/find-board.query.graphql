@@ -15,7 +15,14 @@ query findBoard($id: ID!) {
             cards{
                 id
                 title
+                cover
                 description
+                images {
+                    id
+                }
+                attachments {
+                    id
+                }
             }
         }
     }
