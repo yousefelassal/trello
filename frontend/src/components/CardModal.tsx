@@ -20,7 +20,9 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   const { id } = useParams();
   const navigate = useNavigate();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-    const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("");
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [description, setDescription] = useState("");
 
     const { data, loading, error } = useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, {
         variables: {
@@ -28,6 +30,9 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
         },
         onCompleted: (data) => {
             setTitle(data.findCard?.title as string);
+            if (data.findCard?.description) {
+                setDescription(data.findCard?.description as string);
+            }
         }
     });
 
@@ -68,6 +73,54 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
     });
   }
 
+  const handleDescriptionChange = async () => {
+    setIsEditingDescription(false);
+    if (description.trim() == '' || description.trim() == data?.findCard?.description) {
+      setDescription(data?.findCard?.description as string);  
+      return;
+    }
+    await updateCard({
+      variables: {
+        id: id as string,
+        description: description,
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateCard: {
+          __typename: "Card",
+          id: id as string,
+          title: data?.findCard?.title as string,
+          description: description,
+          cover: data?.findCard?.cover,
+        },
+      },
+    });
+  }
+
+    if (loading) return <div
+    ref={modalRef}
+    className="fixed inset-0 z-10 bg-black/70 flex justify-center overflow-y-auto px-6 py-2 sm:px-10 sm:py-6"
+    onClick={() => navigate(`${previousLocation.pathname}`)}
+  >
+      <div
+          className="flex flex-col text-[#9FADBC] gap-4 w-full bg-[#323940] min-h-[40vh] mt-32 z-20 relative h-fit max-w-2xl rounded-xl shadow-lg p-3 md:px-4 pb-6 mx-1"
+          onClick={e=>e.stopPropagation()}
+      >
+          <div className="absolute right-1 top-1">
+              <Button
+                  variant="ghost"
+                  onClick={()=>navigate(`${previousLocation.pathname}`)}
+                  className="rounded-lg px-2 py-0 hover:bg-gray-500/80"
+              >
+                  <X className="h-5 w-5" />
+              </Button>
+          </div>
+          <Loading className="absolute inset-0" />
+        </div>
+    </div>
+
+    if (error) return <p>Oops something went wrong! {error.message}</p>;
+
   return (
     <div
       ref={modalRef}
@@ -87,8 +140,6 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                     <X className="h-5 w-5" />
                 </Button>
             </div>
-            {loading && <Loading className="absolute inset-0" />}
-            {error && <p>Oops something went wrong!</p>}
             <div className="flex items-center mb-2 gap-2">
                 <IconBoxMultiple className="mt-1" />
                 {isEditingTitle
@@ -129,23 +180,64 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                         <IconAlignJustified />
                         <h2 className="text-lg font-medium">Description</h2>
                     </div>
-                    {data?.findCard?.description &&
+                    {data?.findCard?.description && !isEditingDescription &&
                         <Button
+                            onClick={() => setIsEditingDescription(true)}
                             variant="ghost"
-                            className="rounded-lg px-2 py-0 bg-gray-500/60 shadow-sm hover:bg-gray-500/80"
+                            className="rounded-lg mr-8 py-0 bg-gray-500/60 shadow-sm hover:bg-gray-500/80"
                         >
                             Edit
                         </Button>
                     }
+                    {data?.findCard?.description && isEditingDescription &&
+                    <div className="flex gap-2">
+                        <Button
+                            onClick={handleDescriptionChange}
+                            className="rounded-lg py-0"
+                        >
+                            Save
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setIsEditingDescription(false)
+                                setDescription(data?.findCard?.description as string)
+                            }}
+                            variant="ghost"
+                            className="rounded-lg mr-8 py-0"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                    }
                 </div>
-                {data?.findCard?.description
-                    ? <p className="text-sm">{data?.findCard?.description}</p>
-                    : <Button
-                        variant="ghost"
-                        className="mx-8 rounded-lg text-sm h-14 items-start justify-start bg-gray-500/60 shadow-sm"
-                      >
-                        Add a description...
-                      </Button>
+                {data?.findCard?.description && !isEditingDescription &&
+                    <p className="text-sm mx-8">{data?.findCard?.description}</p>
+                }
+
+                {isEditingDescription &&
+                    <textarea
+                        autoFocus
+                        className="rounded-lg mx-6 text-sm p-2 flex justify-start font-normal bg-black/60 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
+                        value={description}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => setDescription(e.target.value)}
+                        onBlur={handleDescriptionChange}
+                        onKeyDown={(e) => {
+                            if (e.key == 'Escape') {
+                                setIsEditingDescription(false)
+                                setDescription(data?.findCard?.description as string)
+                            }
+                        }}
+                    />
+                }
+                {!data?.findCard?.description && !isEditingDescription &&
+                    <Button
+                    variant="ghost"
+                    className="mx-8 rounded-lg text-sm h-14 items-start justify-start bg-gray-500/60 shadow-sm"
+                    onClick={() => setIsEditingDescription(true)}
+                >
+                    Add a description...
+                </Button>
                 }
                 <div className="flex items-center gap-2">
                     <IconPaperclip />
