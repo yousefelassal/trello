@@ -76,7 +76,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
 
   const handleDescriptionChange = async () => {
     setIsEditingDescription(false);
-    const descriptionWithBreaks = description.replace(/\n/g, ' <br /> ');
+    const descriptionWithBreaks = description.replace(/\n/g, '<br />');
     if (description.trim() == '' || description.trim() == data?.findCard?.description) {
       setDescription(data?.findCard?.description as string);  
       return;
