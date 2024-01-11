@@ -3,13 +3,8 @@ import { useQuery, useMutation } from "@apollo/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import { Loader2, X, ExternalLink } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { Button } from "./ui/button";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger
-} from "@/components/ui/popover"
 import TextareaAutosize from "react-textarea-autosize";
 import {
     FindCardDocument,
@@ -28,6 +23,7 @@ import {
 import Loading from "./Loading";
 import { IconBoxMultiple, IconAlignJustified, IconPaperclip, IconPhoto } from "@tabler/icons-react"
 import UploadImage from "./UploadImage";
+import ImageCard from "./ImageCard";
 
 export default function CardModal({ previousLocation }:any) { //eslint-disable-line
   const modalRef = useRef<any>(); //eslint-disable-line
@@ -38,7 +34,6 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   const [title, setTitle] = useState("");
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [description, setDescription] = useState("");
-  const [deleteImagePopover, setDeleteImagePopover] = useState(false);
 
     const { data, loading, error } = useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, {
         variables: {
@@ -240,18 +235,30 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
       onClick={() => navigate(`${previousLocation.pathname}`)}
     >
         <div
-            className="flex flex-col text-[#9FADBC] gap-4 w-full bg-[#323940] min-h-[40vh] mt-14 z-[60] relative h-fit max-w-2xl rounded-xl shadow-lg p-3 md:px-4 pb-6 mx-1"
+            className="flex flex-col text-[#9FADBC] gap-4 w-full bg-[#323940] min-h-[40vh] mt-14 z-[60] relative h-fit max-w-2xl rounded-xl shadow-lg mx-1"
             onClick={e=>e.stopPropagation()}
         >
-            <div className="absolute right-1 top-1">
+            <div className="absolute z-10 right-1 top-1">
                 <Button
                     variant="ghost"
                     onClick={()=>navigate(`${previousLocation.pathname}`)}
-                    className="rounded-lg px-2 py-0 hover:bg-gray-500/80"
+                    className="rounded-full p-0 px-2 text-white bg-gray-500/40 hover:bg-gray-500/80"
                 >
                     <X className="h-5 w-5" />
                 </Button>
             </div>
+            {data?.findCard?.cover &&
+                <div className="flex items-center justify-center">
+                    <div className="relative h-32 w-full overflow-hidden rounded-md bg-black/60">
+                        <img
+                            src={data?.findCard?.cover}
+                            alt={data?.findCard?.title}
+                            className="object-cover absolute inset-0 w-full h-full"
+                        />
+                    </div>
+                </div>
+            }
+            <div className="w-full p-3 md:px-4 pb-6">
             <div className="flex items-center mb-2 gap-2">
                 <IconBoxMultiple className="mt-1" />
                 {isEditingTitle
@@ -384,93 +391,14 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                     &&
                     <>
                         {data?.findCard?.images?.map((image) => (
-                            <a
-                                href={image?.url}
-                                target="_blank"
-                                rel="noreferrer"
+                            <ImageCard
                                 key={image?.id}
-                                className="rounded-lg hover:text-white ml-8 mr-4 flex flex-col sm:flex-row items-center hover:bg-gray-500/80 transition"
-                            >
-                                <div className="relative h-20 w-32 overflow-hidden rounded-md bg-black/60">
-                                    <img
-                                        src={image?.url}
-                                        alt={image?.name}
-                                        className="object-contain absolute inset-0 w-full h-full"
-                                    />
-                                </div>
-                                <div className="flex-1 p-2 flex flex-col items-start">
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-semibold">{image?.name}</span>
-                                        <ExternalLink className="h-4 w-4" />
-                                    </div>
-                                    <span className="text-xs">Added at {new Date(parseInt(image?.uploaded_at)).toLocaleString()}</span>
-                                    <div className="flex gap-3">
-                                    {image?.url === data?.findCard?.cover 
-                                        ? <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleRemoveCover()
-                                            }}
-                                            className="transition hover:underline-offset-4 text-xs justify-self-end underline hover:text-blue-400"
-                                          >
-                                            Remove cover
-                                          </button>
-                                        : <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleSetCover(image?.url as string)
-                                            }}
-                                            className="transition hover:underline-offset-4 text-xs underline hover:text-blue-400"
-                                          >
-                                            Set as cover
-                                          </button>
-                                    }
-                                    <Popover open={deleteImagePopover} onOpenChange={setDeleteImagePopover}>
-                                    <PopoverTrigger asChild>
-                                    <button
-                                        className="transition hover:underline-offset-4 text-xs underline hover:text-red-500"
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            e.preventDefault()
-                                            setDeleteImagePopover(!deleteImagePopover)
-                                        }}
-                                        >
-                                        Delete
-                                    </button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="flex relative item-center gap-2 flex-col w-60 p-3">
-                                        <Button
-                                            variant="ghost"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setDeleteImagePopover(false)
-                                            }}
-                                            className="absolute px-2 py-0 rounded-xl right-1 top-1"
-                                        >
-                                            <X className="h-5 w-5" />
-                                        </Button>
-                                        <span className="font-semibold">Delete image?</span>
-                                        <span className="text-sm">Deleting an image is permanent. There is no undo.</span>
-                                        <div className="flex gap-2">
-                                            <Button
-                                                variant="destructive"
-                                                className="rounded-lg py-0 flex w-full"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleDeleteImage(image?.key as string, image?.id as string)
-                                                    if(image?.url === data?.findCard?.cover) {
-                                                        handleRemoveCover()
-                                                    }
-                                                }}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    </PopoverContent>
-                                    </Popover>
-                                    </div>
-                                </div>
-                            </a>
+                                image={image}
+                                handleDeleteImage={handleDeleteImage}
+                                handleSetCover={handleSetCover}
+                                handleRemoveCover={handleRemoveCover}
+                                data={data}
+                            />
                         ))}
                     </>
                 }
@@ -484,6 +412,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                     >
                         {form.formState.isSubmitting ? <><Loader2 className="animate-spin" /> Deleting...</> : "Delete Card"}
                     </Button>
+                </div>
                 </div>
             </div>
         </div>
