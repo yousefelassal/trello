@@ -1,0 +1,13 @@
+mutation addImage($cardId: ID!, $key: String!, $url: String!, $name: String!, $uploadedAt: String!) {
+  addImageToCard(cardId: $cardId, key: $key, url: $url, name: $name, uploaded_at: $uploadedAt) {
+    id
+    cover
+    images {
+      id
+      key
+      url
+      name
+      uploaded_at
+    }
+  }
+}
