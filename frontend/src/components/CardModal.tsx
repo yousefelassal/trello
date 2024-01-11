@@ -38,6 +38,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   const [title, setTitle] = useState("");
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [description, setDescription] = useState("");
+  const [deleteImagePopover, setDeleteImagePopover] = useState(false);
 
     const { data, loading, error } = useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, {
         variables: {
@@ -424,18 +425,49 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                                             Set as cover
                                           </button>
                                     }
+                                    <Popover open={deleteImagePopover} onOpenChange={setDeleteImagePopover}>
+                                    <PopoverTrigger asChild>
                                     <button
                                         className="transition hover:underline-offset-4 text-xs underline hover:text-red-500"
                                         onClick={(e) => {
-                                            e.preventDefault();
-                                            handleDeleteImage(image?.key as string, image?.id as string)
-                                            if(image?.url === data?.findCard?.cover) {
-                                                handleRemoveCover()
-                                            }
+                                            e.stopPropagation()
+                                            e.preventDefault()
+                                            setDeleteImagePopover(!deleteImagePopover)
                                         }}
-                                    >
+                                        >
                                         Delete
                                     </button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="flex relative item-center gap-2 flex-col w-60 p-3">
+                                        <Button
+                                            variant="ghost"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setDeleteImagePopover(false)
+                                            }}
+                                            className="absolute px-2 py-0 rounded-xl right-1 top-1"
+                                        >
+                                            <X className="h-5 w-5" />
+                                        </Button>
+                                        <span className="font-semibold">Delete image?</span>
+                                        <span className="text-sm">Deleting an image is permanent. There is no undo.</span>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="destructive"
+                                                className="rounded-lg py-0 flex w-full"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleDeleteImage(image?.key as string, image?.id as string)
+                                                    if(image?.url === data?.findCard?.cover) {
+                                                        handleRemoveCover()
+                                                    }
+                                                }}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </div>
+                                    </PopoverContent>
+                                    </Popover>
                                     </div>
                                 </div>
                             </a>
