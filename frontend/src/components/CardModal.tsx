@@ -41,7 +41,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
       onClick={() => navigate(`${previousLocation.pathname}`)}
     >
         <div
-            className="flex flex-col text-[#9FADBC] gap-4 w-full bg-[#323940] min-h-[50vh] mt-16 z-20 relative h-fit max-w-2xl rounded-xl shadow-lg p-3 md:px-4 md:py-3 mx-1"
+            className="flex flex-col text-[#9FADBC] gap-4 w-full bg-[#323940] min-h-[40vh] mt-32 z-20 relative h-fit max-w-2xl rounded-xl shadow-lg p-3 md:px-4 pb-6 mx-1"
             onClick={e=>e.stopPropagation()}
         >
             <div className="absolute right-1 top-1">
