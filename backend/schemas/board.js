@@ -188,7 +188,16 @@ const resolvers = {
             }
 
             const board = await Board.findById(args.id)
-                .populate({ path: 'lists', populate: { path: 'cards' }})
+                .populate({
+                    path: 'lists',
+                        populate: {
+                            path: 'cards',
+                                populate: {
+                                    path: 'attachments',
+                                    path: 'images'
+                                }
+                        }
+                })
                 .populate('uploaded_bgs');
 
             if(board.user.toString() !== user._id.toString()) {
