@@ -92,7 +92,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
           __typename: "Card",
           id: id as string,
           title: data?.findCard?.title as string,
-          description: description,
+          description: descriptionWithBreaks,
           cover: data?.findCard?.cover,
         },
       },
