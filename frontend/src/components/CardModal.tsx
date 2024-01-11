@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useParams, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { Button } from "./ui/button";
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -12,6 +13,9 @@ import {
     UpdateCardDocument,
     UpdateCardMutation,
     UpdateCardMutationVariables,
+    DeleteCardDocument,
+    DeleteCardMutation,
+    DeleteCardMutationVariables,
 } from "@/generated/graphql";  
 import Loading from "./Loading";
 import { IconBoxMultiple, IconAlignJustified, IconPaperclip, IconPhoto } from "@tabler/icons-react"
@@ -20,6 +24,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   const modalRef = useRef<any>(); //eslint-disable-line
   const { id } = useParams();
   const navigate = useNavigate();
+  const form = useForm();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState("");
   const [isEditingDescription, setIsEditingDescription] = useState(false);
@@ -38,6 +43,13 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
     });
 
     const [updateCard] = useMutation<UpdateCardMutation, UpdateCardMutationVariables>(UpdateCardDocument);
+
+    const [deleteCard] = useMutation<DeleteCardMutation, DeleteCardMutationVariables>(DeleteCardDocument, {
+        update: (cache) => {
+            cache.evict({ id: cache.identify({ __typename: "Card", id: id }) as string });
+            cache.gc();
+        },
+    });
 
   useEffect(() => {
     const observerRefValue = modalRef.current;
@@ -98,6 +110,15 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
       },
     });
   }
+
+    const handleDeleteCard = async () => {
+        await deleteCard({
+            variables: {
+                id: id as string
+            }
+        })
+        navigate(`${previousLocation.pathname}`)
+    }
 
     if (loading) return <div
     ref={modalRef}
@@ -287,6 +308,16 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                         Add an image
                       </Button>
                 }
+                <div className="flex items-end justify-end">
+                    <Button
+                        variant="destructive"
+                        className="m-4 flex flex-end gap-2 rounded-lg shadow-sm"
+                        onClick={form.handleSubmit(handleDeleteCard)}
+                        disabled={form.formState.isSubmitting}
+                    >
+                        {form.formState.isSubmitting ? <><Loader2 className="animate-spin" /> Deleting...</> : "Delete Card"}
+                    </Button>
+                </div>
             </div>
         </div>
     </div>
