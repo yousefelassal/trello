@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { useQuery } from "@apollo/client";
+import { useState, useEffect, useRef } from "react";
+import { useQuery, useMutation } from "@apollo/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { X } from "lucide-react";
@@ -7,7 +7,10 @@ import { Button } from "./ui/button";
 import {
     FindCardDocument,
     FindCardQuery,
-    FindCardQueryVariables
+    FindCardQueryVariables,
+    UpdateCardDocument,
+    UpdateCardMutation,
+    UpdateCardMutationVariables,
 } from "@/generated/graphql";  
 import Loading from "./Loading";
 import { IconBoxMultiple, IconAlignJustified, IconPaperclip, IconPhoto } from "@tabler/icons-react"
@@ -16,12 +19,19 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   const modalRef = useRef<any>(); //eslint-disable-line
   const { id } = useParams();
   const navigate = useNavigate();
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [title, setTitle] = useState("");
 
     const { data, loading, error } = useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, {
         variables: {
             findCardId: id as string
+        },
+        onCompleted: (data) => {
+            setTitle(data.findCard?.title as string);
         }
     });
+
+    const [updateCard] = useMutation<UpdateCardMutation, UpdateCardMutationVariables>(UpdateCardDocument);
 
   useEffect(() => {
     const observerRefValue = modalRef.current;
@@ -33,6 +43,30 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
       }
     };
   }, []);
+
+  const handleTitleChange = async () => {
+    setIsEditingTitle(false);
+    if (title.trim() == '' || title.trim() == data?.findCard?.title) {
+      setTitle(data?.findCard?.title as string);  
+      return;
+    }
+    await updateCard({
+      variables: {
+        id: id as string,
+        title: title,
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateCard: {
+          __typename: "Card",
+          id: id as string,
+          title: title,
+          description: data?.findCard?.description,
+          cover: data?.findCard?.cover,
+        },
+      },
+    });
+  }
 
   return (
     <div
@@ -56,8 +90,38 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
             {loading && <Loading className="absolute inset-0" />}
             {error && <p>Oops something went wrong!</p>}
             <div className="flex items-center mb-2 gap-2">
-                <IconBoxMultiple />
-                <h1 className="text-2xl mb-2 font-semibold">{data?.findCard?.title}</h1>
+                <IconBoxMultiple className="mt-1" />
+                {isEditingTitle
+                    ?  <input
+                        autoFocus
+                        type="text"
+                        className="rounded-lg w-fit text-2xl p-0 flex justify-start font-semibold bg-black/60 border-2 border-[#22272B] shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
+                        value={title}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => setTitle(e.target.value)}
+                        onBlur={handleTitleChange}
+                        onKeyDown={(e) => {
+                        if (e.key == 'Enter' && (title.trim() != '' || title.trim() != data?.findCard?.title as string)) {
+                            handleTitleChange()
+                        }
+                        if (e.key == 'Escape') {
+                            setIsEditingTitle(false)
+                            setTitle(data?.findCard?.title as string)
+                        }
+                        }}
+                        style={{
+                        width: `${(title.length + 0.6)}ch`,
+                        minWidth: '4ch'
+                        }}
+                    />
+                    :  <Button
+                        className="text-2xl p-0 flex justify-start font-semibold"
+                        variant="ghost"
+                        onClick={() => setIsEditingTitle(true)}
+                      >
+                        {data?.findCard?.title}
+                      </Button>
+                }
             </div>
             <div className="flex flex-col gap-2">
                 <div className="flex justify-between">
