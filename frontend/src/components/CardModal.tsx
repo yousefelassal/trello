@@ -32,7 +32,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
         onCompleted: (data) => {
             setTitle(data.findCard?.title as string);
             if (data.findCard?.description) {
-                setDescription(data.findCard?.description as string);
+                setDescription(data.findCard?.description.replace(/<br \/>/g, '\n') as string);
             }
         }
     });
