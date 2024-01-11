@@ -60,9 +60,19 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                 <h1 className="text-2xl mb-2 font-semibold">{data?.findCard?.title}</h1>
             </div>
             <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                    <IconAlignJustified />
-                    <h2 className="text-lg font-medium">Description</h2>
+                <div className="flex justify-between">
+                    <div className="flex items-center gap-2">
+                        <IconAlignJustified />
+                        <h2 className="text-lg font-medium">Description</h2>
+                    </div>
+                    {data?.findCard?.description &&
+                        <Button
+                            variant="ghost"
+                            className="rounded-lg px-2 py-0 bg-gray-500/60 shadow-sm hover:bg-gray-500/80"
+                        >
+                            Edit
+                        </Button>
+                    }
                 </div>
                 {data?.findCard?.description
                     ? <p className="text-sm">{data?.findCard?.description}</p>
