@@ -186,7 +186,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                         <Button
                             onClick={() => setIsEditingDescription(true)}
                             variant="ghost"
-                            className="rounded-lg mr-8 py-0 bg-gray-500/60 shadow-sm hover:bg-gray-500/80"
+                            className="rounded-lg mr-4 py-0 bg-gray-500/60 shadow-sm hover:bg-gray-500/80"
                         >
                             Edit
                         </Button>
@@ -204,7 +204,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                 <div className="flex flex-col gap-2">
                     <TextareaAutosize
                         autoFocus
-                        className="rounded-lg mx-6 text-sm p-2 flex justify-start font-normal bg-black/60 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
+                        className="rounded-lg ml-6 mr-4 text-sm p-2 flex justify-start font-normal bg-black/60 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
                         value={description}
                         onFocus={(e) => e.target.select()}
                         onChange={(e) => setDescription(e.target.value)}
@@ -239,7 +239,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                 {!data?.findCard?.description && !isEditingDescription &&
                     <Button
                     variant="ghost"
-                    className="mx-8 rounded-lg text-sm h-14 items-start justify-start bg-gray-500/60 shadow-sm"
+                    className="ml-8 mr-4 rounded-lg text-sm h-14 items-start justify-start bg-gray-500/60 shadow-sm"
                     onClick={() => setIsEditingDescription(true)}
                 >
                     Add a description...
@@ -260,7 +260,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                         </div>
                     : <Button
                         variant="ghost"
-                        className="mx-8 flex gap-2 rounded-lg text-sm justify-start bg-gray-500/60 shadow-sm"
+                        className="ml-8 mr-4 flex gap-2 rounded-lg text-sm justify-start bg-gray-500/60 shadow-sm"
                       >
                         <IconPaperclip />
                         Add an attachment
@@ -281,7 +281,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                         </div>
                     : <Button
                         variant="ghost"
-                        className="mx-8 flex gap-2 rounded-lg text-sm justify-start bg-gray-500/60 shadow-sm"
+                        className="ml-8 mr-4 flex gap-2 rounded-lg text-sm justify-start bg-gray-500/60 shadow-sm"
                       >
                         <IconPhoto />
                         Add an image
