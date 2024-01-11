@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useMutation } from "@apollo/client";
+import { Link, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
     DeleteListDocument,
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/popover"  
 import { X, MoreHorizontal, Loader2, Trash, Pen } from "lucide-react"
 import { Separator } from "./ui/separator";
+import { IconBoxMultiple, IconAlignJustified, IconPaperclip, IconPhoto } from "@tabler/icons-react"
 
 export default function List({list, index, addNewCard}: {list: any, index: number, addNewCard: (list:any, title:string) => void}) { //eslint-disable-line
   const [title, setTitle] = useState('')
@@ -27,6 +29,7 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
   const [isEditing, setIsEditing] = useState(false)
   const [listTitle, setListTitle] = useState(list.title)
   const form = useForm()
+  const location = useLocation()
 
   const [deleteList] = useMutation<DeleteListMutation, DeleteListMutationVariables>(DeleteListDocument, {
     update: (cache) => {
@@ -109,7 +112,7 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                 }
                 <Popover>
                     <PopoverTrigger asChild>
-                        <Button variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
+                        <Button title="Open list actions" variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
                             <MoreHorizontal className="w-5 h-5" />
                         </Button>
                     </PopoverTrigger>
@@ -184,10 +187,36 @@ export default function List({list, index, addNewCard}: {list: any, index: numbe
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             className={`${snapshot.isDragging ? 'bg-[#353f48] border-blue-500' : 'bg-[#22272B]' }
-                            flex rounded-lg border-2 border-[#22272B] hover:border-blue-500 justify-center px-2 py-1 shadow-2xl flex-col`}
+                            flex rounded-lg border-2 border-[#22272B] hover:border-blue-500 justify-center pr-[2px] pl-2 py-[2px] shadow-2xl flex-col`}
                         >
-                        <h4 className="text-lg font-bold">{card.title}</h4>
-                        <div>{card.description}</div>
+                        {card.cover && 
+                            <div className="flex-1 relative rounded-lg h-[100px] w-full">
+                                <img
+                                    src={card.cover}
+                                    className="absolute inset-0 object-cover "
+                                />
+                            </div>
+                        }
+                        <div className="flex items-center justify-between">
+                            <h4 className="text-lg font-bold">{card.title}</h4>
+                            <div className="flex gap-1">
+                                <Link
+                                    to={`/${location.pathname.split('/')[1]}/${card.id}`}
+                                    state={{ previousLocation: location }}
+                                >
+                                    <Button title="Open card dialog" variant="ghost" className="py-0 px-[10px] rounded-lg hover:bg-gray-500/80">
+                                        <IconBoxMultiple className="w-5 h-5" />
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                        {card.description || card.images || card.attachments &&
+                            <div className="flex gap-2">
+                                {card.description && <IconAlignJustified />}
+                                {card.images && <IconPhoto />}
+                                {card.attachments && <IconPaperclip />}
+                            </div>
+                        }
                     </div>
                     )}
                     </Draggable>
