@@ -330,7 +330,7 @@ export type FindBoardQueryVariables = Exact<{
 }>;
 
 
-export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, description?: string | null, saved?: boolean | null, uploaded_bgs?: Array<{ __typename?: 'Image', id: string, url: string }> | null, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
+export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, description?: string | null, saved?: boolean | null, uploaded_bgs?: Array<{ __typename?: 'Image', id: string, url: string }> | null, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, cover?: string | null, description?: string | null, images?: Array<{ __typename?: 'Image', id: string }> | null, attachments?: Array<{ __typename?: 'Attachment', id: string }> | null }> }> } | null };
 
 export type FindCardQueryVariables = Exact<{
   findCardId: Scalars['ID']['input'];
@@ -805,7 +805,14 @@ export const FindBoardDocument = gql`
       cards {
         id
         title
+        cover
         description
+        images {
+          id
+        }
+        attachments {
+          id
+        }
       }
     }
   }
