@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { X } from "lucide-react";
 import { Button } from "./ui/button";
+import TextareaAutosize from "react-textarea-autosize";
 import {
     FindCardDocument,
     FindCardQuery,
@@ -75,6 +76,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
 
   const handleDescriptionChange = async () => {
     setIsEditingDescription(false);
+    const descriptionWithBreaks = description.replace(/\n/g, ' <br /> ');
     if (description.trim() == '' || description.trim() == data?.findCard?.description) {
       setDescription(data?.findCard?.description as string);  
       return;
@@ -82,7 +84,7 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
     await updateCard({
       variables: {
         id: id as string,
-        description: description,
+        description: descriptionWithBreaks,
       },
       optimisticResponse: {
         __typename: "Mutation",
@@ -211,11 +213,15 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                     }
                 </div>
                 {data?.findCard?.description && !isEditingDescription &&
-                    <p className="text-sm mx-8">{data?.findCard?.description}</p>
+                    <p className="text-sm mx-8">{
+                        data?.findCard?.description.split('<br />').map((line, index) => (
+                            <span key={index}>{line}<br /></span>
+                        ))
+                    }</p>
                 }
 
                 {isEditingDescription &&
-                    <textarea
+                    <TextareaAutosize
                         autoFocus
                         className="rounded-lg mx-6 text-sm p-2 flex justify-start font-normal bg-black/60 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
                         value={description}
