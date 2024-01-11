@@ -1,0 +1,21 @@
+query findCard($findCardId: ID!) {
+  findCard(id: $findCardId) {
+    id
+    title
+    description
+    images {
+      id
+      url
+      key
+      name
+      uploaded_at
+    }
+    cover
+    attachments {
+      id
+      name
+      url
+      uploaded_at
+    }
+  }
+}
