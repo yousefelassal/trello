@@ -16,6 +16,7 @@ import Signup from "./pages/Signup"
 import Login from "./pages/Login"
 import Docs from "./pages/Docs"
 import Board from "./pages/Board"
+import CardModal from "./components/CardModal"
 import Header from "./components/Header"
 import useHasMounted from './hooks/useHasMounted'
 import { useTokenValue } from "./hooks/useTokenValue"
@@ -26,6 +27,7 @@ export default function App() {
   const client = useApolloClient()
   const hasMounted = useHasMounted()
   const location = useLocation()
+  const previousLocation = location.state?.previousLocation
 
   if (!hasMounted) {
     return null
@@ -41,12 +43,18 @@ export default function App() {
     return (
       <>
         <Header logout={logout} />
-        <Routes>
+        <Routes location={previousLocation || location}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Navigate to="/" replace={true} />} />
           <Route path="/signup" element={<Navigate to="/" replace={true} />} />
           <Route path="/:id" element={<Board />} />
         </Routes>
+
+        {previousLocation && (
+          <Routes>
+            <Route path="/:id/:id" element={<CardModal previousLocation={previousLocation} />} />
+          </Routes>
+        )}
       </>
     )
   }
