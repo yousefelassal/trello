@@ -314,6 +314,13 @@ export type FindBoardQueryVariables = Exact<{
 
 export type FindBoardQuery = { __typename?: 'Query', findBoard?: { __typename?: 'Board', id: string, bg: string, title: string, description?: string | null, saved?: boolean | null, uploaded_bgs?: Array<{ __typename?: 'Image', id: string, url: string }> | null, lists: Array<{ __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> }> } | null };
 
+export type FindCardQueryVariables = Exact<{
+  findCardId: Scalars['ID']['input'];
+}>;
+
+
+export type FindCardQuery = { __typename?: 'Query', findCard?: { __typename?: 'Card', id: string, title: string, description?: string | null, cover?: string | null, images?: Array<{ __typename?: 'Image', id: string, url: string, key: string, name: string, uploaded_at: string }> | null, attachments?: Array<{ __typename?: 'Attachment', id: string, name: string, url: string, uploaded_at: string }> | null } | null };
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -725,6 +732,62 @@ export type FindBoardQueryHookResult = ReturnType<typeof useFindBoardQuery>;
 export type FindBoardLazyQueryHookResult = ReturnType<typeof useFindBoardLazyQuery>;
 export type FindBoardSuspenseQueryHookResult = ReturnType<typeof useFindBoardSuspenseQuery>;
 export type FindBoardQueryResult = Apollo.QueryResult<FindBoardQuery, FindBoardQueryVariables>;
+export const FindCardDocument = gql`
+    query findCard($findCardId: ID!) {
+  findCard(id: $findCardId) {
+    id
+    title
+    description
+    images {
+      id
+      url
+      key
+      name
+      uploaded_at
+    }
+    cover
+    attachments {
+      id
+      name
+      url
+      uploaded_at
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindCardQuery__
+ *
+ * To run a query within a React component, call `useFindCardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindCardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindCardQuery({
+ *   variables: {
+ *      findCardId: // value for 'findCardId'
+ *   },
+ * });
+ */
+export function useFindCardQuery(baseOptions: Apollo.QueryHookOptions<FindCardQuery, FindCardQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, options);
+      }
+export function useFindCardLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindCardQuery, FindCardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, options);
+        }
+export function useFindCardSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindCardQuery, FindCardQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, options);
+        }
+export type FindCardQueryHookResult = ReturnType<typeof useFindCardQuery>;
+export type FindCardLazyQueryHookResult = ReturnType<typeof useFindCardLazyQuery>;
+export type FindCardSuspenseQueryHookResult = ReturnType<typeof useFindCardSuspenseQuery>;
+export type FindCardQueryResult = Apollo.QueryResult<FindCardQuery, FindCardQueryVariables>;
 export const LoginDocument = gql`
     mutation login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
