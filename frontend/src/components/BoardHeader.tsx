@@ -171,7 +171,7 @@ export default function BoardHeader({board}:{board:any}) { //eslint-disable-line
             </div>
             <Sheet>
             <SheetTrigger asChild>
-                <Button variant="ghost" className="px-2 rounded-lg hover:bg-gray-500/80">
+                <Button title="Open options menu" variant="ghost" className="px-2 rounded-lg hover:bg-gray-500/80">
                     <MoreHorizontal />
                 </Button>
             </SheetTrigger>
