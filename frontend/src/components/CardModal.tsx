@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useParams, useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { Loader2, X } from "lucide-react";
@@ -242,7 +243,9 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                 <Button
                     variant="ghost"
                     onClick={()=>navigate(`${previousLocation.pathname}`)}
-                    className="rounded-full p-0 px-2 text-white bg-gray-500/40 hover:bg-gray-500/80"
+                    className={cn("rounded-full py-0 px-[10px] text-white hover:bg-gray-500/80",
+                        data?.findCard?.cover && 'bg-gray-500/40'
+                    )}
                 >
                     <X className="h-5 w-5" />
                 </Button>
