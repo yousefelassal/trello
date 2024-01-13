@@ -48,6 +48,17 @@ export default function App() {
           <Route path="/login" element={<Navigate to="/" replace={true} />} />
           <Route path="/signup" element={<Navigate to="/" replace={true} />} />
           <Route path="/:id" element={<Board />} />
+          <Route path="/documentation" element={
+            <>
+            <div className="fixed h-[40rem] md:min-h-screen w-full rounded-md flex items-center justify-center antialiased overflow-hidden">
+              <Spotlight
+                className="top-10 left-0 md:left-60 md:-top-20"
+                fill="#3478F3"
+              />
+            </div>
+            <Docs />
+            </>
+          } />
         </Routes>
 
         {previousLocation && (
