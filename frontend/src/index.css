@@ -36,3 +36,7 @@
     @apply bg-black/[0.96] text-white overscroll-none;
   }
 }
+
+.ch-scrollycoding-step-content {
+  min-height: 0px;
+}
