@@ -46,7 +46,7 @@ export default function Header({logout}: {logout: () => void}) {
 
   if (error) return <div>{error.message}</div>
 
-  if (loading) return <div className="container top-0 fixed py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[#1D2125]">
+  if (loading) return <div className="px-4 sm:container w-screen top-0 fixed py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[#1D2125]">
     <div className="flex gap-2">
       <Skeleton className="h-9 w-24 bg-gray-500/80" />
       <Skeleton className="h-9 w-20 bg-gray-500/80" />
@@ -121,9 +121,6 @@ export default function Header({logout}: {logout: () => void}) {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <Link to="/documentation" className="rounded-md px-2 py-1 items-center flex gap-1 transition hover:bg-gray-500/80">
-          <div className="text-base font-semibold">Docs</div>
-        </Link>
         <AddBoard header className="w-8 h-8 items-center flex justify-center p-0" />
       </div>
       <button onClick={logout} className="flex items-center text-sm flex-col">
