@@ -80,8 +80,8 @@ export default function Header({logout}: {logout: () => void}) {
   }
   
   return (
-    <div className="container w-screen top-0 fixed py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[linear-gradient(110deg,#333_0.6%,#222)]">
-      <div className="flex gap-2">
+    <div className="px-4 sm:container w-screen top-0 fixed py-2 items-center z-40 flex justify-between border-b border-neutral-600 bg-[linear-gradient(110deg,#333_0.6%,#222)]">
+      <div className="flex gap-1 sm:gap-2">
         <Link to="/" className="group rounded-md px-2 py-1 items-center flex gap-1 transition hover:bg-gray-500/80">
           <div className="rounded-[3px] items-start p-1 h-5 w-5 flex gap-[2px] bg-[#9eacba]/80">
             <div className="h-3 group-hover:animate-logo-reverse w-2 bg-[#1d2125]/80 rounded-[1px]" />
@@ -121,6 +121,9 @@ export default function Header({logout}: {logout: () => void}) {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
+        <Link to="/documentation" className="rounded-md px-2 py-1 items-center flex gap-1 transition hover:bg-gray-500/80">
+          <div className="text-base font-semibold">Docs</div>
+        </Link>
         <AddBoard header className="w-8 h-8 items-center flex justify-center p-0" />
       </div>
       <button onClick={logout} className="flex items-center text-sm flex-col">
