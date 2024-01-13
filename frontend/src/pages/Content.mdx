@@ -1,10 +1,49 @@
-# Hello
+<h1 className="text-4xl py-2 font-bold">Docuemntation</h1>
 
-Lorem ipsum dolor sit amet.
+<h2 className="text-lg font-semibold">Client State</h2>
 
-```python hello.py mark=1[22:30]
-print("Rendered with Code Hike")
+A custom hook was created to get the user token on first render from local storage and set the token value on login and signup using `jotai` util <span className="underline">[`atomWithStorage`](https://jotai.org/docs/utilities/storage)</span>
+
+<CH.Code>
+
+```ts useTokenValue.ts mark=4[20:34],7[29:35]
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+
+const tokenValue = atomWithStorage<string | null>('trello-3al-daya2-token', null)
+
+export const useTokenValue = () => {
+  const [token, setToken] = useAtom(tokenValue)
+
+  return {
+    token,
+    setToken
+  }
+}
 ```
+
+```tsx App.tsx focus=1,4,6[7:12],14,15
+import { useTokenValue } from "./hooks/useTokenValue";
+
+function App() {
+  const { token, setToken } = useTokenValue()
+
+  if (token) {
+    return (
+      // user is logged in and dashboard is rendered
+    )
+  }
+
+  return (
+    // user is not logged in and landing page is rendered with login and signup
+      <Route path="/login" element={<Login setToken={setToken} />} />
+      <Route path="/signup" element={<Signup setToken={setToken} />} />
+  );
+}
+
+```
+
+</CH.Code>
 
 Lorem ipsum dolor sit amet.
 
