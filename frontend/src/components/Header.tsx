@@ -25,6 +25,16 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Code2, Github, LogOut } from "lucide-react";
+import { Button } from './ui/button'
 
 export default function Header({logout}: {logout: () => void}) {
   const { data:user, loading, error } = useQuery<MeQuery, MeQueryVariables>(MeDocument)
@@ -123,9 +133,36 @@ export default function Header({logout}: {logout: () => void}) {
         </NavigationMenu>
         <AddBoard header className="w-8 h-8 items-center flex justify-center p-0" />
       </div>
-      <button onClick={logout} className="flex items-center text-sm flex-col">
-        Logout <span className="text-xs">{user?.me?.name}</span>
-      </button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+         <Button variant="outline" className="bg-transparent border-neutral-600 rounded-lg hover:bg-gray-500/80">More</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>{user?.me?.name}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link to="/documentation">
+              <Code2 className="mr-2 h-4 w-4" />
+              <span>Documentation</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <a
+              href="https://github.com/yousefelassal/trello"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Github className="mr-2 h-4 w-4" />
+              <span>GitHub</span>
+            </a>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={logout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Log out</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   )
 }
