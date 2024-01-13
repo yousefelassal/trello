@@ -1,6 +1,6 @@
 <h1 className="text-4xl py-2 font-bold">Docuemntation</h1>
 
-<h2 className="text-lg font-semibold">Client State</h2>
+<h2 className="text-2xl font-semibold">Client State</h2>
 
 A custom hook was created to get the user token on first render from local storage and set the token value on login and signup using `jotai` util <span className="underline">[`atomWithStorage`](https://jotai.org/docs/utilities/storage)</span>
 
@@ -45,110 +45,164 @@ function App() {
 
 </CH.Code>
 
-Lorem ipsum dolor sit amet.
+<h2 className="text-2xl font-semibold">Server State</h2>
 
-# Scrollycoding
+<CH.Section>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+```tsx main.tsx
+import ReactDOM from 'react-dom/client'
+import ApolloProvider from './components/ApolloProvider.tsx'
 
-Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <ApolloProvider>
+    <Router>
+      <App />
+    </Router>
+  </ApolloProvider>
+)
+```
+A custom [ApolloProvider](focus://2,5,9) component was created to wrap the app with the apollo client and set the authorization header with the user token from local storage
+
+</CH.Section>
 
 <CH.Scrollycoding>
 
-## Step 1
+<h3 className="text-lg font-semibold">Using Token</h3>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing something about points
+`useTokenValue` is used imported and used to get the user token
 
-```js app.js focus=3:10
-const { lorem, ipsum } = dolor({
-  sit: {
-    amet: 1,
-    consectetur: 2,
-    adipiscing: (elit) => ({
-      sed: elit,
-    }),
-    eiusmod: (tempor) => ({
-      incididunt: tempor,
-    }),
-    ut: (labore) => ({
-      et: labore,
-      dolore: labore + 1,
-    }),
-    magna: (aliqua) => ({
-      ut: aliqua,
-    }),
-    nostrud: (elit) => ({
-      exercitation: elit,
-      ullamco: elit,
-    }),
-    laboris: (elit) => ({
-      nisi: elit,
-    }),
-  },
-})
+```tsx ApolloProvider.tsx focus=1,8
+import { useTokenValue } from '@/hooks/useTokenValue'
+
+interface Props {
+  children: React.ReactNode
+}
+
+const ApolloProvider = ({children}:Props) => {
+  const { token } = useTokenValue()
+
+  const httpLink = createHttpLink({
+    uri: import.meta.env.VITE_SERVER,
+  })
+  
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: authLink.concat(httpLink),
+  })
+
+  return (
+    <Provider client={client}>
+      {children}
+    </Provider>
+  )
+}
+
+export default ApolloProvider
 ```
 
 ---
 
-## Step 2
+<h3 className="text-lg font-semibold">User Context</h3>
 
-Velit euismod in pellentesque massa placerat
+`setContext` is used to set the authorization header with the user token
 
-```js app.js focus=11:17
 
+```tsx ApolloProvider.tsx focus=1,10:17
+import { setContext } from '@apollo/client/link/context'
+import { useTokenValue } from '@/hooks/useTokenValue'
+
+interface Props {
+  children: React.ReactNode
+}
+
+const ApolloProvider = ({children}:Props) => {
+  const { token } = useTokenValue()
+  const authLink = setContext((_, { headers }) => {
+    return {
+        headers: {
+          ...headers,
+          authorization: token ? `Bearer ${token}` : null,
+        }
+    }
+  })
+  const httpLink = createHttpLink({
+    uri: import.meta.env.VITE_SERVER,
+  })
+  
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: authLink.concat(httpLink),
+  })
+
+  return (
+    <Provider client={client}>
+      {children}
+    </Provider>
+  )
+}
+
+export default ApolloProvider
 ```
 
 ---
 
-## Step 3
+<h3 className="text-lg font-semibold">Apollo Client</h3>
 
-Id aliquet risus feugiat in ante metus dictum at tempornt augue interdum velit euismod.
+The apollo client is created with the `authLink` created and `httpLink` from the server uri which is set in the `.env` file according to the environment (development or production)
 
-```js app.js focus=11:14
-const { lorem, ipsum } = dolor({
-  sit: {
-    amet: 1,
-    consectetur: 2,
-    adipiscing: (elit) => ({
-      sed: elit,
-    }),
-    eiusmod: (tempor) => ({
-      incididunt: tempor,
-    }),
-    ut: (labore) => ({
-      et: lorem(labore * ipsum),
-      dolore: lorem(labore + 1),
-    }),
-    nostrud: (elit) => ({
-      exercitation: elit,
-      ullamco: elit,
-    }),
-    laboris: (elit) => ({
-      nisi: elit,
-    }),
-  },
-})
+<CH.Code>
+
+```tsx ApolloProvider.tsx focus=1:6,24:37
+import {
+  ApolloClient,
+  ApolloProvider as Provider,
+  InMemoryCache,
+  createHttpLink,
+} from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
+import { useTokenValue } from '@/hooks/useTokenValue'
+
+interface Props {
+  children: React.ReactNode
+}
+
+const ApolloProvider = ({children}:Props) => {
+  const { token } = useTokenValue()
+  const authLink = setContext((_, { headers }) => {
+    return {
+        headers: {
+          ...headers,
+          authorization: token ? `Bearer ${token}` : null,
+        }
+    }
+  })
+  const httpLink = createHttpLink({
+    uri: import.meta.env.VITE_SERVER,
+  })
+  
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: authLink.concat(httpLink),
+  })
+
+  return (
+    <Provider client={client}>
+      {children}
+    </Provider>
+  )
+}
+
+export default ApolloProvider
 ```
 
 ---
 
-## Step 4
-
-Velit euismod in pellentesque massa placerat.
-
-```js app.js focus=15:21
-
+```env .env
+VITE_SERVER=http://localhost:4000/graphql
 ```
 
----
+</CH.Code>
 
-## Step 5
-
-Velit euismod in pellentesque massa placerat.
-
-```js app.js
-
-```
 
 </CH.Scrollycoding>
 
