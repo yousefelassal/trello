@@ -135,9 +135,9 @@ export default function Header({logout}: {logout: () => void}) {
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-         <Button variant="outline" className="bg-transparent border-neutral-600 rounded-lg hover:bg-gray-500/80">More</Button>
+         <Button variant="outline" className="bg-transparent text-sm px-3 py-1 border-neutral-600 rounded-lg hover:bg-gray-500/80">More</Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="-translate-x-8">
           <DropdownMenuLabel>{user?.me?.name}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
