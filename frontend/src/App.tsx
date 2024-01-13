@@ -50,7 +50,7 @@ export default function App() {
           <Route path="/:id" element={<Board />} />
           <Route path="/documentation" element={
             <>
-            <div className="fixed h-[40rem] md:min-h-screen w-full rounded-md flex items-center justify-center antialiased overflow-hidden">
+            <div className="absolute h-[40rem] md:min-h-screen w-full rounded-md flex items-center justify-center antialiased overflow-hidden">
               <Spotlight
                 className="top-10 left-0 md:left-60 md:-top-20"
                 fill="#3478F3"
