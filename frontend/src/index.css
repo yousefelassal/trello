@@ -72,3 +72,7 @@
 .ch-editor-frame {
   width: 100%;
 }
+
+.list {
+  list-style-type: disc;
+}
