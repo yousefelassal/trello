@@ -40,3 +40,7 @@
 .ch-scrollycoding-step-content {
   min-height: 0px;
 }
+
+.ch-scrollycoding-step-content[data-selected] {
+  background-color: #1a202ccc;
+}
