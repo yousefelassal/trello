@@ -50,7 +50,7 @@
 }
 
 .ch-spotlight-tabs {
-  @apply flex flex-row gap-8 overflow-y-auto sm:overflow-hidden w-full;
+  @apply flex flex-row gap-8 overflow-y-auto w-full pb-2;
 }
 
 .ch-spotlight-tab {
