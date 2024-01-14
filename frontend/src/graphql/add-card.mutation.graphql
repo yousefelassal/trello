@@ -2,10 +2,17 @@ mutation addCard($listId: ID!, $title: String!) {
   addCard(listId: $listId, title: $title) {
     id
     title
-    cards {
-        id
-        title
-        description
+    cards{
+      id
+      title
+      cover
+      description
+      images {
+          id
+      }
+      attachments {
+          id
+      }
     }
   }
 }
