@@ -1,0 +1,13 @@
+mutation addAttachment($cardId: ID!, $url: String!, $name: String!, $uploadedAt: String!) {
+  addAttachmentToCard(cardId: $cardId, url: $url, name: $name, uploaded_at: $uploadedAt) {
+    id
+    cover
+    attachments {
+      id
+      name
+      url
+      open_graph_image
+      uploaded_at
+    }
+  }
+}
