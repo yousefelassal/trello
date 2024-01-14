@@ -4,6 +4,7 @@ const Card = require("../models/card")
 const Image = require("../models/image")
 const Attachment = require("../models/attachment")
 const { GraphQLError } = require('graphql')
+const { getOpenGraphImage } = require('../utils/opengraph')
 
 const typeDefs = `
     type Attachment {
@@ -11,6 +12,7 @@ const typeDefs = `
         url: String!
         name: String!
         uploaded_at: String!
+        open_graph_image: String
     }
 
     type Image {
@@ -509,6 +511,7 @@ const resolvers = {
             if(!user) {
                 throw new GraphQLError("Not authenticated")
             }
+
             const card = await Card.findById(args.cardId)
             const attachment = new Attachment({ ...args })
             try {
@@ -518,6 +521,13 @@ const resolvers = {
             }
 
             card.attachments = card.attachments.concat(attachment._id)
+
+            const openGraphImage = await getOpenGraphImage(attachment.url)
+            if(openGraphImage) {
+                attachment.open_graph_image = openGraphImage
+                card.cover = openGraphImage
+            }
+
             await card.save()
 
             return card.populate('attachments')
