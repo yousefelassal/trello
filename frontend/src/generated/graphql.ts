@@ -362,7 +362,7 @@ export type FindCardQueryVariables = Exact<{
 }>;
 
 
-export type FindCardQuery = { __typename?: 'Query', findCard?: { __typename?: 'Card', id: string, title: string, description?: string | null, cover?: string | null, images?: Array<{ __typename?: 'Image', id: string, url: string, key: string, name: string, uploaded_at: string }> | null, attachments?: Array<{ __typename?: 'Attachment', id: string, name: string, url: string, uploaded_at: string }> | null } | null };
+export type FindCardQuery = { __typename?: 'Query', findCard?: { __typename?: 'Card', id: string, title: string, description?: string | null, cover?: string | null, images?: Array<{ __typename?: 'Image', id: string, url: string, key: string, name: string, uploaded_at: string }> | null, attachments?: Array<{ __typename?: 'Attachment', id: string, name: string, url: string, uploaded_at: string, open_graph_image?: string | null }> | null } | null };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -1010,6 +1010,7 @@ export const FindCardDocument = gql`
       name
       url
       uploaded_at
+      open_graph_image
     }
   }
 }
