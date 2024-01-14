@@ -94,7 +94,7 @@ export default function Board() {
     addCard({
         variables: {
             listId: list.id,
-            title: title
+            title
         },
         optimisticResponse: {
             __typename: "Mutation",
@@ -103,12 +103,15 @@ export default function Board() {
                 id: list.id,
                 title: list.title,
                 cards: [
-                    ...list.cards as any[], //eslint-disable-line
+                    ...list.cards as any[] || [], //eslint-disable-line
                     {
                         __typename: "Card",
                         id: `temp-${Date.now()}`,
                         title: title,
-                        description: ""
+                        cover: null,
+                        description: null,
+                        attachments: [],
+                        images: [],
                     }
                 ]
             }
