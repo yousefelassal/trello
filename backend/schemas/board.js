@@ -435,7 +435,7 @@ const resolvers = {
             list.cards = list.cards.concat(card._id)
             await list.save()
 
-            return list.populate('cards')
+            return list.populate({ path: 'cards', populate: { path: 'attachments', path: 'images' }})
         },
         updateCard: async (root, args, context) => {
             const user = context.currentUser
