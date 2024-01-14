@@ -20,11 +20,18 @@ import {
     DeleteImageDocument,
     DeleteImageMutation,
     DeleteImageMutationVariables,
+    AddAttachmentDocument,
+    AddAttachmentMutation,
+    AddAttachmentMutationVariables,
+    DeleteAttachmentDocument,
+    DeleteAttachmentMutation,
+    DeleteAttachmentMutationVariables
 } from "@/generated/graphql";  
 import Loading from "./Loading";
 import { IconBoxMultiple, IconAlignJustified, IconPaperclip, IconPhoto } from "@tabler/icons-react"
 import UploadImage from "./UploadImage";
 import ImageCard from "./ImageCard";
+import AttachmentCard from "./AttachmentCard";
 
 export default function CardModal({ previousLocation }:any) { //eslint-disable-line
   const modalRef = useRef<any>(); //eslint-disable-line
@@ -35,6 +42,9 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
   const [title, setTitle] = useState("");
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [description, setDescription] = useState("");
+  const [attachmentName, setAttachmentName] = useState("");
+  const [attachmentUrl, setAttachmentUrl] = useState("");
+  const [isAddingAttachment, setIsAddingAttachment] = useState(false);
 
     const { data, loading, error } = useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, {
         variables: {
@@ -58,6 +68,10 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
     });
 
     const [deleteImage] = useMutation<DeleteImageMutation, DeleteImageMutationVariables>(DeleteImageDocument)
+
+    const [addAttachment] = useMutation<AddAttachmentMutation, AddAttachmentMutationVariables>(AddAttachmentDocument)
+    
+    const [deleteAttachment] = useMutation<DeleteAttachmentMutation, DeleteAttachmentMutationVariables>(DeleteAttachmentDocument)
 
   useEffect(() => {
     const observerRefValue = modalRef.current;
@@ -200,6 +214,57 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
             },
             update: (cache) => {
                 cache.evict({ id: cache.identify({ __typename: "Image", id: id }) as string });
+                cache.gc();
+            }
+        })
+    }
+
+    const handleAddAttachment = async () => {
+        if (attachmentName.trim() == '' || attachmentUrl.trim() == '') {
+            setIsAddingAttachment(false)
+            setAttachmentName('')
+            setAttachmentUrl('')
+            return;
+        }
+        setIsAddingAttachment(false)
+        setAttachmentName('')
+        setAttachmentUrl('')
+        await addAttachment({
+            variables: {
+                name: attachmentName,
+                url: attachmentUrl,
+                cardId: id as string,
+                uploadedAt: new Date().toISOString()
+            },
+            optimisticResponse: {
+                __typename: "Mutation",
+                addAttachmentToCard: {
+                    __typename: "Card",
+                    id: id as string,
+                    cover: data?.findCard?.cover,
+                    attachments: [
+                        ...data?.findCard?.attachments as any, //eslint-disable-line
+                        {
+                            __typename: "Attachment",
+                            id: new Date().toISOString(),
+                            name: attachmentName,
+                            url: attachmentUrl,
+                            uploaded_at: new Date().toISOString(),
+                            open_graph_image: null
+                        }
+                    ]
+                }
+            }
+        })
+    }
+
+    const handleDeleteAttachment = async (id:string) => {
+        await deleteAttachment({
+            variables: {
+                id: id
+            },
+            update: (cache) => {
+                cache.evict({ id: cache.identify({ __typename: "Attachment", id: id }) as string });
                 cache.gc();
             }
         })
@@ -370,22 +435,85 @@ export default function CardModal({ previousLocation }:any) { //eslint-disable-l
                     <h2 className="text-lg font-medium">Attachments</h2>
                 </div>
                 {data?.findCard?.attachments?.length !== 0
-                    ? 
-                        <div className="flex flex-col gap-2">
-                            {data?.findCard?.attachments?.map((attachment, index) => (
-                                <div className="flex items-center gap-2" key={index}>
-                                    <a href={attachment?.url} target="_blank" rel="noreferrer">{attachment?.name}</a>
-                                </div>
-                            ))}
-                        </div>
-                    : <Button
-                        variant="ghost"
-                        className="ml-8 mr-4 flex gap-2 rounded-lg text-sm justify-start bg-gray-500/60 shadow-sm"
-                      >
-                        <IconPaperclip />
-                        Add an attachment
-                      </Button>
+                    &&
+                    <>
+                        {data?.findCard?.attachments?.map((attachment) => (
+                            <AttachmentCard
+                                key={attachment?.id}
+                                attachment={attachment}
+                                handleDeleteAttachment={handleDeleteAttachment}
+                                handleSetCover={handleSetCover}
+                                handleRemoveCover={handleRemoveCover}
+                                data={data}
+                            />
+                        ))}
+                    </>
                 }
+                {isAddingAttachment &&
+                    <div className="flex flex-col gap-2">
+                        <input
+                            autoFocus
+                            type="text"
+                            className="rounded-lg ml-6 mr-4 text-sm p-2 flex justify-start font-normal bg-black/60 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
+                            value={attachmentName}
+                            onFocus={(e) => e.target.select()}
+                            onChange={(e) => setAttachmentName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key == 'Escape') {
+                                    setIsAddingAttachment(false)
+                                    setAttachmentName('')
+                                    setAttachmentUrl('')
+                                }
+                            }}
+                            placeholder="Name"
+                        />
+                        <input
+                            type="text"
+                            className="rounded-lg ml-6 mr-4 text-sm p-2 flex justify-start font-normal bg-black/60 shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-white"
+                            value={attachmentUrl}
+                            onFocus={(e) => e.target.select()}
+                            onChange={(e) => setAttachmentUrl(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key == 'Escape') {
+                                    setIsAddingAttachment(false)
+                                    setAttachmentName('')
+                                    setAttachmentUrl('')
+                                }
+                            }}
+                            placeholder="URL"
+                        />
+                        <div className="flex gap-2">
+                            <Button
+                                onClick={handleAddAttachment}
+                                className="rounded-lg ml-6 py-0"
+                            >
+                                Save
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setIsAddingAttachment(false)
+                                    setAttachmentName('')
+                                    setAttachmentUrl('')
+                                }}
+                                variant="ghost"
+                                className="rounded-lg py-0"
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                }
+                {!isAddingAttachment &&
+                <Button
+                    variant="ghost"
+                    className="ml-8 mr-4 flex gap-2 rounded-lg text-sm justify-start bg-gray-500/60 shadow-sm"
+                    onClick={() => setIsAddingAttachment(true)}
+                >
+                    <IconPaperclip />
+                    Add an attachment
+                </Button>
+                }
+                
                 <div className="flex items-center gap-2">
                     <IconPhoto />
                     <h2 className="text-lg font-medium">Images</h2>
