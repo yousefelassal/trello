@@ -192,13 +192,15 @@ const resolvers = {
             const board = await Board.findById(args.id)
                 .populate({
                     path: 'lists',
-                        populate: {
-                            path: 'cards',
-                                populate: {
-                                    path: 'attachments',
-                                    path: 'images'
-                                }
-                        }
+                    model: 'List',
+                    populate: {
+                    path: 'cards',
+                    model: 'Card',
+                    populate: [
+                        { path: 'attachments', model: 'Attachment' },
+                        { path: 'images', model: 'Image' }
+                    ]
+                    }
                 })
                 .populate('uploaded_bgs');
 
@@ -511,9 +513,16 @@ const resolvers = {
             if(!user) {
                 throw new GraphQLError("Not authenticated")
             }
-
+            
             const card = await Card.findById(args.cardId)
             const attachment = new Attachment({ ...args })
+
+            const openGraphImage = await getOpenGraphImage(attachment.url)
+            if(openGraphImage) {
+                attachment.open_graph_image = openGraphImage
+                card.cover = openGraphImage
+            }
+
             try {
                 await attachment.save()
             } catch (error) {
@@ -521,14 +530,6 @@ const resolvers = {
             }
 
             card.attachments = card.attachments.concat(attachment._id)
-
-            const openGraphImage = await getOpenGraphImage(attachment.url)
-            if(openGraphImage) {
-                attachment.open_graph_image = openGraphImage
-                await attachment.save()
-                card.cover = openGraphImage
-            }
-
             await card.save()
 
             return card.populate('attachments')
