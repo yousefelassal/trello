@@ -21,6 +21,7 @@ export type Attachment = {
   __typename?: 'Attachment';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  open_graph_image?: Maybe<Scalars['String']['output']>;
   uploaded_at: Scalars['String']['output'];
   url: Scalars['String']['output'];
 };
@@ -252,6 +253,16 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type AddAttachmentMutationVariables = Exact<{
+  cardId: Scalars['ID']['input'];
+  url: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  uploadedAt: Scalars['String']['input'];
+}>;
+
+
+export type AddAttachmentMutation = { __typename?: 'Mutation', addAttachmentToCard?: { __typename?: 'Card', id: string, cover?: string | null, attachments?: Array<{ __typename?: 'Attachment', id: string, name: string, url: string, open_graph_image?: string | null, uploaded_at: string }> | null } | null };
+
 export type AddBgMutationVariables = Exact<{
   boardId: Scalars['ID']['input'];
   key: Scalars['String']['input'];
@@ -303,6 +314,13 @@ export type CreateBoardMutationVariables = Exact<{
 
 
 export type CreateBoardMutation = { __typename?: 'Mutation', createBoard?: { __typename?: 'Board', id: string, title: string, description?: string | null, bg: string, updated_at?: string | null, saved?: boolean | null } | null };
+
+export type DeleteAttachmentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteAttachmentMutation = { __typename?: 'Mutation', deleteAttachment?: { __typename?: 'Attachment', id: string } | null };
 
 export type DeleteBoardMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -426,6 +444,55 @@ export type UpdateListMutationVariables = Exact<{
 export type UpdateListMutation = { __typename?: 'Mutation', updateList?: { __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> } | null };
 
 
+export const AddAttachmentDocument = gql`
+    mutation addAttachment($cardId: ID!, $url: String!, $name: String!, $uploadedAt: String!) {
+  addAttachmentToCard(
+    cardId: $cardId
+    url: $url
+    name: $name
+    uploaded_at: $uploadedAt
+  ) {
+    id
+    cover
+    attachments {
+      id
+      name
+      url
+      open_graph_image
+      uploaded_at
+    }
+  }
+}
+    `;
+export type AddAttachmentMutationFn = Apollo.MutationFunction<AddAttachmentMutation, AddAttachmentMutationVariables>;
+
+/**
+ * __useAddAttachmentMutation__
+ *
+ * To run a mutation, you first call `useAddAttachmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddAttachmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addAttachmentMutation, { data, loading, error }] = useAddAttachmentMutation({
+ *   variables: {
+ *      cardId: // value for 'cardId'
+ *      url: // value for 'url'
+ *      name: // value for 'name'
+ *      uploadedAt: // value for 'uploadedAt'
+ *   },
+ * });
+ */
+export function useAddAttachmentMutation(baseOptions?: Apollo.MutationHookOptions<AddAttachmentMutation, AddAttachmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddAttachmentMutation, AddAttachmentMutationVariables>(AddAttachmentDocument, options);
+      }
+export type AddAttachmentMutationHookResult = ReturnType<typeof useAddAttachmentMutation>;
+export type AddAttachmentMutationResult = Apollo.MutationResult<AddAttachmentMutation>;
+export type AddAttachmentMutationOptions = Apollo.BaseMutationOptions<AddAttachmentMutation, AddAttachmentMutationVariables>;
 export const AddBgDocument = gql`
     mutation addBg($boardId: ID!, $key: String!, $url: String!, $name: String!, $uploadedAt: String!) {
   addBgToBoard(
@@ -695,6 +762,39 @@ export function useCreateBoardMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateBoardMutationHookResult = ReturnType<typeof useCreateBoardMutation>;
 export type CreateBoardMutationResult = Apollo.MutationResult<CreateBoardMutation>;
 export type CreateBoardMutationOptions = Apollo.BaseMutationOptions<CreateBoardMutation, CreateBoardMutationVariables>;
+export const DeleteAttachmentDocument = gql`
+    mutation deleteAttachment($id: ID!) {
+  deleteAttachment(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteAttachmentMutationFn = Apollo.MutationFunction<DeleteAttachmentMutation, DeleteAttachmentMutationVariables>;
+
+/**
+ * __useDeleteAttachmentMutation__
+ *
+ * To run a mutation, you first call `useDeleteAttachmentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAttachmentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAttachmentMutation, { data, loading, error }] = useDeleteAttachmentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteAttachmentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAttachmentMutation, DeleteAttachmentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAttachmentMutation, DeleteAttachmentMutationVariables>(DeleteAttachmentDocument, options);
+      }
+export type DeleteAttachmentMutationHookResult = ReturnType<typeof useDeleteAttachmentMutation>;
+export type DeleteAttachmentMutationResult = Apollo.MutationResult<DeleteAttachmentMutation>;
+export type DeleteAttachmentMutationOptions = Apollo.BaseMutationOptions<DeleteAttachmentMutation, DeleteAttachmentMutationVariables>;
 export const DeleteBoardDocument = gql`
     mutation deleteBoard($id: ID!) {
   deleteBoard(id: $id) {
