@@ -525,6 +525,7 @@ const resolvers = {
             const openGraphImage = await getOpenGraphImage(attachment.url)
             if(openGraphImage) {
                 attachment.open_graph_image = openGraphImage
+                await attachment.save()
                 card.cover = openGraphImage
             }
 
