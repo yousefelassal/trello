@@ -280,7 +280,7 @@ export type AddCardMutationVariables = Exact<{
 }>;
 
 
-export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, description?: string | null }> } | null };
+export type AddCardMutation = { __typename?: 'Mutation', addCard?: { __typename?: 'List', id: string, title: string, cards: Array<{ __typename?: 'Card', id: string, title: string, cover?: string | null, description?: string | null, images?: Array<{ __typename?: 'Image', id: string }> | null, attachments?: Array<{ __typename?: 'Attachment', id: string }> | null }> } | null };
 
 export type AddImageMutationVariables = Exact<{
   cardId: Scalars['ID']['input'];
@@ -549,7 +549,14 @@ export const AddCardDocument = gql`
     cards {
       id
       title
+      cover
       description
+      images {
+        id
+      }
+      attachments {
+        id
+      }
     }
   }
 }
