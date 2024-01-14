@@ -65,6 +65,9 @@ A custom [ApolloProvider](focus://2,5,9) component was created to wrap the app w
 
 </CH.Section>
 
+<br />
+
+
 <CH.Scrollycoding>
 
 <h3 className="text-lg font-semibold">Using Token</h3>
@@ -206,87 +209,288 @@ VITE_SERVER=http://localhost:4000/graphql
 
 </CH.Scrollycoding>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+<h2 className="text-2xl font-semibold">Creating a new Board</h2>
 
-Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+<br />
 
-# Spotlight
+<img
+  src="https://utfs.io/f/6eab8aeb-9a8f-429d-85b6-d80f88a18c53-74p8et.PNG"
+  alt="Create Board Modal"
+  className="rounded-lg shadow-lg"
+/>
 
-This is how to use the `<CH.Spotlight>` component. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quia! Quidem, quisquam.
+<h3 className="text-lg font-semibold">Unsplash API</h3> 
+
+Custom hook `useRandomPhotos` is created to fetch random photos from <span className="underline">[Unsplash API](https://unsplash.com/documentation#get-a-random-photo)</span> returning the photos array, with loading and error state
 
 <CH.Spotlight>
 
-```js app.js
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null && 0
-  dolor = sit - amet(dolor)
-  return sit ? consectetur(ipsum) : []
+```tsx useRandomPhotos.tsx
+import { useState, useEffect } from 'react'
+
+const useRandomPhotos = () => {
+    const [data, setData] = useState<any>([])
+    const [error, setError] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => {
+        setIsLoading(true)
+        setData([])
+        fetch(`https://api.unsplash.com/photos/random
+          ?client_id=${import.meta.env.VITE_ACCESS_KEY}
+          &count=4
+          &topics=minimalism,wallpapers,nature,textures-patterns`)
+            .then((res) => res.json())
+            .then((data) => {
+                setData(data)
+                setIsLoading(false)
+            })
+            .catch((error) => {
+                setError(error)
+                setIsLoading(false)
+            })
+    }, [])
+
+    return {
+        photos: data.map((photo) => photo.urls.regular),
+        error,
+        isLoading
+    }
 }
+
+export default useRandomPhotos
 ```
 
 ---
 
-Change focus
+Selecting the topics and count from the API
 
-```js app.js focus=2:4
+```tsx useRandomPhotos.tsx focus=11:14
 
 ```
 
 ---
 
-Or change the code
+Handling Errors with hardcoded data (Unsplash API has a limit of 50 requests per hour)
 
-```js app.js focus=6:10
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null && 0
-  dolor = sit - amet(dolor)
-  return sit ? consectetur(ipsum) : []
+
+```tsx useRandomPhotos.tsx focus=3:16,35:39,44
+import { useState, useEffect } from 'react'
+
+const dataIfError = [
+    {
+        "id": "0z-sWoAqs0c",
+        "urls": {
+            "raw": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3",
+            "full": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=85",
+            "regular": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=1080",
+            "small": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=400",
+            "thumb": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=200",
+            "small_s3": "https://s3.us-west-2.amazonaws.com/images.unsplash.com/small/photo-1704500355467-88351c0797c3"
+        },
+        // ...
+    }
+]
+
+const useRandomPhotos = () => {
+    const [data, setData] = useState<any>([])
+    const [error, setError] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => {
+        setIsLoading(true)
+        setData([])
+        fetch(`https://api.unsplash.com/photos/random
+          ?client_id=${import.meta.env.VITE_ACCESS_KEY}
+          &count=4
+          &topics=minimalism,wallpapers,nature,textures-patterns`)
+            .then((res) => res.json())
+            .then((data) => {
+                setData(data)
+                setIsLoading(false)
+            })
+            .catch((error) => {
+                setError(error)
+                setIsLoading(false)
+                setData(dataIfError)
+            })
+    }, [])
+
+    return {
+        photos: data.map((photo) => photo.urls.regular),
+        error,
+        isLoading
+    }
 }
 
-function adipiscing(...elit) {
-  console.log(elit)
-  return elit.map((ipsum) => ipsum.sit)
-}
+export default useRandomPhotos
 ```
 
 ---
 
-Or change the file
+Handling background selection
+
+```tsx useRandomPhotos.tsx focus=22:26,49,50
+import { useState, useEffect } from 'react'
+
+const dataIfError = [
+    {
+        "id": "0z-sWoAqs0c",
+        "urls": {
+            "raw": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3",
+            "full": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=85",
+            "regular": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=1080",
+            "small": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=400",
+            "thumb": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=200",
+            "small_s3": "https://s3.us-west-2.amazonaws.com/images.unsplash.com/small/photo-1704500355467-88351c0797c3"
+        },
+        // ...
+    }
+]
+
+const useRandomPhotos = () => {
+    const [data, setData] = useState<any>([])
+    const [error, setError] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const [selectedBg, setSelectedBg] = useState('')
+
+    const handleBgChange = (bg: string) => {
+        setSelectedBg(bg)
+    }
+
+    useEffect(() => {
+        setIsLoading(true)
+        setData([])
+        fetch(`https://api.unsplash.com/photos/random?client_id=${import.meta.env.VITE_ACCESS_KEY}&count=4&topics=minimalism,wallpapers,nature,textures-patterns`)
+            .then((res) => res.json())
+            .then((data) => {
+                setData(data)
+                setSelectedBg(data[0].urls.regular)
+                setIsLoading(false)
+            })
+            .catch((error) => {
+                setError(error)
+                setIsLoading(false)
+                setData(dataIfError)
+            })
+    }, [])
+
+    return {
+        photos: data.map((photo) => photo.urls.regular),
+        error,
+        isLoading,
+        selectedBg,
+        handleBgChange
+    }
+}
+
+export default useRandomPhotos
+```
+
+---
+
+Using the hook
 
 <CH.Code>
 
-```js app.js focus=1:4
-function adipiscing(...elit) {
-  console.log(elit)
-  return elit.map((ipsum) => ipsum.sit)
+```tsx useRandomPhotos.tsx
+import { useState, useEffect } from 'react'
+
+const dataIfError = [
+    {
+        "id": "0z-sWoAqs0c",
+        "urls": {
+            "raw": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3",
+            "full": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=85",
+            "regular": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=1080",
+            "small": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=400",
+            "thumb": "https://images.unsplash.com/photo-1704500355467-88351c0797c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NDc0MTJ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDQ4OTE3NzV8&ixlib=rb-4.0.3&q=80&w=200",
+            "small_s3": "https://s3.us-west-2.amazonaws.com/images.unsplash.com/small/photo-1704500355467-88351c0797c3"
+        },
+        // ...
+    }
+]
+
+const useRandomPhotos = () => {
+    const [data, setData] = useState<any>([])
+    const [error, setError] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const [selectedBg, setSelectedBg] = useState('')
+
+    const handleBgChange = (bg: string) => {
+        setSelectedBg(bg)
+    }
+
+    useEffect(() => {
+        setIsLoading(true)
+        setData([])
+        fetch(`https://api.unsplash.com/photos/random?client_id=${import.meta.env.VITE_ACCESS_KEY}&count=4&topics=minimalism,wallpapers,nature,textures-patterns`)
+            .then((res) => res.json())
+            .then((data) => {
+                setData(data)
+                setSelectedBg(data[0].urls.regular)
+                setIsLoading(false)
+            })
+            .catch((error) => {
+                setError(error)
+                setIsLoading(false)
+                setData(dataIfError)
+            })
+    }, [])
+
+    return {
+        photos: data.map((photo) => photo.urls.regular),
+        error,
+        isLoading,
+        selectedBg,
+        handleBgChange
+    }
 }
+
+export default useRandomPhotos
 ```
 
 ---
 
-```css styles.css
-.lorem {
-  color: #fff;
-  padding: 10px;
-  background: #000;
+```tsx AddBoard.tsx
+import useRandomPhotos from "@/hooks/useRandomPhotos";
+
+export default function AddBoard() {
+  const { photos, isLoading, selectedBg, handleBgChange } = useRandomPhotos()
+
+  return (
+  {isLoading && (
+      // Skeleton
+  )}
+  { !isLoading && (
+      <div className="w-full flex-1 flex items-center flex-col gap-4">
+          <div className="relative rounded-lg h-36 w-48 overflow-hidden">
+              <img src={selectedBg} alt="" className="object-cover absolute w-full h-full shadow-md" />
+              <Placeholder />
+          </div>
+          <div className="flex gap-2">
+              {photos.map((bg, i) => (
+                  <button
+                      key={i}
+                      className={cn('relative group rounded-md h-12 w-16 overflow-hidden transition', selectedBg === bg ? 'ring-2 ring-blue-500' : '')}
+                      onClick={() => handleBgChange(bg)}
+                  >
+                      {selectedBg === bg && (
+                          <div className="absolute z-20 inset-0 flex items-center justify-center">
+                              <Check className="text-white/80 w-5 h-5" />
+                          </div>
+                      )}
+                      <div className={cn("absolute hidden group-hover:block z-10 inset-0 bg-black/40 items-center justify-center", selectedBg === bg && 'block')} />
+                      <img src={bg} alt="" className="object-cover absolute inset-0 w-full h-full shadow-md" />
+                  </button>
+              ))}
+          </div>
+      </div>
+  )}
+  )
 }
 ```
 
 </CH.Code>
-
----
-
-### By the way
-
-- you can
-- put any
-- markdown
-- here
-
-👍
-
-```js app.js
-
-```
 
 </CH.Spotlight>
