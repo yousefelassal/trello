@@ -548,3 +548,64 @@ export default function AddBoard() {
 
 </CH.Code>
 when mutation is completed `useNavigate` is used to redirect the user to the new board page and cache is immutably updated with the new board data using `updateQuery` on a successful response
+
+<br />
+<h2 className="text-2xl font-semibold">Using <span className="underline">[Codegen](https://the-guild.dev/graphql/codegen)</span> to generate typed queries and mutations</h2>
+
+<CH.Code>
+
+```bash
+npm i -D @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-graphql-request @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
+```
+</CH.Code>
+
+<h3 className="font-semibold">This will install the following packages as `devDepencencies`</h3>
+
+<ul className="list ml-8">
+<li>`@graphql-codegen/cli`</li>
+<li>`@graphql-codegen/typescript`</li>
+<li>`@graphql-codegen/typescript-graphql-request`</li>
+<li>`@graphql-codegen/typescript-operations`</li>
+<li>`@graphql-codegen/typescript-react-apollo`</li>
+</ul>
+
+<CH.Code>
+
+```yml graphql.config.yml
+schema:
+  - "http://localhost:4000/"
+documents:
+  - "./src/graphql/*.graphql"
+generates:
+  ./src/generated/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+```
+
+</CH.Code>
+
+<h3 className="font-semibold">The configuration file does the following:</h3>
+
+<ul className="list ml-8">
+<li>`schema` points to our GraphQL endpoint for fetching the API schema map.</li>
+<li>`documents` tells GraphQL Codegen where to look for our schema files.</li>
+<li>`generates` tells GraphQL Codegen where to create and store generated code.</li>
+<li>`plugins` Specifies what GraphQL Codegen plugins to use.</li>
+</ul>
+
+<CH.Code>
+
+```json package.json
+{
+  "scripts": {
+    "generate": "graphql-codegen --config graphql.config.yml",
+    "predev": "npm run generate"
+  }
+}
+```
+
+</CH.Code>
+
+The `generate` script will run the codegen and generate the types in `./src/generated/graphql.ts`
