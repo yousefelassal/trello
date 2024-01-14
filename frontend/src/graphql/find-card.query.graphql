@@ -16,6 +16,7 @@ query findCard($findCardId: ID!) {
       name
       url
       uploaded_at
+      open_graph_image
     }
   }
 }
