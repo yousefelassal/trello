@@ -775,7 +775,42 @@ export function CardModal({previousLocation}) {
 }
 ```
 
-
-
 </CH.Scrollycoding>
 
+<h3 className="text-lg font-semibold">Using `useParams`</h3>
+
+<CH.Section>
+
+[`useParams`](focus://1,10,13) hook was used to get the `boardId` and `cardId` from the url params to fetch the data from the server.
+
+
+```tsx CardModal.tsx
+import { useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import {
+  FindCardDocument,
+  FindCardQuery,
+  FindCardQueryVariables,
+} from "@/generated/graphql";
+
+export function CardModal({previousLocation}) {
+  const { id } = useParams();
+  const { data, loading, error } = useQuery<FindCardQuery, FindCardQueryVariables>(FindCardDocument, {
+    variables: {
+      findCardId: id as string
+    },
+    onCompleted: (data) => {
+      if (data.findCard?.description) {
+        setDescription(data.findCard?.description.replace(/<br \/>/g, '\n') as string);
+      }
+    }
+  });
+  return (
+    // ...
+  );
+}
+```
+
+if card has a description it is set to the state using `setDescription` [replacing `<br />` with `\n`](focus://17) to display the description in a textarea.
+
+</CH.Section>
