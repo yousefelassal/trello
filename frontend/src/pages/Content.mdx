@@ -1098,3 +1098,81 @@ module.exports = {
 ```
 
 </CH.Code>
+
+<br />
+<h2 className="text-2xl font-semibold">Using <span className="underline">[uploadthing](https://docs.uploadthing.com/)</span> to handle file uploads</h2>
+
+Uploadthing simplifies uploading files to S3, while owning and having full control over the service.
+post requests are made to my `/api/uploadthing` endpoint.
+
+<CH.Code>
+
+```ts index.ts
+import cors from 'cors';
+import "dotenv/config"
+import express, { Request, Response } from 'express';
+import { createUploadthingExpressHandler } from "uploadthing/express"
+import { UTApi } from 'uploadthing/server';
+import { uploadRouter } from './router'
+
+const app = express();
+const utapi = new UTApi()
+
+app.use(cors());
+app.get('/', (req, res) => res.send('Hello from uploadthing api'));
+
+app.use(
+    '/api/uploadthing',
+    createUploadthingExpressHandler({
+        router: uploadRouter,
+    })
+)
+
+const deleteRouter = express.Router()
+
+deleteRouter.post('/:id', async (req:Request, res:Response) => {
+    const key = req.params.id
+    if (!key) {
+        res.status(400).send('missing key')
+        return
+    }
+    try {
+        await utapi.deleteFiles(key)
+        res.status(200).send('deleted')
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
+app.use('/api/uploadthing/delete', deleteRouter)
+
+app.listen(process.env.PORT || 3000, () => console.log(`Server listening on port ${process.env.PORT || 3000}!`) );
+```
+
+```ts router.ts
+import { createUploadthing, type FileRouter } from "uploadthing/server";
+
+const f = createUploadthing({
+  errorFormatter: (err) => {
+    console.log("Error uploading file", err.message);
+    console.log("  - Above error caused by:", err.cause);
+
+    return { message: err.message };
+  },
+});
+
+export const uploadRouter = {
+  image: f({
+    image: {
+        maxFileSize: "4MB",
+        maxFileCount: 1
+    }
+  }).onUploadComplete((data) => {
+    console.log("upload completed", data);
+}),
+} satisfies FileRouter;
+
+export type OurFileRouter = typeof uploadRouter;
+```
+
+</CH.Code>
