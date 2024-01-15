@@ -666,6 +666,116 @@ I highly recommend this course by <span className="underline">[Alex Reardon](htt
 </div>
 
 
+<br />
+<h2 className="text-2xl font-semibold">Dynamic Routes for Card Modals</h2>
+<br />
+<img src="https://utfs.io/f/3812f97a-99cc-4d32-a7cb-11c5f343e410-7ce0k0.PNG" alt="card modal" className="rounded-lg shadow-lg" />
+
+<CH.Scrollycoding>
+
+<h3 className="text-lg font-semibold">Displaying modal as an overlay</h3>
+
+<p className="text-sm">When a modal is opened, the previous location is passed to `<Routes/>` instead of using the current location by default.</p>
+
+```tsx App.tsx focus=3,4,9,14:18
+export default function App() {
+  const {token, setToken} = useTokenValue()
+  const location = useLocation()
+  const previousLocation = location.state?.previousLocation
+  
+  if (token) {
+    return(
+      <>
+      <Routes location={previousLocation || location}>
+        <Route path="/" element={<Home />} />
+        <Route path="/:id" element={<Board />} />
+      </Routes>
+
+      {previousLocation && (
+        <Routes>
+          <Route path="/:id/:id" element={<CardModal previousLocation={previousLocation} />} />
+        </Routes>
+      )}
+      </>
+    )
+  }
+
+  return (
+    // ...
+  )
+}
+
+```
+
+---
+
+<h3 className="text-lg font-semibold">CardModal Component</h3>
+
+<p className="text-sm">`useNavigate` Hook is used to redirect to the Board page when the modal is closed.</p>
+
+```tsx CardModal.tsx
+import { useNavigate } from 'react-router-dom';
+
+export function CardModal({previousLocation}) {
+  const navigate = useNavigate();
+  return (
+    <div
+      onClick={() => navigate(`${previousLocation.pathname}`)}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Content */}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+<h3 className="text-lg font-semibold">Preventing the scroll underneath the modal</h3>
+
+<p className="text-sm">
+Using <span className="underline">[body-scroll-lock](https://www.npmjs.com/package/body-scroll-lock)</span> `disableBodyScroll` and `enableBodyScroll` functions when the modal component is mounted and unmounted, respectively. 
+</p>
 
 
+```tsx CardModal.tsx
+import { useEffect, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+
+export function CardModal({previousLocation}) {
+  const modalRef = useRef();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const observerRefValue = modalRef.current;
+    disableBodyScroll(observerRefValue);
+    return () => {
+      if (observerRefValue) {
+        enableBodyScroll(observerRefValue);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={modalRef}
+      onClick={() => navigate(`${previousLocation.pathname}`)}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Content */}
+      </div>
+    </div>
+  );
+}
+```
+
+
+
+</CH.Scrollycoding>
 
