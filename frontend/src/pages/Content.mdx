@@ -814,3 +814,31 @@ export function CardModal({previousLocation}) {
 if card has a description it is set to the state using `setDescription` [replacing `<br />` with `\n`](focus://17) to display the description in a textarea.
 
 </CH.Section>
+
+<br />
+<h2 className="text-2xl font-semibold">Using <span className="underline">[React Hook Form](https://react-hook-form.com/)</span></h2>
+
+Was used to handle the form submission and display the form state.
+
+```tsx CardModal.tsx
+import { useForm } from "react-hook-form";
+
+export default function CardModal(){
+  const form = useForm()
+
+  return(
+    // ...
+    <>
+      <Button
+        variant="destructive"
+        className="m-4 flex flex-end gap-2 rounded-lg shadow-sm"
+        onClick={form.handleSubmit(handleDeleteCard)}
+        disabled={form.formState.isSubmitting}
+      >
+        {form.formState.isSubmitting ? <><Loader2 className="animate-spin" /> Deleting...</> : "Delete Card"}
+      </Button>
+  </>
+  )
+}
+
+```
