@@ -1,4 +1,4 @@
-<h1 className="text-4xl py-2 font-bold">Docuemntation</h1>
+<h1 className="text-4xl py-2 font-bold">Documentation</h1>
 
 <h2 className="text-2xl font-semibold">Client State</h2>
 
@@ -609,3 +609,44 @@ generates:
 </CH.Code>
 
 The `generate` script will run the codegen and generate the types in `./src/generated/graphql.ts`
+
+<br />
+<h2 className="text-2xl font-semibold">Optimistic UI</h2>
+
+Handling optimistic updates was the most challenging part of the project, as it would feel weird when the user move or create a card/list and it disappears and reappears again after the response is received from the server.
+
+It was achieved by passing the `optimisticResponse` object to the mutation options to the `useMutation` hook.
+
+<CH.Code>
+
+```tsx Board.tsx
+const [addList] = useMutation<AddListMutation, AddListMutationVariables>(AddListDocument,{
+  optimisticResponse: {
+    __typename: "Mutation",
+    addList: {
+      __typename: "Board",
+      id: id as string,
+      title: data?.findBoard?.title as string,
+      bg: data?.findBoard?.bg as string,
+      description: data?.findBoard?.description as string,
+      lists: [
+        ...data?.findBoard?.lists as any[] || [],
+        {
+            __typename: "List",
+            id: `temp-${Date.now()}`,
+            title: listTitle,
+            cards: []
+        }
+      ]
+    }
+  }
+})
+```
+
+</CH.Code>
+
+when the mutation happens the optimistic response is cached with a separate cache identifier to insure that our cached data remains accurate if the mutation fails,
+and eventually when the server responds with the _actual_ resulting object the optimistic version is removed.
+
+A temporary `id` is provided to be able to identify the object which is then replaced with the actual `id` from the server response.
+This technique was used for most mutations in the project.
