@@ -1002,3 +1002,55 @@ module.exports = {
 </CH.Code>
 
 extending the `Query` and `Mutation` types in each schema file and merging them in the main schema file using `merge` function from `lodash` library.
+
+<br />
+<h2 className="text-2xl font-semibold">Creating Context</h2>
+
+logging in would return a token (`jsonwebtoken`) which is used to authenticate the user by decoding the token and finding the user in the database.
+
+<CH.Code>
+
+```js user.js
+login: async (root, args) => {
+  const user = await User.findOne({ username: args.username })
+  const passwordCorrect = user === null
+      ? false
+      : await bcrypt.compare(args.password, user.passwordHash)
+
+  if (!(user && passwordCorrect)) {
+      throw new GraphQLError('invalid username or password', {
+          extensions: {
+              code: 'UNAUTHENTICATED'
+          }
+      })
+  }
+
+  const userForToken = {
+      username: user.username,
+      id: user._id
+  }
+
+  return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+}
+```
+
+```js context.js
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+require('dotenv').config()
+
+const userContext = async ({ req, res }) => {
+    const auth = req ? req.headers.authorization : null
+    if(auth && auth.toLowerCase().startsWith('bearer ')) {
+        const decodedToken = jwt.verify(
+            auth.substring(7), process.env.JWT_SECRET
+        )
+        const currentUser = await User.findById(decodedToken.id)
+        return { currentUser }
+    }
+}
+
+module.exports = userContext
+```
+
+</CH.Code>
