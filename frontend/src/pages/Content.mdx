@@ -1054,3 +1054,47 @@ module.exports = userContext
 ```
 
 </CH.Code>
+
+<br />
+<h2 className="text-2xl font-semibold">Using <span className="underline">[cheerio](https://cheerio.js.org/)</span> to get Open Graph Image</h2>
+
+<CH.Code>
+
+```js board.js
+const { getOpenGraphImage } = require('../utils/opengraph')
+
+const resolvers = {
+  Query: {
+    // ...
+  },
+  Mutation: {
+    // ...
+    addAttachment: async (root, args, { currentUser }) => {
+      // ...
+      const ogImage = await getOpenGraphImage(attachment.url)
+      if(ogImage) {
+        attachment.open_graph_image = ogImage
+      }
+      // ...
+    }
+  }
+}
+```
+
+```js opengraph.js
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+async function getOpenGraphImage(url) {
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
+    const ogImage = $('meta[property="og:image"]').attr('content');
+    return ogImage;
+}
+
+module.exports = {
+    getOpenGraphImage,
+};
+```
+
+</CH.Code>
