@@ -842,3 +842,163 @@ export default function CardModal(){
 }
 
 ```
+
+<br />
+<h2 className="text-2xl font-semibold">Server</h2>
+
+<h3 className="text-lg font-semibold">Modularizing Schema</h3>
+
+Splitting up the schema types and the associated resolvers into separate files and importing them in the main schema file.
+
+<CH.Code>
+
+```js schema.js
+const { makeExecutableSchema } = require('@graphql-tools/schema')
+const merge = require('lodash/merge')
+const {
+    typeDefs: User,
+    resolvers: userResolvers
+} = require('./schemas/user')
+
+const {
+  typeDefs: Board,
+  resolvers: boardResolvers
+} = require('./schemas/board')
+
+const Query = `
+  type Query {
+    test: String
+  }
+
+  type Mutation {
+    _empty: String
+  }
+`;
+
+const resolvers = {
+    Query: {
+        test: () => 'Hello World'
+    },
+    Mutation: {}
+};
+
+const schema = makeExecutableSchema({
+    typeDefs: [Query, User, Board],
+    resolvers: merge(resolvers, userResolvers, boardResolvers),
+    logger: { log: e => console.log(e) }
+});
+
+module.exports = schema
+```
+
+```ts user.ts
+const typeDefs = `
+  // ...
+
+  type User {
+    name: String!
+    username: String!
+    boards: [Board!]!
+    id: ID!
+  }
+
+  extend type Query {
+    me: User
+  }
+
+  extend type Mutation {
+    // ...
+  }
+`
+
+const resolvers = {
+  Query: {
+    // ...
+  },
+  Mutation: {
+    // ...
+  }
+}
+
+module.exports = {
+  typeDefs,
+  resolvers
+}
+```
+
+```js board.js
+const typeDefs = `
+  type Attachment {
+    id: ID!
+    url: String!
+    name: String!
+    uploaded_at: String!
+    open_graph_image: String
+  }
+
+  type Image {
+    id: ID!
+    url: String!
+    key: String!
+    name: String!
+    uploaded_at: String!
+  }
+
+  type Card {
+    title: String!
+    description: String
+    id: ID!
+    attachments: [Attachment!]
+    images: [Image!]
+    cover: String
+  }
+
+  type List {
+    title: String!
+    cards: [Card!]!
+    id: ID!
+  }
+
+  type Board {
+    title: String!
+    description: String
+    created_at: String
+    updated_at: String
+    saved: Boolean
+    saved_at: String
+    lists: [List!]!
+    bg: String!
+    uploaded_bgs: [Image!]
+    id: ID!
+    user: User!
+    listsOrder: [List!]!
+  }
+
+  extend type Query {
+    // ...
+  }
+
+  extend type Mutation {
+    // ...
+  }
+`
+
+const resolvers = {
+  Query: {
+    // ...
+  },
+  Mutation: {
+    // ...
+  }
+}
+
+module.exports = {
+  typeDefs,
+  resolvers
+}
+```
+
+
+</CH.Code>
+
+extending the `Query` and `Mutation` types in each schema file and merging them in the main schema file using `merge` function from `lodash` library.
