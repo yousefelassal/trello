@@ -537,7 +537,7 @@ when mutation is completed `useNavigate` is used to redirect the user to the new
 
 ```bash
 npm i -D @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-graphql-request @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
-``
+```
 
 <h3 className="font-semibold">This will install the following packages as `devDepencencies`</h3>
 
