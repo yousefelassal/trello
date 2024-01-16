@@ -30,28 +30,28 @@ export default function Bento() {
 const Header1 = () => (
   <div className="flex relative w-full h-full">
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl  bg-dot-white/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-white/[0.2] bg-black" />
-    <img className="w-full h-full absolute inset-0 object-cover rounded-lg" src="https://utfs.io/f/7e2c0cac-b12a-49ac-b8a3-9103dfda427a-vkc6j0.png" alt="" />
+    <img className="w-full h-full absolute inset-0 object-cover sm:object-contain rounded-lg" src="https://utfs.io/f/7e2c0cac-b12a-49ac-b8a3-9103dfda427a-vkc6j0.png" alt="" />
   </div>
 );
 
 const Header2 = () => (
   <div className="flex relative w-full h-full">
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl  bg-dot-white/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-white/[0.2] bg-black" />
-    <img className="w-full h-full absolute inset-0 object-contain" src="https://utfs.io/f/1f804b95-3e65-425f-8da1-5d22f94a85c9-glaqp8.png" alt="" />
+    <img className="w-full h-full absolute inset-0 object-cover sm:object-contain rounded-lg" src="https://utfs.io/f/1f804b95-3e65-425f-8da1-5d22f94a85c9-glaqp8.png" alt="" />
   </div>
 );
 
 const Header3 = () => (
   <div className="flex relative w-full h-full">
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl  bg-dot-white/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-white/[0.2] bg-black" />
-    <img className="w-full h-full absolute inset-0 object-contain" src="https://utfs.io/f/54f5b403-080c-43a7-8c91-675ebb610582-tecaw2.png" alt="" />
+    <img className="w-full h-full absolute inset-0 object-cover sm:object-contain rounded-lg" src="https://utfs.io/f/54f5b403-080c-43a7-8c91-675ebb610582-tecaw2.png" alt="" />
   </div>
 );
   
 const Header4 = () => (
   <div className="flex relative w-full h-full">
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl  bg-dot-white/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-white/[0.2] bg-black" />
-    <img className="w-full h-full absolute inset-0 object-cover rounded-lg" src="https://utfs.io/f/7d2b3185-c688-405d-98ae-7783538811a5-hxt83z.png" alt="" />
+    <img className="w-full h-full absolute inset-0 object-cover sm:object-contain rounded-lg" src="https://utfs.io/f/7d2b3185-c688-405d-98ae-7783538811a5-hxt83z.png" alt="" />
   </div>
 );
 
